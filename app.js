@@ -1,4 +1,4 @@
-let LANG = "zh"
+let LANG = "gr"
 
 
 function setLang(lang){
@@ -246,5 +246,6 @@ renderWebsite()
 showImages()
 
 })
+
 
 
