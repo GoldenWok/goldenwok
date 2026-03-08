@@ -46,29 +46,16 @@ renderMenu()
 
 function renderMenu(){
 
-const container = document.getElementById("menuContainer")
-container.innerHTML=""
+const container = document.getElementById("menuContainer");
+container.innerHTML="";
 
-const columns=[]
+DB.menu.forEach(cat=>{
 
-for(let i=0;i<3;i++){
+const card = document.createElement("div");
+card.className="menu-card";
 
-const col=document.createElement("div")
-col.className="menu-column"
-
-container.appendChild(col)
-
-columns.push(col)
-
-}
-
-DB.menu.forEach((cat,index)=>{
-
-const card=document.createElement("div")
-card.className="menu-card"
-
-let html=`<h3>${cat.name[LANG]}</h3>`
-html+=`<div class="menu-items">`
+let html = `<h3>${cat.name[LANG]}</h3>`;
+html += `<div class="menu-items">`;
 
 cat.items.forEach(item=>{
 
@@ -76,18 +63,15 @@ if(item.type==="complex"){
 
 html+=`<div class="menu-item complex-title">
 ${item.title[LANG]}
-</div>`
+</div>`;
 
 item.options.forEach(op=>{
-
 html+=`
 <div class="menu-item">
 <span>${op[LANG]}</span>
 <span>€${op.price}</span>
-</div>
-`
-
-})
+</div>`;
+});
 
 }else{
 
@@ -95,27 +79,23 @@ html+=`
 <div class="menu-item">
 <span>${item[LANG]}</span>
 <span>€${item.price}</span>
-</div>
-`
-
+</div>`;
 }
 
-})
+});
 
-html+=`</div>`
-
-card.innerHTML=html
+html += `</div>`;
+card.innerHTML = html;
 
 card.addEventListener("click",()=>{
-card.classList.toggle("open")
-})
+card.classList.toggle("open");
+});
 
-columns[index % 3].appendChild(card)
+container.appendChild(card);
 
-})
+});
 
 }
-
 
 /* ===== COLLAPSE ===== */
 
@@ -290,6 +270,7 @@ showImages()
 
 
 window.addEventListener("resize",showImages)
+
 
 
 
