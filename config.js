@@ -15,11 +15,9 @@ gr:"🍜 Μενού"
 },
 
 galleryTitle:{
-name:{
 zh:"📷 图库",
 en:"📷 Gallery",
 gr:"📷 Φωτογραφίες"
-}
 },
 
 collapseAll:{
@@ -1135,4 +1133,5 @@ price:0.5
 
 
 }
+
 
