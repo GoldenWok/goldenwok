@@ -741,3 +741,6 @@ border-radius:10px;
 .map {
     margin-top: 100px;
 }
+.gallery-track{
+touch-action: pan-y;
+}
