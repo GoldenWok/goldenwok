@@ -21,7 +21,7 @@ document.getElementById("buffetPrice").innerText = DB.buffetPrice[LANG]
 document.getElementById("orderTitle").innerText = DB.orderModule.title[LANG]
 document.getElementById("orderButton").innerText = DB.orderModule.orderButton[LANG]
 
-document.getElementById("galleryTitle").innerText =DB.galleryTitle.name[LANG];
+document.getElementById("galleryTitle").innerText =DB.galleryTitle.name[LANG]
   
 document.getElementById("locationTitle").innerText = DB.locationTitle[LANG]
 
@@ -248,6 +248,7 @@ renderWebsite()
 showImages()
 
 })
+
 
 
 
