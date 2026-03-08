@@ -754,7 +754,26 @@ justify-content:center;
 
 .gallery-track img{
 width:90%;
+
+#menuContainer{
+display:grid;
+grid-template-columns: repeat(3,1fr);
+gap:20px;
+}
+
+@media (max-width:900px){
+#menuContainer{
+grid-template-columns: repeat(2,1fr);
+}
+}
+
+@media (max-width:600px){
+#menuContainer{
+grid-template-columns: 1fr;
+}
+}
 max-width:420px;
 }
 
 }
+
