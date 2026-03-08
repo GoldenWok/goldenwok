@@ -75,19 +75,19 @@ gr:"🍜 Παραγγελία στο eFood"
 contact:{
 zh:{
 title:"联系方式",
-phone:"电话：+30 XXXXXXXX",
+phone:"电话：2109345137-2109345271",
 address:"地址：Leof. Andrea Siggrou 207, Nea Smirni 171 21"
 },
 
 en:{
 title:"Contact",
-phone:"Phone: +30 XXXXXXXX",
+phone:"Phone: 2109345137-2109345271",
 address:"Address: Leof. Andrea Siggrou 207, Nea Smirni 171 21"
 },
 
 gr:{
 title:"Επικοινωνία",
-phone:"Τηλέφωνο: +30 XXXXXXXX",
+phone:"Τηλέφωνο: 2109345137-2109345271",
 address:"Διεύθυνση: Λεωφ. Ανδρέα Συγγρού 207, Νέα Σμύρνη 171 21"
 }
 },
@@ -269,7 +269,7 @@ price:4.5
 {
 id:"salads",
 name:{
-zh:"🥗沙拉与🥦蔬菜",
+zh:"🥗沙拉&🥦蔬菜",
 en:"🥗Salads & 🥦vegetables",
 gr:"🥗Σαλάτες & 🥦λαχανικά"
 },
@@ -330,7 +330,7 @@ price:5.2
 {
 id:"rice",
 name:{
-zh:"🍚 米饭与🥢面条",
+zh:"🍚 米饭&🥢面条",
 en:"🍚 Rice & 🥢noodles",
 gr:"🍚 Ρύζι & 🥢noodles"
 },
@@ -1132,5 +1132,6 @@ price:0.5
 }
 
 ]
+
 
 }
