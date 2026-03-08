@@ -1,11 +1,19 @@
+
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
-<title>Golden Wok</title>
-<link rel="stylesheet" href="style.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Golden Wok</title>
+
+<meta name="description" content="Golden Wok Chinese Restaurant in Nea Smyrni. Authentic Chinese cuisine, buffet and delivery.">
+<meta name="keywords" content="Chinese restaurant Nea Smyrni, Golden Wok, Chinese food Athens">
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -22,13 +30,13 @@
 
 </header>
 
+
 <section class="hero">
 
 <h1 id="welcome"></h1>
 <p id="slogan"></p>
 
 <section class="card-module">
-
 
 <h2 id="orderTitle"></h2>
 
@@ -41,69 +49,65 @@
 
 </div>
 
-<a id="orderButton" class="order-btn" 
-href="https://www.e-food.gr/delivery/nea-smurni/golden-wok-8734941" 
+<a id="orderButton"
+class="order-btn"
+href="https://www.e-food.gr/delivery/nea-smurni/golden-wok-8734941"
 target="_blank"></a>
 
 </section>
 
 </section>
 
+
 <section class="menu">
 
 <h2 id="menuTitle"></h2>
 
-<button onclick="collapseAll()" 
+<button
+onclick="collapseAll()"
 id="collapseBtn"
 class="collapse-btn">
 </button>
 
 <div id="menuContainer" class="menu-grid"></div>
 
-
 </section>
+
 
 <section id="gallery">
 
-<h1>Gallery</h1>
+<h1 id="galleryTitle">Gallery</h1>
 
 <div class="gallery">
 
 <button class="arrow left" onclick="prevSlide()">❮</button>
 
 <div class="gallery-track" id="galleryTrack">
-<img src="images/f29.webp" onclick="openImage(this)">
-<img src="images/food1.webp" onclick="openImage(this)">   
 
-<img src="images/food2.webp" onclick="openImage(this)">
-<img src="images/food3.webp" onclick="openImage(this)">
-<img src="images/food4.webp" onclick="openImage(this)">
-<img src="images/food5.webp" onclick="openImage(this)">
-<img src="images/food10.webp" onclick="openImage(this)">
-<img src="images/food11.webp" onclick="openImage(this)">
-<img src="images/f18.webp" onclick="openImage(this)">
-<img src="images/f19.webp" onclick="openImage(this)">
-<img src="images/f20.webp" onclick="openImage(this)">
-<img src="images/f21.webp" onclick="openImage(this)">
-<img src="images/f22.webp" onclick="openImage(this)">
-<!-- <img src="images/f35.webp" onclick="openImage(this)"> -->
-<img src="images/f36.webp" onclick="openImage(this)">
-<img src="images/f37.webp" onclick="openImage(this)">
-<img src="images/f33.webp" onclick="openImage(this)">
-
-
-<img src="images/f28.webp" onclick="openImage(this)">
-<img src="images/food6.webp" onclick="openImage(this)">
-<img src="images/food12.webp" onclick="openImage(this)">
-<img src="images/food13.webp" onclick="openImage(this)">
-<img src="images/f30.webp" onclick="openImage(this)">
-<img src="images/f31.webp" onclick="openImage(this)">
-<img src="images/f32.webp" onclick="openImage(this)">
-<!-- <img src="images/f33.webp" onclick="openImage(this)"> -->
-<img src="images/f34.webp" onclick="openImage(this)">
-
-
-
+<img src="images/f29.webp" alt="Golden Wok food" loading="lazy" onclick="openImage(this)">
+<img src="images/food1.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food2.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food3.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food4.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food5.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food10.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food11.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f18.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f19.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f20.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f21.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f22.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f36.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f37.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f33.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f28.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food6.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food12.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/food13.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f30.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f31.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f32.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+<img src="images/f34.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
 
 </div>
 
@@ -113,9 +117,11 @@ class="collapse-btn">
 
 </section>
 
-<div id="lightbox" onclick="closeImage()">
+
+<div id="lightbox">
 <img id="lightboxImg">
 </div>
+
 
 <section class="map">
 
@@ -130,6 +136,7 @@ src="https://www.google.com/maps?q=Leof.+Andrea+Siggrou+207,+Nea+Smirni+171+21&o
 
 </section>
 
+
 <section class="contact">
 
 <h2 id="contactTitle"></h2>
@@ -137,6 +144,7 @@ src="https://www.google.com/maps?q=Leof.+Andrea+Siggrou+207,+Nea+Smirni+171+21&o
 <p id="contactAddress"></p>
 
 </section>
+
 
 <footer>
 
@@ -148,8 +156,11 @@ Golden Wok © 2026
 
 </footer>
 
+
 <script src="config.js"></script>
 <script src="app.js"></script>
 
 </body>
+
 </html>
+
