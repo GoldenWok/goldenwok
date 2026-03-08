@@ -744,3 +744,17 @@ border-radius:10px;
 .gallery-track{
 touch-action: pan-y;
 }
+
+/*kjb----------------------------------*/
+@media(max-width:768px){
+
+.gallery-track{
+justify-content:center;
+}
+
+.gallery-track img{
+width:90%;
+max-width:420px;
+}
+
+}
