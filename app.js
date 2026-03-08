@@ -142,6 +142,28 @@ btn.innerText = DB.collapseAll[LANG]
 
 let index=0
 
+// function showImages(){
+
+// const images=document.querySelectorAll("#galleryTrack img")
+// const total=images.length
+
+// images.forEach(img=>{
+// img.style.display="none"
+// img.classList.remove("active")
+// })
+
+// let left=(index-1+total)%total
+// let center=index
+// let right=(index+1)%total
+
+// images[left].style.display="block"
+// images[center].style.display="block"
+// images[right].style.display="block"
+
+// images[center].classList.add("active")
+
+// }
+
 function showImages(){
 
 const images=document.querySelectorAll("#galleryTrack img")
@@ -152,6 +174,17 @@ img.style.display="none"
 img.classList.remove("active")
 })
 
+/* mobile */
+if(window.innerWidth < 768){
+
+images[index].style.display="block"
+images[index].classList.add("active")
+
+}
+
+/* desktop */
+else{
+
 let left=(index-1+total)%total
 let center=index
 let right=(index+1)%total
@@ -161,6 +194,8 @@ images[center].style.display="block"
 images[right].style.display="block"
 
 images[center].classList.add("active")
+
+}
 
 }
 
@@ -248,6 +283,13 @@ renderWebsite()
 showImages()
 
 })
+
+
+
+
+
+
+window.addEventListener("resize",showImages)
 
 
 
