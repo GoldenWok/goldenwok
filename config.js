@@ -14,7 +14,7 @@ en:"🍜 Menu",
 gr:"🍜 Μενού"
 },
 
-gallery:{
+galleryTitle:{
 name:{
 zh:"📷 图库",
 en:"📷 Gallery",
@@ -1135,3 +1135,4 @@ price:0.5
 
 
 }
+
