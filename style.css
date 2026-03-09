@@ -779,18 +779,20 @@ max-width:420px;
 
 .menu-item{
 display:flex;
-justify-content:space-between;
 align-items:flex-start;
 gap:10px;
 }
 
 .menu-item span:first-child{
-text-align:left;
 flex:1;
+text-align:left;
+word-break:break-word;
 }
 
 .menu-item span:last-child{
+margin-left:auto;
 white-space:nowrap;
+font-weight:bold;
 }
 
 
