@@ -46,19 +46,22 @@ renderMenu()
 
 function renderMenu(){
 
+const isMobile = window.innerWidth < 700;
+
 const container = document.getElementById("menuContainer");
 container.innerHTML="";
 
 const columnCount = 3;
 
 /* 创建列 */
+/* 创建三列 */
 const columns = [];
 
-for(let i=0;i<columnCount;i++){
-const col = document.createElement("div");
-col.className="menu-column";
-container.appendChild(col);
-columns.push(col);
+for(let i=0;i<3;i++){
+    const col = document.createElement("div");
+    col.className="menu-column";
+    container.appendChild(col);
+    columns.push(col);
 }
 
 /* 计算总行数 */
@@ -118,12 +121,15 @@ const col = i % columnCount;
 /* 转换为列优先 */
 const columnIndex = col;
 
-columns[columnIndex].appendChild(card);
-
+if(isMobile){
+    container.appendChild(card);
+}else{
+    columns[col].appendChild(card);
 }
 
 }
 
+}
 /* ===== COLLAPSE ===== */
 
 function collapseAll(){
@@ -297,6 +303,7 @@ showImages()
 
 
 window.addEventListener("resize",showImages)
+
 
 
 
