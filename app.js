@@ -49,11 +49,31 @@ function renderMenu(){
 const container = document.getElementById("menuContainer");
 container.innerHTML="";
 
-DB.menu.forEach(cat=>{
+const columnCount = 3;
+
+/* 创建列 */
+const columns = [];
+
+for(let i=0;i<columnCount;i++){
+const col = document.createElement("div");
+col.className="menu-column";
+container.appendChild(col);
+columns.push(col);
+}
+
+/* 计算总行数 */
+const total = DB.menu.length;
+const rows = Math.ceil(total / columnCount);
+
+/* 按行逻辑放入列 */
+for(let i=0;i<total;i++){
+
+const cat = DB.menu[i];
 
 const card = document.createElement("div");
 card.className="menu-card";
 
+/* 构建HTML */
 let html = `<h3>${cat.name[LANG]}</h3>`;
 html += `<div class="menu-items">`;
 
@@ -91,9 +111,16 @@ card.addEventListener("click",()=>{
 card.classList.toggle("open");
 });
 
-container.appendChild(card);
+/* 行列计算 */
+const row = Math.floor(i / columnCount);
+const col = i % columnCount;
 
-});
+/* 转换为列优先 */
+const columnIndex = col;
+
+columns[columnIndex].appendChild(card);
+
+}
 
 }
 
@@ -270,6 +297,7 @@ showImages()
 
 
 window.addEventListener("resize",showImages)
+
 
 
 
