@@ -46,7 +46,7 @@ gr:"Ώρες λειτουργίας: Κάθε μέρα 13:00 - 23:00"
 
 buffetPrice:{ 
 zh:"自助餐价格：周三周五 18€  （ 儿童 6-12岁 10€ ） | 周六周日 20€ （ 儿童 6-12岁 12€ ）", 
-en:"Buffet Price: Wed Fri 18€ ( Children 6-12 10€ ) | Sat Sun 20€ ( Children 6-12 years 12€ )", 
+en:"Buffet Price: Wed Fri 18€ ( Children 6-12 years 10€ ) | Sat Sun 20€ ( Children 6-12 years 12€ )", 
 gr:"Τιμή μπουφέ: Τετ Παρ 18€ ( Παιδιά 6-12 ετών 10€ ) | Σαβ Κυρ 20€ ( Παιδιά 6-12 ετών 12€ )" 
 },
 
@@ -1133,5 +1133,6 @@ price:0.5
 
 
 }
+
 
 
