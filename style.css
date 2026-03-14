@@ -571,26 +571,26 @@ html, body, a, button, span, .menu-item, .lang span {
 }
 /* --- 2. 图片项：不裁切比例 --- */
 .gallery-slide-item {
-    flex: 0 0 auto; /* 宽度由图片内容决定 */
-    height: 60vh; /* 锁定一个优雅的屏幕高度比例 */
-    min-width: 300px;
+    flex: 0 0 auto;
+    height: 65vh; 
+    min-width: 350px;
     scroll-snap-align: center;
-    transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
-    opacity: 0.2; /* 默认更暗淡 */
-    transform: scale(0.9);
+    transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1); /* 更好看的缓动曲线 */
+    opacity: 0.1; /* 边缘更暗，对比更强 */
+    transform: scale(0.8);
     cursor: none !important;
 }
 
-/* 鼠标悬停时：临时变亮（满足你的需求 3） */
+/* 鼠标经过时的预亮效果 */
 .gallery-slide-item:hover {
-    opacity: 0.6;
+    opacity: 0.5;
+    transform: scale(0.85);
 }
 
-/* 中心激活状态：最亮且放大 */
+/* 激活态最亮、最大 */
 .gallery-slide-item.is-active {
     opacity: 1 !important;
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 30px rgba(197, 160, 89, 0.2));
+    transform: scale(1.05) !important;
 }
 
 .lazy-img {
