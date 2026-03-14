@@ -546,74 +546,67 @@ html, body, a, button, span, .menu-item, .lang span {
     }
 }
 
-/* --- 1. 画廊外层容器 --- */
+/* --- 1. 画廊容器 --- */
 .gallery-section {
-    padding: 60px 0;
+    position: relative;
+    padding: 80px 0;
     background: #050505;
-    overflow: hidden; /* 必须锁定，防止巨大图片撑开网页 */
 }
 
-/* --- 2. 滑动轨道 (最关键) --- */
 .gallery-slider-wrapper {
-    display: flex !important; /* 强制横向 */
-    flex-direction: row !important;
-    flex-wrap: nowrap !important; /* 绝对禁止换行 */
-    
-    overflow-x: auto; /* 开启横向滚动 */
-    overflow-y: hidden;
-    
-    /* 隐藏滚动条 */
-    scrollbar-width: none; 
-    -ms-overflow-style: none;
-    
-    padding: 20px 50px; /* 左右留白 */
-    gap: 20px;
-    cursor: grab; /* 提示用户可以抓取滑动 */
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory; /* 核心：滑动停止时自动对齐中心 */
+    scroll-behavior: smooth;
+    gap: 30px;
+    padding: 20px 30%; /* 留出侧边空间显示半透明图 */
+    scrollbar-width: none;
 }
 
-.gallery-slider-wrapper::-webkit-scrollbar {
-    display: none; /* 彻底隐藏 Chrome 滚动条 */
-}
+.gallery-slider-wrapper::-webkit-scrollbar { display: none; }
 
-/* --- 3. 每一个图片的承载框 --- */
+/* --- 2. 图片项：默认缩小并半透明 --- */
 .gallery-slide-item {
-    /* 核心修复：禁止图片自动放大，锁定宽度 */
-    flex: 0 0 320px !important; 
-    width: 320px !important; 
-    height: 450px; /* 你可以根据需要调整高度 */
-    
-    border-radius: 4px;
+    flex: 0 0 400px; /* 电脑端宽度 */
+    height: 500px;
+    scroll-snap-align: center; /* 停止时居中对齐 */
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 0.3; /* 边缘图片半透明 */
+    transform: scale(0.85); /* 边缘图片缩小 */
+    border-radius: 2px;
     overflow: hidden;
-    background: #111;
-    transition: transform 0.4s ease;
 }
 
-.gallery-slide-item:hover {
-    transform: translateY(-10px); /* 悬停微动 */
-}
-
-/* --- 4. 图片本身 --- */
-.lazy-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 自动裁剪以填满 320x450 的框 */
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
-
-.lazy-img.loaded {
+/* 核心技巧：通过 JS 给当前中心的图片加一个 .active 类，或者使用 CSS 粗略模拟 */
+/* 这里我们用 JS 来动态控制，视觉效果最精准 */
+.gallery-slide-item.is-active {
     opacity: 1;
+    transform: scale(1.05); /* 中心图变大 */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
-/* --- 5. 响应式：针对手机缩小尺寸 --- */
+/* --- 3. 左右控制按钮 --- */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #c5a059;
+    font-size: 40px;
+    cursor: none !important;
+    z-index: 100;
+    transition: 0.3s;
+    padding: 20px;
+}
+
+.nav-btn:hover { color: #fff; }
+.prev-btn { left: 5%; }
+.next-btn { right: 5%; }
+
+/* 响应式调整 */
 @media (max-width: 768px) {
-    .gallery-slide-item {
-        flex: 0 0 260px !important; 
-        width: 260px !important;
-        height: 350px;
-    }
-    .gallery-slider-wrapper {
-        padding: 20px 20px;
-        gap: 15px;
-    }
+    .gallery-slider-wrapper { padding: 20px 15%; }
+    .gallery-slide-item { flex: 0 0 280px; height: 380px; }
 }
