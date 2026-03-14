@@ -328,40 +328,48 @@ if (orderBtn) {
     orderBtn.style.setProperty('cursor', 'none', 'important');
 }
 
+// 在 app.js 中替换或添加
 const slider = document.getElementById('galleryContainer');
-let isDown = false;
-let startX;
-let scrollLeft;
-let velocity = 0; // 增加速度系数实现惯性
+let isDragging = false;
+let startX, scrollLeft;
 
 if (slider) {
+    // 1. 鼠标拖拽逻辑
     slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        slider.style.scrollBehavior = 'auto'; // 拖拽时必须关闭 smooth，否则会卡顿
+        isDragging = true;
+        slider.style.scrollBehavior = 'auto'; // 拖拽时关闭平滑，防止“跟不上”
         startX = e.pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
-        velocity = 0;
     });
 
-    slider.addEventListener('mouseleave', () => { isDown = false; });
-    slider.addEventListener('mouseup', () => { 
-        isDown = false; 
-        slider.style.scrollBehavior = 'smooth'; // 结束拖拽恢复平滑
+    slider.addEventListener('mouseup', () => {
+        isDragging = false;
+        slider.style.scrollBehavior = 'smooth'; // 释放后恢复平滑
     });
 
     slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
+        if (!isDragging) return;
         e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 2.5; // 2.5 是灵敏度，数字越大滑动越快
+        const walk = (x - startX) * 2; // 调整滑动灵敏度
         slider.scrollLeft = scrollLeft - walk;
     });
 
-    // 监听鼠标滚轮，让横向滑动也支持滚轮
-    slider.addEventListener('wheel', (e) => {
-        if (e.deltaY !== 0) {
-            e.preventDefault();
-            slider.scrollLeft += e.deltaY;
+    // 2. 需求 3：点击图片自动将其推到正中间
+    slider.addEventListener('click', (e) => {
+        const item = e.target.closest('.gallery-slide-item');
+        if (item && !isDragging) {
+            scrollToElement(item);
         }
+    });
+}
+
+function scrollToElement(el) {
+    const container = document.getElementById("galleryContainer");
+    const containerCenter = container.offsetWidth / 2;
+    const elCenter = el.offsetLeft + (el.offsetWidth / 2);
+    container.scrollTo({
+        left: elCenter - containerCenter,
+        behavior: 'smooth'
     });
 }
