@@ -598,22 +598,26 @@ html, body, a, button, span, .menu-item, .lang span {
 }
 
 /* --- 3. 图片本身 (核心修复) --- */
+/* --- 3. 图片本身 (终极补丁版本) --- */
 .lazy-img {
-    width: 100% !important;  /* 宽度占满 450px 的框框 */
-    height: 100% !important; /* 高度占满 550px 的框框 */
-    
-    /* 终极修复： object-fit: cover ！！！ */
-    /* 它会让图片自动裁剪缩放以填满框框，不拉伸变形，也不会只显示局部 */
-    object-fit: cover !important; 
-    
-    display: block;
-    cursor: none !important; /* 别忘了隐藏原生光标 */
-    
-    /* 配合你的懒加载渐显 */
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
+    /* 强制填满父容器，不多不少 */
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important; /* 核心：防止图片超越 450px */
+    max-height: 100% !important;
 
+    /* 核心：确保图片缩放且居中 */
+    object-fit: cover !important; 
+    object-position: center !important; 
+    
+    display: block !important;
+    position: absolute; /* 绝对定位能更好地控制在框框里 */
+    top: 0;
+    left: 0;
+
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
 .lazy-img.loaded {
     opacity: 1;
 }
