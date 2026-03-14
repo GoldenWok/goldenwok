@@ -110,12 +110,13 @@ const revealObserver = new IntersectionObserver((entries) => {
    修正版：全量渲染横向滑块 (全量、无分页)
    ========================================= */
 // 渲染画廊
+// 修改渲染函数中的 onclick
 function renderGallery() {
     const container = document.getElementById("galleryContainer");
     if (!container || !DB.gallery) return;
 
     container.innerHTML = DB.gallery.map(imgName => `
-        <div class="gallery-slide-item" onclick="scrollToMe(this)">
+        <div class="gallery-slide-item" onclick="handleGalleryClick(this, event, 'images/${imgName}')">
             <img data-src="images/${imgName}" 
                  src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
                  class="lazy-img" alt="Golden Wok">
@@ -126,23 +127,28 @@ function renderGallery() {
     setupActiveEffect();
 }
 
-// 需求 3：点击图片自动推到中间
-// 需求 3：点击图片或按钮，精准计算中心点
-function scrollToElement(el) {
-    const container = document.getElementById("galleryContainer");
-    if (!el || !container) return;
+function handleGalleryClick(el, event, fullSrc) {
+    // 如果点击的是已经居中的图片，则放大
+    if (el.classList.contains('is-active')) {
+        openFullImage(fullSrc);
+    } else {
+        // 如果点击的是侧边图片，则先把它推到中间
+        scrollToElement(el);
+    }
+}
 
-    // 计算元素相对于容器中心的偏移量
-    const containerWidth = container.offsetWidth;
-    const elOffset = el.offsetLeft;
-    const elWidth = el.offsetWidth;
+function openFullImage(src) {
+    const overlay = document.getElementById("imageOverlay");
+    const img = document.getElementById("overlayImg");
+    img.src = src;
+    overlay.style.display = "flex";
+    setTimeout(() => overlay.classList.add('active'), 10);
+}
 
-    const targetScroll = elOffset - (containerWidth / 2) + (elWidth / 2);
-
-    container.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth'
-    });
+function closeImage() {
+    const overlay = document.getElementById("imageOverlay");
+    overlay.classList.remove('active');
+    setTimeout(() => overlay.style.display = "none", 400);
 }
 
 // 需求 4：按钮点击也能找到“下一张”并居中
