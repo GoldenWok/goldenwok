@@ -546,110 +546,102 @@ html, body, a, button, span, .menu-item, .lang span {
     }
 }
 
-/* --- 1. 轨道：去掉间距 --- */
-.gallery-slider-wrapper {
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scroll-behavior: smooth;
-    gap: 0px !important; /* 彻底去掉间距 */
-    padding: 20px 40vw; /* 确保中心对齐 */
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    cursor: grab; /* 提示用户可以拖拽 */
-}
-
-/* 拖拽时的手势 */
-.gallery-slider-wrapper:active {
-    cursor: grabbing;
-}
-
-/* --- 2. 图片项：利用负边距实现叠加 --- */
-/* --- 1. 轨道：彻底锁死间距 --- */
+/* --- 1. 轨道：锁定 3 列视野 --- */
 .gallery-slider-wrapper {
     display: flex !important;
-    flex-wrap: nowrap !important;
-    gap: 0 !important; /* 彻底清除间距 */
-    padding: 20px 35vw; 
-    overflow-x: scroll; /* 改为 scroll 以便 JS 更好地接管 */
+    align-items: center;
+    overflow-x: auto;
+    /* 核心修复：取消 mandatory，改用 proximity 解决僵硬感 */
+    scroll-snap-type: x proximity; 
+    scroll-behavior: smooth;
     
-    /* 关键：去掉强制吸附，这会让手动滑动非常僵硬 */
-    scroll-snap-type: none !important; 
-    
-    /* 隐藏滚动条 */
+    /* 核心：两侧留白 35%，确保中间只有一张图的完整空间 */
+    padding: 20px 35vw !important; 
+    gap: 0 !important;
     scrollbar-width: none;
     cursor: grab;
-    -webkit-overflow-scrolling: touch; /* iOS 保持丝滑 */
 }
 
-/* --- 2. 图片项：利用负边距实现层叠 --- */
+.gallery-slider-wrapper::-webkit-scrollbar { display: none; }
+
+/* --- 2. 图片项：负边距实现覆盖 --- */
 .gallery-slide-item {
-    flex: 0 0 auto;
-    height: 70vh;
-    min-width: 400px;
+    /* 锁定宽度，确保一排只能看到三个（中间 1 + 两侧边缘） */
+    flex: 0 0 400px !important; 
+    width: 400px !important;
+    height: 550px !important;
     
-    /* 核心：负边距。如果还是有间距，把 -50px 往大改 (如 -80px) */
-    margin-right: -60px !important; 
+    /* 核心：通过负边距让图片左右重叠 */
+    margin: 0 -80px !important; 
     
-    transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1), 
-                opacity 0.5s ease, 
-                z-index 0s;
-    opacity: 0.2;
-    transform: scale(0.85);
-    z-index: 1;
+    scroll-snap-align: center;
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 0.1; /* 两侧默认极淡 */
+    transform: scale(0.8);
+    z-index: 1; /* 默认层级低 */
 }
 
-/* 激活态：让中间的图“跳”到最前面 */
+/* 激活态：正中间的那一张 */
 .gallery-slide-item.is-active {
     opacity: 1 !important;
-    transform: scale(1.05) !important;
-    z-index: 100 !important; /* 确保不被左右遮挡 */
-    margin-right: 0px !important; /* 激活时撑开一点，避免被左右挡住菜品 */
-    margin-left: 20px;
+    transform: scale(1.1) !important;
+    z-index: 100 !important; /* 确保中间的图叠在左右两张上面 */
+    filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
 }
+
+/* 需求 3 增强：鼠标悬停在侧边图上时稍微亮一点 */
+.gallery-slide-item:hover {
+    opacity: 0.4;
+}
+
+/* 图片本身：不裁切 */
 .lazy-img {
-    height: 100%;
-    width: auto;
-    object-fit: contain;
-    /* 给图片加一个淡淡的阴影，增强重叠的立体感 */
-    filter: drop-shadow(-10px 0 20px rgba(0,0,0,0.5));
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important; /* 完整显示不裁切 */
+    display: block;
 }
-/* --- 左右控制按钮：重塑高奢细线风格 --- */
 .nav-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.2); /* 增加极淡背景，确保在浅色图前可见 */
+    background: none;
     border: none;
-    width: 60px;
+    width: 100px;
     height: 100px;
+    z-index: 1000;
     cursor: none !important;
-    z-index: 999; /* 确保在最顶层 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.4s ease;
+    transition: 0.4s;
 }
 
-.prev-btn { left: 20px; } /* 确保间距足够 */
-.next-btn { right: 20px; }
-
-/* 细长金色箭头 */
+/* 极简长箭头 */
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 1px;
+    background: #c5a059;
+    top: 50%;
+}
 .nav-btn::after {
     content: '';
-    width: 20px;
-    height: 20px;
-    border-top: 2px solid #c5a059;
-    border-right: 2px solid #c5a059;
-    display: inline-block;
-    transition: 0.3s;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-top: 1px solid #c5a059;
+    border-right: 1px solid #c5a059;
+    top: 43%;
 }
 
-.prev-btn::after { transform: rotate(-135deg); }
-.next-btn::after { transform: rotate(45deg); }
+.prev-btn { left: 2%; }
+.prev-btn::after { transform: rotate(-135deg); left: 0; }
+.prev-btn::before { left: 0; }
 
-.nav-btn:hover { background: rgba(197, 160, 89, 0.1); }
+.next-btn { right: 2%; }
+.next-btn::after { transform: rotate(45deg); right: 0; }
+.next-btn::before { right: 0; }
+
+.nav-btn:hover::before { width: 70px; background: #fff; }
 .nav-btn:hover::after { border-color: #fff; }
 /* 响应式调整 */
 @media (max-width: 768px) {
