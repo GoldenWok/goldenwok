@@ -113,21 +113,47 @@ function renderGallery() {
     const container = document.getElementById("galleryContainer");
     if (!container || !DB.gallery) return;
 
-    // 直接渲染所有图片，不需要 slice
     container.innerHTML = DB.gallery.map(imgName => `
         <div class="gallery-slide-item">
-            <img 
-                data-src="images/${imgName}" 
-                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                alt="Golden Wok" 
-                class="lazy-img"
-                onclick="openImage(this)"
-            >
+            <img data-src="images/${imgName}" 
+                 src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                 class="lazy-img" onclick="openImage(this)">
         </div>
     `).join('');
 
-    // 依然保留懒加载，因为用户可能不滑到底
     initLazyLoading();
+    setupActiveEffect(); // 初始化聚焦效果
+}
+
+// 左右按钮点击逻辑
+function moveGallery(direction) {
+    const container = document.getElementById("galleryContainer");
+    const scrollAmount = 430; // 图片宽度 + gap
+    container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+
+// 动态处理边缘透明效果
+function setupActiveEffect() {
+    const container = document.getElementById("galleryContainer");
+    const items = document.querySelectorAll('.gallery-slide-item');
+
+    const updateActive = () => {
+        let centerX = container.getBoundingClientRect().left + container.offsetWidth / 2;
+        
+        items.forEach(item => {
+            let itemCenter = item.getBoundingClientRect().left + item.offsetWidth / 2;
+            // 判断图片中心是否靠近容器中心 (误差范围 50px)
+            if (Math.abs(centerX - itemCenter) < 100) {
+                item.classList.add('is-active');
+            } else {
+                item.classList.remove('is-active');
+            }
+        });
+    };
+
+    container.addEventListener('scroll', updateActive);
+    // 初始化时执行一次
+    setTimeout(updateActive, 100);
 }
 function initCursorHover() {
     const cursor = document.querySelector('.cursor');
