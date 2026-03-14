@@ -1,90 +1,54 @@
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="el">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Golden Wok</title>
-
-<meta name="description" content="Golden Wok Chinese Restaurant in Nea Smyrni. Authentic Chinese cuisine, buffet and delivery.">
-<meta name="keywords" content="Chinese restaurant Nea Smyrni, Golden Wok, Chinese food Athens">
-
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOLDEN WOK | Authentic Chinese Dining</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
+<body class="loading"> <div class="cursor"></div>
+    <div class="cursor-follower"></div>
 
-<body>
+    <header id="header">
+        <nav class="lang-nav">
+            <div class="lang">
+                <span onclick="setLang('zh')">ZH</span>
+                <span onclick="setLang('en')">EN</span>
+                <span onclick="setLang('gr')">GR</span>
+            </div>
+        </nav>
+        <h1 id="siteTitle" class="main-logo split-text"></h1>
+    </header>
 
-<header>
+    <section class="hero parallax-bg">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h2 id="welcome" class="split-text"></h2>
+            <div class="gold-line-divider"></div>
+            <p id="slogan" class="reveal-type"></p>
+        </div>
+    </section>
 
-<h2 id="siteTitle"></h2>
+    <section class="info-section reveal">
+        <h3 id="orderTitle" class="gold-subtitle"></h3>
+        <div class="info-box">
+            <p id="openingText" class="grey-hint"></p>
+            <p id="buffetTime" class="gold-core-text"></p>
+            <p id="buffetPrice" class="gold-core-text"></p>
+        </div>
+        <a id="orderButton" class="cta-gold-btn" href="https://www.e-food.gr/delivery/nea-smurni/golden-wok-8734941" target="_blank"></a>
+    </section>
 
-<div class="lang">
-<button onclick="setLang('zh')">中文</button>
-<button onclick="setLang('en')">English</button>
-<button onclick="setLang('gr')">Ελληνικά</button>
-</div>
+    <section class="menu-section reveal">
+        <h2 id="menuTitle" class="section-title"></h2>
+        <div id="menuContainer" class="modern-menu-grid"></div>
+    </section>
 
-</header>
-
-
-<section class="hero">
-
-<h1 id="welcome"></h1>
-<p id="slogan"></p>
-
-<section class="card-module">
-
-<h2 id="orderTitle"></h2>
-
-<div class="buffet-box">
-
-<p id="openingText"></p>
-
-<p id="buffetTime"></p>
-<p id="buffetPrice"></p>
-
-</div>
-
-<a id="orderButton"
-class="order-btn"
-href="https://www.e-food.gr/delivery/nea-smurni/golden-wok-8734941"
-target="_blank"></a>
-
-</section>
-
-</section>
-
-
-<section class="menu">
-
-<h2 id="menuTitle"></h2>
-
-<button
-onclick="collapseAll()"
-id="collapseBtn"
-class="collapse-btn">
-</button>
-
-<div id="menuContainer" class="menu-grid"></div>
-
-</section>
-
-
-<section id="gallery">
-
-<h1 id="galleryTitle"></h1>
-
-<div class="gallery">
-
-<button class="arrow left" onclick="prevSlide()">❮</button>
-
-<div class="gallery-track" id="galleryTrack">
-
-<img src="images/f29.webp" alt="Golden Wok food" loading="lazy" onclick="openImage(this)">
+    <section id="gallery" class="gallery-section reveal">
+        <h2 id="galleryTitle" class="section-title"></h2>
+        <div class="gallery-masonry">
+            <img src="images/f29.webp" alt="Golden Wok food" loading="lazy" onclick="openImage(this)">
 <img src="images/food1.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
 <img src="images/food2.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
 <img src="images/food3.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
@@ -108,64 +72,38 @@ class="collapse-btn">
 <img src="images/f31.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
 <img src="images/f32.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
 <img src="images/f34.webp" alt="Chinese dish" loading="lazy" onclick="openImage(this)">
+            </div>
+    </section>
 
-</div>
+    <section class="location-section reveal">
+        <h2 id="locationTitle" class="section-title"></h2>
+        <div class="map-wrapper">
+            <iframe 
+              id="googleMap" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.44238510656!2d23.712613476388484!3d37.94344400240974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bc24985223c3%3A0xc3f17c5b6b150c77!2sGolden%20Wok!5e0!3m2!1sen!2sgr!4v1709800000000!5m2!1sen!2sgr" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+        <div class="location-info">
+            <p id="contactAddress" class="gold-address-text"></p>
+            <div class="gold-dot-divider"></div> <p id="contactPhone" class="gold-address-text"></p>
+        </div>
+    </section>
 
-<button class="arrow right" onclick="nextSlide()">❯</button>
-
-</div>
-
-</section>
-
-
-<div id="lightbox">
-<img id="lightboxImg">
-</div>
-
-
-<section class="map">
-
-<h2 id="locationTitle"></h2>
-
-<iframe
-width="90%"
-height="350"
-loading="lazy"
-src="https://www.google.com/maps?q=Leof.+Andrea+Siggrou+207,+Nea+Smirni+171+21&output=embed">
-</iframe>
-
-</section>
-
-
-<section class="contact">
-
-<h2 id="contactTitle"></h2>
-<p id="contactPhone"></p>
-<p id="contactAddress"></p>
-
-</section>
-
-
-<footer>
-
-<div class="footer-brand">Golden Wok</div>
-
-<div class="footer-copy">
-Golden Wok © 2026
-</div>
-
+   <footer class="minimal-footer">
+    <div class="footer-logo">GOLDEN WOK</div>
+    <div class="footer-dot"></div>
+    <p class="footer-info">ATHENS · NEA SMYRNI</p>
+    <p class="footer-copy">© 2026</p>
 </footer>
 
-
-<script src="config.js"></script>
-<script src="app.js"></script>
-
+    <script src="config.js"></script>
+    <script src="app.js"></script>
 </body>
 
+<div id="loader">
+    <div class="loader-logo">GOLDEN WOK</div>
+</div>
 </html>
-
-
-
-
-
-
