@@ -568,26 +568,54 @@ html, body, a, button, span, .menu-item, .lang span {
 
 /* --- 2. 图片项：默认缩小并半透明 --- */
 /* 1. 确保每一个滑块框框是有固定尺寸的 */
+/* --- 1. 每一个图片的承载框 (框框必须固定死) --- */
 .gallery-slide-item {
-    flex: 0 0 450px !important; /* 强制锁定宽度 450px */
-    width: 450px !important;
-    height: 550px !important; /* 强制锁定高度 550px */
+    /* 核心修复：强制锁定宽度 450px，禁止自动放大 */
+    flex: 0 0 450px !important; 
+    width: 450px !important; 
+    
+    /* 核心修复：强制锁定高度 550px，禁止图片撑开 */
+    height: 550px !important; 
     
     scroll-snap-align: center;
     border-radius: 8px; /* 增加圆角更高级 */
     overflow: hidden; /* 核心：超出框框的部分隐藏 */
     position: relative;
-    background: #111;
+    background: #111; /* 占位背景色 */
+    
+    /* 默认状态：暗淡、缩小 (配合你的聚焦效果) */
+    transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+    opacity: 0.15; 
+    transform: scale(0.85);
 }
 
-
-
-/* 核心技巧：通过 JS 给当前中心的图片加一个 .active 类，或者使用 CSS 粗略模拟 */
-/* 这里我们用 JS 来动态控制，视觉效果最精准 */
+/* --- 2. 激活状态 (中心图) --- */
 .gallery-slide-item.is-active {
+    opacity: 1 !important;
+    transform: scale(1) !important; /* 焦点图恢复原大 */
+    box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+    z-index: 10;
+}
+
+/* --- 3. 图片本身 (核心修复) --- */
+.lazy-img {
+    width: 100% !important;  /* 宽度占满 450px 的框框 */
+    height: 100% !important; /* 高度占满 550px 的框框 */
+    
+    /* 终极修复： object-fit: cover ！！！ */
+    /* 它会让图片自动裁剪缩放以填满框框，不拉伸变形，也不会只显示局部 */
+    object-fit: cover !important; 
+    
+    display: block;
+    cursor: none !important; /* 别忘了隐藏原生光标 */
+    
+    /* 配合你的懒加载渐显 */
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.lazy-img.loaded {
     opacity: 1;
-    transform: scale(1.05); /* 中心图变大 */
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
 /* --- 3. 左右控制按钮 --- */
