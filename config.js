@@ -34,7 +34,7 @@ gr:"Ώρα μπουφέ: Τετ Παρ Σαβ 19:00 - 23:00 | Κυρ 13:30-17:00
         "f20.webp", "f21.webp", "f22.webp", "f36.webp", "f37.webp", "f33.webp",
         "f28.webp", "food6.webp", "food12.webp", "food13.webp", "f30.webp",
         "f31.webp", "f32.webp", "f34.webp"
-    ]
+    ],
 /* ===== 菜单数据库（终极版三语言） ===== */
 
 menu:[
