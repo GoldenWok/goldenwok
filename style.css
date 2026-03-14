@@ -567,16 +567,20 @@ html, body, a, button, span, .menu-item, .lang span {
 .gallery-slider-wrapper::-webkit-scrollbar { display: none; }
 
 /* --- 2. 图片项：默认缩小并半透明 --- */
+/* 1. 确保每一个滑块框框是有固定尺寸的 */
 .gallery-slide-item {
-    flex: 0 0 400px; /* 电脑端宽度 */
-    height: 500px;
-    scroll-snap-align: center; /* 停止时居中对齐 */
-    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    opacity: 0.3; /* 边缘图片半透明 */
-    transform: scale(0.85); /* 边缘图片缩小 */
-    border-radius: 2px;
-    overflow: hidden;
+    flex: 0 0 450px !important; /* 强制锁定宽度 450px */
+    width: 450px !important;
+    height: 550px !important; /* 强制锁定高度 550px */
+    
+    scroll-snap-align: center;
+    border-radius: 8px; /* 增加圆角更高级 */
+    overflow: hidden; /* 核心：超出框框的部分隐藏 */
+    position: relative;
+    background: #111;
 }
+
+
 
 /* 核心技巧：通过 JS 给当前中心的图片加一个 .active 类，或者使用 CSS 粗略模拟 */
 /* 这里我们用 JS 来动态控制，视觉效果最精准 */
