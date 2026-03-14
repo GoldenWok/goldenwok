@@ -51,7 +51,6 @@ function setLang(lang) {
    2. 核心渲染逻辑
    ========================================= */
 function renderWebsite() {
-    // 安全填充函数
     const safeSet = (id, val) => {
         const el = document.getElementById(id);
         if (el) el.innerText = val || "";
@@ -60,15 +59,11 @@ function renderWebsite() {
     safeSet("siteTitle", DB.restaurant?.[LANG]);
     safeSet("welcome", DB.welcome?.[LANG]);
     safeSet("slogan", DB.slogan?.[LANG]);
-    
-    // 营业时间与自助
     safeSet("orderTitle", DB.orderModule?.title?.[LANG]);
     safeSet("openingText", DB.opening?.[LANG]);
     safeSet("buffetTime", DB.buffetTime?.[LANG]);
     safeSet("buffetPrice", DB.buffetPrice?.[LANG]);
     safeSet("orderButton", DB.orderModule?.orderButton?.[LANG]);
-    
-    // 标题
     safeSet("menuTitle", DB.menuTitle?.[LANG]);
     safeSet("galleryTitle", DB.galleryTitle?.[LANG]);
     safeSet("locationTitle", DB.locationTitle?.[LANG]);
@@ -78,9 +73,13 @@ function renderWebsite() {
         safeSet("contactAddress", contact.address);
         safeSet("contactPhone", contact.phone);
     }
-   renderGarelly();
 
+    // --- 核心修复：更正拼写并确保顺序 ---
+    renderGallery(); // 确保这里拼写正确
     renderMenu();
+
+    // 重新绑定交互监听，确保新生成的图片也能触发光标变白
+    initCursorHover(); 
 }
 
 /* =========================================
@@ -115,7 +114,8 @@ function renderGallery() {
         <div class="gallery-item">
             <img 
                 data-src="images/${imgName}" 
-                src="images/placeholder.webp" 
+                // 在 map 循环里修改 src 的值
+src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
                 alt="Golden Wok Authentic Chinese" 
                 class="lazy-img"
                 onclick="openImage(this)"
@@ -126,7 +126,26 @@ function renderGallery() {
     // 初始化画廊懒加载
     initLazyLoading();
 }
+function initCursorHover() {
+    const cursor = document.querySelector('.cursor');
+    const follower = document.querySelector('.cursor-follower');
+    if (!cursor || !follower) return;
 
+    // 重新获取所有交互元素，包括刚生成的图片和菜单
+    const interactive = document.querySelectorAll('a, button, .cta-gold-btn, .lang span, .menu-item, .lazy-img');
+    
+    interactive.forEach(el => {
+        el.style.cursor = 'none'; // 强制隐藏原生光标
+        el.addEventListener('mouseenter', () => {
+            cursor.classList.add('hover');
+            follower.classList.add('hover');
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.classList.remove('hover');
+            follower.classList.remove('hover');
+        });
+    });
+}
 function initLazyLoading() {
     const images = document.querySelectorAll('.lazy-img');
     const imageObserver = new IntersectionObserver((entries, observer) => {
