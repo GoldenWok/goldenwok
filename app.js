@@ -106,24 +106,27 @@ const revealObserver = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
+/* =========================================
+   修正版：全量渲染横向滑块 (全量、无分页)
+   ========================================= */
 function renderGallery() {
     const container = document.getElementById("galleryContainer");
     if (!container || !DB.gallery) return;
 
+    // 直接渲染所有图片，不需要 slice
     container.innerHTML = DB.gallery.map(imgName => `
-        <div class="gallery-item">
+        <div class="gallery-slide-item">
             <img 
                 data-src="images/${imgName}" 
-                // 在 map 循环里修改 src 的值
-src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-                alt="Golden Wok Authentic Chinese" 
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
+                alt="Golden Wok" 
                 class="lazy-img"
                 onclick="openImage(this)"
             >
         </div>
     `).join('');
 
-    // 初始化画廊懒加载
+    // 依然保留懒加载，因为用户可能不滑到底
     initLazyLoading();
 }
 function initCursorHover() {
