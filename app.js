@@ -109,41 +109,55 @@ const revealObserver = new IntersectionObserver((entries) => {
 /* =========================================
    修正版：全量渲染横向滑块 (全量、无分页)
    ========================================= */
+// 渲染画廊
 function renderGallery() {
     const container = document.getElementById("galleryContainer");
     if (!container || !DB.gallery) return;
 
     container.innerHTML = DB.gallery.map(imgName => `
-        <div class="gallery-slide-item">
+        <div class="gallery-slide-item" onclick="scrollToMe(this)">
             <img data-src="images/${imgName}" 
                  src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                 class="lazy-img" onclick="openImage(this)">
+                 class="lazy-img" alt="Golden Wok">
         </div>
     `).join('');
 
     initLazyLoading();
-    setupActiveEffect(); // 初始化聚焦效果
+    setupActiveEffect();
 }
 
-// 左右按钮点击逻辑
+// 需求 3：点击图片自动推到中间
+function scrollToMe(el) {
+    const container = document.getElementById("galleryContainer");
+    const containerCenter = container.offsetWidth / 2;
+    const elCenter = el.offsetLeft + (el.offsetWidth / 2);
+    
+    container.scrollTo({
+        left: elCenter - containerCenter,
+        behavior: 'smooth'
+    });
+}
+
+// 需求 4：按钮移动逻辑
 function moveGallery(direction) {
     const container = document.getElementById("galleryContainer");
-    const scrollAmount = 430; // 图片宽度 + gap
-    container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    // 每次移动一个视口的 40%，实现丝滑切换
+    const moveDistance = container.offsetWidth * 0.4;
+    container.scrollBy({ left: direction * moveDistance, behavior: 'smooth' });
 }
 
-// 动态处理边缘透明效果
+// 自动检测中心图片并高亮
 function setupActiveEffect() {
     const container = document.getElementById("galleryContainer");
-    const items = document.querySelectorAll('.gallery-slide-item');
-
     const updateActive = () => {
-        let centerX = container.getBoundingClientRect().left + container.offsetWidth / 2;
-        
+        const items = document.querySelectorAll('.gallery-slide-item');
+        const containerCenter = container.getBoundingClientRect().left + container.offsetWidth / 2;
+
         items.forEach(item => {
-            let itemCenter = item.getBoundingClientRect().left + item.offsetWidth / 2;
-            // 判断图片中心是否靠近容器中心 (误差范围 50px)
-            if (Math.abs(centerX - itemCenter) < 100) {
+            const rect = item.getBoundingClientRect();
+            const itemCenter = rect.left + rect.width / 2;
+            
+            if (Math.abs(containerCenter - itemCenter) < 150) {
                 item.classList.add('is-active');
             } else {
                 item.classList.remove('is-active');
@@ -152,7 +166,6 @@ function setupActiveEffect() {
     };
 
     container.addEventListener('scroll', updateActive);
-    // 初始化时执行一次
     setTimeout(updateActive, 100);
 }
 function initCursorHover() {
