@@ -78,6 +78,7 @@ function renderWebsite() {
         safeSet("contactAddress", contact.address);
         safeSet("contactPhone", contact.phone);
     }
+   renderGarelly();
 
     renderMenu();
 }
