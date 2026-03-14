@@ -547,58 +547,66 @@ html, body, a, button, span, .menu-item, .lang span {
 }
 
 /* --- 1. 轨道：锁定 3 列视野 --- */
+/* --- 1. 轨道：锁定 3 图视野 --- */
 .gallery-slider-wrapper {
     display: flex !important;
     align-items: center;
     overflow-x: auto;
-    /* 核心修复：取消 mandatory，改用 proximity 解决僵硬感 */
-    scroll-snap-type: x proximity; 
-    scroll-behavior: smooth;
-    
-    /* 核心：两侧留白 35%，确保中间只有一张图的完整空间 */
-    padding: 20px 35vw !important; 
+    scroll-snap-type: x proximity;
+    /* 调整 padding 确保中间那张图居中，左右刚好露出侧脸 */
+    padding: 50px 30vw !important; 
     gap: 0 !important;
     scrollbar-width: none;
     cursor: grab;
 }
 
-.gallery-slider-wrapper::-webkit-scrollbar { display: none; }
-
-/* --- 2. 图片项：负边距实现覆盖 --- */
+/* --- 2. 图片承载框：圆润与阴影 --- */
 .gallery-slide-item {
-    /* 锁定宽度，确保一排只能看到三个（中间 1 + 两侧边缘） */
-    flex: 0 0 400px !important; 
-    width: 400px !important;
-    height: 550px !important;
+    /* 动态宽度：占据屏幕宽度的 40% */
+    flex: 0 0 40vw !important; 
+    width: 40vw !important;
+    height: 60vh !important;
     
-    /* 核心：通过负边距让图片左右重叠 */
-    margin: 0 -80px !important; 
+    /* 核心：轻微覆盖。-40px 让边缘重叠约 10% */
+    margin: 0 -40px !important; 
     
     scroll-snap-align: center;
-    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    opacity: 0.1; /* 两侧默认极淡 */
-    transform: scale(0.8);
-    z-index: 1; /* 默认层级低 */
+    transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+    
+    /* 初始状态：轻微虚化，不再是全透明 */
+    opacity: 0.5; 
+    transform: scale(0.9);
+    
+    /* 圆润四角 */
+    border-radius: 30px; 
+    overflow: hidden;
+    z-index: 1;
+    background: #111;
+    
+    /* 增加立体感阴影 */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* 激活态：正中间的那一张 */
+/* --- 3. 激活状态：正中间的图 --- */
 .gallery-slide-item.is-active {
     opacity: 1 !important;
-    transform: scale(1.1) !important;
-    z-index: 100 !important; /* 确保中间的图叠在左右两张上面 */
-    filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
+    transform: scale(1.05) !important;
+    z-index: 100 !important; /* 置顶 */
+    margin: 0 10px !important; /* 激活时稍微撑开一点，露出圆角 */
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
 }
 
-/* 需求 3 增强：鼠标悬停在侧边图上时稍微亮一点 */
+/* 悬停效果：适度变亮 */
 .gallery-slide-item:hover {
-    opacity: 0.4;
+    opacity: 0.8;
 }
 
-/* 图片本身：不裁切 */
+/* 图片本身：锁定圆角并适配 */
 .lazy-img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: contain !important; /* 完整显示不裁切 */
+    object-fit: cover !important; /* 建议用 cover 配合 30px 圆角，视觉最整齐 */
+    border-radius: 30px; 
     display: block;
 }
 .nav-btn {
