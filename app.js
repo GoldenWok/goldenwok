@@ -106,6 +106,44 @@ const revealObserver = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
+function renderGallery() {
+    const container = document.getElementById("galleryContainer");
+    if (!container || !DB.gallery) return;
+
+    container.innerHTML = DB.gallery.map(imgName => `
+        <div class="gallery-item">
+            <img 
+                data-src="images/${imgName}" 
+                src="images/placeholder.webp" 
+                alt="Golden Wok Authentic Chinese" 
+                class="lazy-img"
+                onclick="openImage(this)"
+            >
+        </div>
+    `).join('');
+
+    // 初始化画廊懒加载
+    initLazyLoading();
+}
+
+function initLazyLoading() {
+    const images = document.querySelectorAll('.lazy-img');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src; // 替换占位图
+                img.onload = () => img.classList.add('loaded'); // 加载完后再显示
+                observer.unobserve(img);
+            }
+        });
+    }, { rootMargin: "0px 0px 200px 0px" }); // 提前 200px 开始加载
+
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// 记得在 renderWebsite() 中调用 renderGallery();
+
 function renderMenu() {
     const container = document.getElementById("menuContainer");
     if (!container || !DB.menu) return;
