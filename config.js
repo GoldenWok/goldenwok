@@ -2,100 +2,31 @@ const DB = {
 
 /* ===== 餐厅信息 ===== */
 
-restaurant:{
-zh:"金鼎",
-en:"Golden Wok",
-gr:"Golden Wok"
-},
-
-menuTitle:{
-zh:"🍜 菜单",
-en:"🍜 Menu",
-gr:"🍜 Μενού"
-},
-
-galleryTitle:{
-zh:"📷 图库",
-en:"📷 Gallery",
-gr:"📷 Φωτογραφίες"
-},
-
-collapseAll:{
-zh:"⬇ 一键收起所有分类",
-en:"⬇ Collapse All",
-gr:"⬇ Σύμπτυξη όλων"
-},
-
-slogan:{
-zh:"正宗中华料理 雅典中餐厅",
-en:"Authentic Chinese Food in Athens",
-gr:"Αυθεντικό Κινέζικο Φαγητό στην Αθήνα"
-},
-
-welcome:{
-zh:"欢迎来到金鼎",
-en:"Welcome to Golden Wok",
-gr:"Καλώς ήρθατε στο Golden Wok"
-},
-
-opening:{
-zh:"营业时间：每天 13:00 - 23:30, 周一休息",
-en:"Opening Hours: Every day 13:00 - 23:30, closed on Monday.",
-gr:"Ώρες λειτουργίας: Κάθε μέρα 13:00 - 23:30, κλειστά τη Δευτέρα."
-},
-
-buffetPrice:{ 
-zh:"自助餐价格：周三周五 18€  （ 儿童 6-12岁 10€ ） | 周六周日 20€ （ 儿童 6-12岁 12€ ）", 
-en:"Buffet Price: Wed Fri 18€ ( Children 6-12 years 10€ ) | Sat Sun 20€ ( Children 6-12 years 12€ )", 
-gr:"Τιμή μπουφέ: Τετ Παρ 18€ ( Παιδιά 6-12 ετών 10€ ) | Σαβ Κυρ 20€ ( Παιδιά 6-12 ετών 12€ )" 
-},
-
-buffetTime:{
-zh:"自助餐时间：周三周五周六 19：00 - 23：00 | 周日 13：30-17：00",
+restaurant: { zh: "金鼎", en: "GOLDEN WOK", gr: "GOLDEN WOK" },
+    menuTitle: { zh: "选单", en: "THE MENU", gr: "ΤΟ ΜΕΝΟΥ" },
+    galleryTitle: { zh: "视觉", en: "GALLERY", gr: "ΦΩΤΟΓΡΑΦΙΕΣ" },
+    slogan: { zh: "传承正宗中华料理精髓", en: "THE ART OF CHINESE TASTE", gr: "Η ΤΕΧΝΗ ΤΗΣ ΚΙΝΕΖΙΚΗΣ ΓΕΥΣΗΣ" },
+    welcome: { zh: "欢迎", en: "WELCOME", gr: "ΚΑΛΩΣ ΗΡΘΑΤΕ" },
+    opening: { zh:"营业时间：每天 13:00 - 23:00",
+en:"Opening Hours: Every day 13:00 - 23:00",
+gr:"Ώρες λειτουργίας: Κάθε μέρα 13:00 - 23:00" },
+    buffetPrice: {zh:"自助餐价格：周三周五 18€  （ 儿童 6-12岁 10€ ） | 周六周日 20€ （ 儿童 6-12岁 12€ ）", 
+en:"Buffet Price: Wed Fri 18€ ( Children 6-12 10€ ) | Sat Sun 20€ ( Children 6-12 years 12€ )", 
+gr:"Τιμή μπουφέ: Τετ Παρ 18€ ( Παιδιά 6-12 ετών 10€ ) | Σαβ Κυρ 20€ ( Παιδιά 6-12 ετών 12€ )"},
+    buffetTime: { zh:"自助餐时间：周三周五周六 19：00 - 23：00 | 周日 13：30-17：00",
 en:"Buffet Time: Wed Fri Sat 19:00 - 23:00 | Sun 13:30-17:00",
-gr:"Ώρα μπουφέ: Τετ Παρ Σαβ 19:00 - 23:00 | Κυρ 13:30-17:00 "
-},
-
-orderModule:{
-title:{
-zh:"🕒 营业时间 & 🍜 点餐",
-en:"🕒 Opening Hours & 🍜 Order",
-gr:"🕒 Ώρες & 🍜 Παραγγελία"
-},
-
-orderButton:{
-zh:"🍜 eFood 在线点餐",
-en:"🍜 Order on eFood",
-gr:"🍜 Παραγγελία στο eFood"
-}
-},
-
-contact:{
-zh:{
-title:"联系方式",
-phone:"电话：2109345137-2109345271",
-address:"地址：Leof. Andrea Siggrou 207, Nea Smirni 171 21"
-},
-
-en:{
-title:"Contact",
-phone:"Phone: 2109345137-2109345271",
-address:"Address: Leof. Andrea Siggrou 207, Nea Smirni 171 21"
-},
-
-gr:{
-title:"Επικοινωνία",
-phone:"Τηλέφωνο: 2109345137-2109345271",
-address:"Διεύθυνση: Λεωφ. Ανδρέα Συγγρού 207, Νέα Σμύρνη 171 21"
-}
-},
-
-locationTitle:{
-zh:"📍 位置",
-en:"📍 Location",
-gr:"📍 Τοποθεσία"
-},
-
+gr:"Ώρα μπουφέ: Τετ Παρ Σαβ 19:00 - 23:00 | Κυρ 13:30-17:00 "},
+    orderModule: {
+        title: { zh: "点餐", en: "ORDER", gr: "ΠΑΡΑΓΓΕΛΙΑ" },
+        orderButton: { zh: "点餐", en: "ORDER", gr: "ΠΑΡΑΓΓΕΛΙΑ" }
+    },
+    locationTitle: { zh: "地点", en: "LOCATION", gr: "ΤΟΠΟΘΕΣΙΑ" },
+    // 关键修复点：确保 contact 结构如下
+    contact: {
+        zh: { title: "联系方式", phone: "2109345137", address: "Leof. Andrea Siggrou 207" },
+        en: { title: "CONTACT", phone: "2109345137", address: "Leof. Andrea Siggrou 207" },
+        gr: { title: "ΕΠΙΚΟΙΝΩΝΙΑ", phone: "2109345137", address: "Λεωφ. Ανδρέα Συγγρού 207" }
+    },
 /* ===== 菜单数据库（终极版三语言） ===== */
 
 menu:[
@@ -103,9 +34,9 @@ menu:[
 {
 id:"appetizers",
 name:{
-zh:"🥟 前菜 ",
-en:"🥟 Appetizers",
-gr:"🥟 Ορεκτικά"
+zh:" 前菜 ",
+en:" Appetizers",
+gr:" Ορεκτικά"
 },
 
 items:[
@@ -221,9 +152,9 @@ price:9.8
 {
 id:"soups",
 name:{
-zh:"🥣 汤类",
-en:"🥣 Soups",
-gr:"🥣 Σούπες"
+zh:" 汤类",
+en:" Soups",
+gr:" Σούπες"
 },
 
 items:[
@@ -267,9 +198,9 @@ price:4.5
 {
 id:"salads",
 name:{
-zh:"🥗沙拉&🥦蔬菜",
-en:"🥗Salads & 🥦vegetables",
-gr:"🥗Σαλάτες & 🥦λαχανικά"
+zh:"沙拉与蔬菜",
+en:"Salads & vegetables",
+gr:"Σαλάτες & λαχανικά"
 },
 
 items:[
@@ -328,9 +259,9 @@ price:5.2
 {
 id:"rice",
 name:{
-zh:"🍚 米饭&🥢面条",
-en:"🍚 Rice & 🥢noodles",
-gr:"🍚 Ρύζι & 🥢noodles"
+zh:" 米饭与面条",
+en:" Rice & noodles",
+gr:" Ρύζι & noodles"
 },
 
 items:[
@@ -424,9 +355,9 @@ price:8.8
 {
 id:"duck",
 name:{
-zh:"🦆鸭肉",
-en:"🦆Duck ",
-gr:"🦆Πάπια"
+zh:"鸭肉",
+en:"Duck ",
+gr:"Πάπια"
 },
 
 items:[
@@ -464,9 +395,9 @@ price:10.5
 {
 id:"chicken",
 name:{
-zh:"🐓鸡肉",
-en:"🐓Chicken ",
-gr:"🐓Κοτόπουλο"
+zh:"鸡肉",
+en:"Chicken ",
+gr:"Κοτόπουλο"
 },
 
 items:[
@@ -518,9 +449,9 @@ price:7.8
 {
 id:"pork",
 name:{
-zh:"🐖猪肉",
-en:"🐖Pork ",
-gr:"🐖Χοιρινό"
+zh:"猪肉",
+en:"Pork ",
+gr:"Χοιρινό"
 },
 
 items:[
@@ -565,9 +496,9 @@ price:9.8
 {
 id:"beef",
 name:{
-zh:"🐂牛肉",
-en:"🐂Beef ",
-gr:"🐂Μοσχάρι"
+zh:"牛肉",
+en:"Beef ",
+gr:"Μοσχάρι"
 },
 
 items:[
@@ -620,9 +551,9 @@ price:9.8
 {
 id:"seafood",
 name:{
-zh:"🐟海鲜",
-en:"🐟Seafood ",
-gr:"🐟Θαλασσινά"
+zh:"海鲜",
+en:"Seafood ",
+gr:"Θαλασσινά"
 },
 
 items:[
@@ -660,9 +591,9 @@ price:9.8
 {
 id:"dessert",
 name:{
-zh:"🍮甜品",
-en:"🍮Dessert ",
-gr:"🍮Επιδόρπιο"
+zh:"甜品",
+en:"Dessert ",
+gr:"Επιδόρπιο"
 },
 
 items:[
@@ -700,9 +631,9 @@ price:4.8
 {
 id:"saladsJapanese",
 name:{
-zh:"🥗沙拉(日式)",
-en:"🥗Salads (Japanese)",
-gr:"🥗Σαλάτες (Ιαπωνικές)"
+zh:"沙拉(日式)",
+en:"Salads (Japanese)",
+gr:"Σαλάτες (Ιαπωνικές)"
 },
 
 items:[
@@ -754,9 +685,9 @@ price:7.8
 {
 id:"soupsJapanese",
 name:{
-zh:"🥣汤类(日式)",
-en:"🥣Soup (Japanese)",
-gr:"🥣Σούπες (Ιαπωνικές)"
+zh:"汤类(日式)",
+en:"Soup (Japanese)",
+gr:"Σούπες (Ιαπωνικές)"
 },
 
 items:[
@@ -786,9 +717,9 @@ price:5.5
 {
 id:"nigiri",
 name:{
-zh:"🍣握寿司与刺身(2片装)",
-en:"🍣Nigiri & Sashimi (2 pcs)",
-gr:"🍣Nigiri & Sashimi (2 τμχ)"
+zh:"握寿司与刺身(2片装)",
+en:"Nigiri & Sashimi (2 pcs)",
+gr:"Nigiri & Sashimi (2 τμχ)"
 },
 
 items:[
@@ -854,9 +785,9 @@ price:4.8
 {
 id:"maki",
 name:{
-zh:"🍣卷寿司",
-en:"🍣Maki",
-gr:"🍣Maki"
+zh:"卷寿司",
+en:"Maki",
+gr:"Maki"
 },
 
 items:[
@@ -957,9 +888,9 @@ price:6.8
 {
 id:"setsushi",
 name:{
-zh:"🍱寿司套餐",
-en:"🍱Set sushi",
-gr:"🍱Ποικιλία σούσι"
+zh:"寿司套餐",
+en:"Set sushi",
+gr:"Ποικιλία σούσι"
 },
 
 items:[
@@ -997,9 +928,9 @@ price: 30
 {
 id:"dishes",
 name:{
-zh:"🍛菜肴(日式)",
-en:"🍛Dishes (Japanese)",
-gr:"🍛Πιάτα (Ιαπωνικά)"
+zh:"菜肴(日式)",
+en:"Dishes (Japanese)",
+gr:"Πιάτα (Ιαπωνικά)"
 },
 
 items:[
@@ -1079,9 +1010,9 @@ price:16.8
 {
 id:"drinks",
 name:{
-zh:"🥤饮品",
-en:"🥤Drinks",
-gr:"🥤Ποτά"
+zh:"饮品",
+en:"Drinks",
+gr:"Ποτά"
 },
 
 items:[
@@ -1113,6 +1044,7 @@ en:"Heineken beer, Amstel beer",
 gr:"Μπίρα Heineken, Μπίρα Amstel",
 price:2.2
 },
+
 {
 zh:"日本清酒 (180 毫升)",
 en:"Sake (180ml)",
@@ -1131,9 +1063,4 @@ price:0.5
 
 ]
 
-
 }
-
-
-
-
