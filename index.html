@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@100;200;300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+    
 <body class="loading"> <div class="cursor"></div>
     <div class="cursor-follower"></div>
 
@@ -82,6 +83,11 @@
 
     <script src="config.js"></script>
     <script src="app.js"></script>
+
+    <div id="imageOverlay" class="image-overlay" onclick="closeImage()">
+    <img id="overlayImg" src="" alt="Full View">
+    <span class="close-overlay">&times;</span>
+</div>
 </body>
 
 <div id="loader">
