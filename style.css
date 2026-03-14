@@ -545,3 +545,36 @@ html, body, a, button, span, .menu-item, .lang span {
         transform: none !important;
     }
 }
+
+.gallery-masonry {
+    column-count: 4; /* 电脑端 4 列 */
+    column-gap: 15px;
+    padding: 20px 0;
+}
+
+@media (max-width: 1024px) { .gallery-masonry { column-count: 3; } }
+@media (max-width: 768px) { .gallery-masonry { column-count: 2; } }
+
+.gallery-item {
+    break-inside: avoid;
+    margin-bottom: 15px;
+    background: #111; /* 占位背景色 */
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.lazy-img {
+    width: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out, transform 0.5s ease;
+    cursor: none !important; /* 确保使用你的金色光标 */
+}
+
+.lazy-img.loaded {
+    opacity: 1;
+}
+
+.lazy-img:hover {
+    transform: scale(1.03);
+}
