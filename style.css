@@ -600,7 +600,6 @@ html, body, a, button, span, .menu-item, .lang span {
     /* 给图片加一个淡淡的阴影，增强重叠的立体感 */
     filter: drop-shadow(-10px 0 20px rgba(0,0,0,0.5));
 }
-/* --- 4. 更好看的左右按钮 (Minimalist Luxury) --- */
 .nav-btn {
     position: absolute;
     top: 50%;
@@ -616,25 +615,31 @@ html, body, a, button, span, .menu-item, .lang span {
     justify-content: center;
 }
 
-.nav-btn {
+/* 使用伪元素画出细长的金色线条箭头 */
+.nav-btn::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: #c5a059;
     position: absolute;
-    top: 55%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px); /* 毛玻璃背景，更有质感 */
-    border: 1px solid rgba(197, 160, 89, 0.3);
-    width: 50px;
-    height: 80px;
-    z-index: 9999; /* 极高层级 */
     transition: 0.4s;
 }
 
-.prev-btn { left: 0; border-radius: 0 5px 5px 0; }
-.next-btn { right: 0; border-radius: 5px 0 0 5px; }
-
-.nav-btn:hover {
-    background: #c5a059;
+.nav-btn::after {
+    content: '';
+    width: 15px;
+    height: 15px;
+    border-top: 1px solid #c5a059;
+    border-right: 1px solid #c5a059;
+    position: absolute;
+    transition: 0.4s;
 }
+
+.prev-btn::after { transform: rotate(-135deg); left: 20px; }
+.next-btn::after { transform: rotate(45deg); right: 20px; }
+
+.nav-btn:hover::before { width: 60px; background: #fff; }
+.nav-btn:hover::after { border-color: #fff; }
 /* 响应式调整 */
 @media (max-width: 768px) {
     .gallery-slider-wrapper { padding: 20px 15%; }
