@@ -546,81 +546,74 @@ html, body, a, button, span, .menu-item, .lang span {
     }
 }
 
-/* --- 1. 画廊区域限制 --- */
+/* --- 1. 画廊外层容器 --- */
 .gallery-section {
     padding: 60px 0;
-    overflow: hidden; /* 防止滑块溢出到屏幕外 */
+    background: #050505;
+    overflow: hidden; /* 必须锁定，防止巨大图片撑开网页 */
 }
 
-/* --- 2. 滑块容器 (核心实现) --- */
+/* --- 2. 滑动轨道 (最关键) --- */
 .gallery-slider-wrapper {
-    display: flex; /* 横向排列 */
-    flex-wrap: nowrap; /* 强制不换行 */
+    display: flex !important; /* 强制横向 */
+    flex-direction: row !important;
+    flex-wrap: nowrap !important; /* 绝对禁止换行 */
+    
     overflow-x: auto; /* 开启横向滚动 */
-    overflow-y: hidden; /* 隐藏垂直滚动 */
+    overflow-y: hidden;
     
-    /* 增加惯性滚动体验 (针对 Safari) */
-    -webkit-overflow-scrolling: touch; 
+    /* 隐藏滚动条 */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
     
-    /* 隐藏浏览器默认的滚动条 (保持极简) */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-    
-    padding: 20px 5%; /* 左右留白，让用户知道能滑动 */
-    gap: 15px; /* 图片之间的间距 */
+    padding: 20px 50px; /* 左右留白 */
+    gap: 20px;
+    cursor: grab; /* 提示用户可以抓取滑动 */
 }
 
-/* 针对 Chrome/Safari 隐藏滚动条 */
 .gallery-slider-wrapper::-webkit-scrollbar {
-    display: none;
+    display: none; /* 彻底隐藏 Chrome 滚动条 */
 }
 
-/* --- 3. 单个图片项的样式 --- */
+/* --- 3. 每一个图片的承载框 --- */
 .gallery-slide-item {
-    flex: 0 0 auto; /* 核心：不缩小、不放大、保持原宽度 */
-    
-    /* 根据你希望图片显示的宽度调整 */
-    width: 300px; 
-    height: 380px; /* 固定高度，看起來更整齐 */
+    /* 核心修复：禁止图片自动放大，锁定宽度 */
+    flex: 0 0 320px !important; 
+    width: 320px !important; 
+    height: 450px; /* 你可以根据需要调整高度 */
     
     border-radius: 4px;
     overflow: hidden;
-    background: #111; /* 占位背景色 */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    
-    /* 增加出现动画 */
-    opacity: 0;
-    animation: slideIn 0.8s ease forwards;
+    background: #111;
+    transition: transform 0.4s ease;
 }
 
-/* --- 4. 图片本身的样式 (配合懒加载) --- */
+.gallery-slide-item:hover {
+    transform: translateY(-10px); /* 悬停微动 */
+}
+
+/* --- 4. 图片本身 --- */
 .lazy-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 核心：确保图片填满框框且不变形 */
-    transition: opacity 0.5s ease-in-out;
+    object-fit: cover; /* 自动裁剪以填满 320x450 的框 */
+    opacity: 0;
+    transition: opacity 0.8s ease;
 }
 
 .lazy-img.loaded {
     opacity: 1;
 }
 
-/* 进场动画 */
-@keyframes slideIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* --- 5. 手机端响应式微调 --- */
+/* --- 5. 响应式：针对手机缩小尺寸 --- */
 @media (max-width: 768px) {
-    .gallery-slider-wrapper {
-        padding: 20px 8%; /* 增加手机端边距，产生“未完待续”的感觉 */
-        gap: 10px;
-    }
     .gallery-slide-item {
-        width: 260px; /* 缩小图片宽度，在手机上更合适 */
-        height: 320px;
+        flex: 0 0 260px !important; 
+        width: 260px !important;
+        height: 350px;
+    }
+    .gallery-slider-wrapper {
+        padding: 20px 20px;
+        gap: 15px;
     }
 }
