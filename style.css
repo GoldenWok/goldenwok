@@ -556,15 +556,19 @@ html, body, a, button, span, .menu-item, .lang span {
 
 .gallery-slider-wrapper {
     display: flex;
-    align-items: center; /* 垂直居中对齐不同高度的图 */
+    align-items: center;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    /* 核心修改：从 mandatory 改为 proximity */
+    scroll-snap-type: x proximity; 
     scroll-behavior: smooth;
-    gap: 50px; /* 增加间距更有呼吸感 */
+    gap: 60px;
     padding: 20px 35vw; 
+    
+    /* 彻底消除任何可能的滚动条干扰 */
     scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch; /* 开启 iOS 的弹性惯性 */
 }
-
 /* --- 2. 图片项：不裁切比例 --- */
 .gallery-slide-item {
     flex: 0 0 auto; /* 宽度由图片内容决定 */
@@ -614,33 +618,46 @@ html, body, a, button, span, .menu-item, .lang span {
     justify-content: center;
 }
 
-/* 使用伪元素画出细长的金色线条箭头 */
-.nav-btn::before {
-    content: '';
-    width: 40px;
-    height: 1px;
-    background: #c5a059;
+/* --- 左右控制按钮：重塑高奢细线风格 --- */
+.nav-btn {
     position: absolute;
-    transition: 0.4s;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.2); /* 增加极淡背景，确保在浅色图前可见 */
+    border: none;
+    width: 60px;
+    height: 100px;
+    cursor: none !important;
+    z-index: 999; /* 确保在最顶层 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
 }
 
+.prev-btn { left: 20px; } /* 确保间距足够 */
+.next-btn { right: 20px; }
+
+/* 细长金色箭头 */
 .nav-btn::after {
     content: '';
-    width: 15px;
-    height: 15px;
-    border-top: 1px solid #c5a059;
-    border-right: 1px solid #c5a059;
-    position: absolute;
-    transition: 0.4s;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid #c5a059;
+    border-right: 2px solid #c5a059;
+    display: inline-block;
+    transition: 0.3s;
 }
 
-.prev-btn::after { transform: rotate(-135deg); left: 20px; }
-.next-btn::after { transform: rotate(45deg); right: 20px; }
+.prev-btn::after { transform: rotate(-135deg); }
+.next-btn::after { transform: rotate(45deg); }
 
-.nav-btn:hover::before { width: 60px; background: #fff; }
+.nav-btn:hover { background: rgba(197, 160, 89, 0.1); }
 .nav-btn:hover::after { border-color: #fff; }
 /* 响应式调整 */
 @media (max-width: 768px) {
     .gallery-slider-wrapper { padding: 20px 15%; }
     .gallery-slide-item { flex: 0 0 280px; height: 380px; }
 }
+
+
