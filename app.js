@@ -327,3 +327,40 @@ const orderBtn = document.getElementById('orderButton');
 if (orderBtn) {
     orderBtn.style.setProperty('cursor', 'none', 'important');
 }
+
+const slider = document.getElementById('galleryContainer');
+let isDown = false;
+let startX;
+let scrollLeft;
+
+if (slider) {
+    // 鼠标按下
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.classList.add('active');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+        // 拖拽时暂时关闭平滑滚动，否则会有延迟感
+        slider.style.scrollBehavior = 'auto';
+    });
+
+    // 鼠标离开容器
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+    });
+
+    // 鼠标松开
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.style.scrollBehavior = 'smooth'; // 恢复平滑滚动
+    });
+
+    // 鼠标移动
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault(); // 阻止默认的文本选择动作
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 2; // 2 是滑动倍速
+        slider.scrollLeft = scrollLeft - walk;
+    });
+}
