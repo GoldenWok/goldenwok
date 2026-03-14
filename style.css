@@ -546,35 +546,81 @@ html, body, a, button, span, .menu-item, .lang span {
     }
 }
 
-.gallery-masonry {
-    column-count: 4; /* 电脑端 4 列 */
-    column-gap: 15px;
-    padding: 20px 0;
+/* --- 1. 画廊区域限制 --- */
+.gallery-section {
+    padding: 60px 0;
+    overflow: hidden; /* 防止滑块溢出到屏幕外 */
 }
 
-@media (max-width: 1024px) { .gallery-masonry { column-count: 3; } }
-@media (max-width: 768px) { .gallery-masonry { column-count: 2; } }
+/* --- 2. 滑块容器 (核心实现) --- */
+.gallery-slider-wrapper {
+    display: flex; /* 横向排列 */
+    flex-wrap: nowrap; /* 强制不换行 */
+    overflow-x: auto; /* 开启横向滚动 */
+    overflow-y: hidden; /* 隐藏垂直滚动 */
+    
+    /* 增加惯性滚动体验 (针对 Safari) */
+    -webkit-overflow-scrolling: touch; 
+    
+    /* 隐藏浏览器默认的滚动条 (保持极简) */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    
+    padding: 20px 5%; /* 左右留白，让用户知道能滑动 */
+    gap: 15px; /* 图片之间的间距 */
+}
 
-.gallery-item {
-    break-inside: avoid;
-    margin-bottom: 15px;
-    background: #111; /* 占位背景色 */
+/* 针对 Chrome/Safari 隐藏滚动条 */
+.gallery-slider-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- 3. 单个图片项的样式 --- */
+.gallery-slide-item {
+    flex: 0 0 auto; /* 核心：不缩小、不放大、保持原宽度 */
+    
+    /* 根据你希望图片显示的宽度调整 */
+    width: 300px; 
+    height: 380px; /* 固定高度，看起來更整齐 */
+    
     border-radius: 4px;
     overflow: hidden;
+    background: #111; /* 占位背景色 */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    
+    /* 增加出现动画 */
+    opacity: 0;
+    animation: slideIn 0.8s ease forwards;
 }
 
+/* --- 4. 图片本身的样式 (配合懒加载) --- */
 .lazy-img {
     width: 100%;
-    display: block;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out, transform 0.5s ease;
-    cursor: none !important; /* 确保使用你的金色光标 */
+    height: 100%;
+    object-fit: cover; /* 核心：确保图片填满框框且不变形 */
+    transition: opacity 0.5s ease-in-out;
 }
 
 .lazy-img.loaded {
     opacity: 1;
 }
 
-.lazy-img:hover {
-    transform: scale(1.03);
+/* 进场动画 */
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- 5. 手机端响应式微调 --- */
+@media (max-width: 768px) {
+    .gallery-slider-wrapper {
+        padding: 20px 8%; /* 增加手机端边距，产生“未完待续”的感觉 */
+        gap: 10px;
+    }
+    .gallery-slide-item {
+        width: 260px; /* 缩小图片宽度，在手机上更合适 */
+        height: 320px;
+    }
 }
