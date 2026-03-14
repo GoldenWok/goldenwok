@@ -127,17 +127,40 @@ function renderGallery() {
 }
 
 // 需求 3：点击图片自动推到中间
-function scrollToMe(el) {
+// 需求 3：点击图片或按钮，精准计算中心点
+function scrollToElement(el) {
     const container = document.getElementById("galleryContainer");
-    const containerCenter = container.offsetWidth / 2;
-    const elCenter = el.offsetLeft + (el.offsetWidth / 2);
-    
+    if (!el || !container) return;
+
+    // 计算元素相对于容器中心的偏移量
+    const containerWidth = container.offsetWidth;
+    const elOffset = el.offsetLeft;
+    const elWidth = el.offsetWidth;
+
+    const targetScroll = elOffset - (containerWidth / 2) + (elWidth / 2);
+
     container.scrollTo({
-        left: elCenter - containerCenter,
+        left: targetScroll,
         behavior: 'smooth'
     });
 }
 
+// 需求 4：按钮点击也能找到“下一张”并居中
+function moveGallery(direction) {
+    const container = document.getElementById("galleryContainer");
+    const activeItem = document.querySelector('.gallery-slide-item.is-active');
+    
+    if (activeItem) {
+        const target = direction > 0 ? activeItem.nextElementSibling : activeItem.previousElementSibling;
+        if (target) {
+            scrollToElement(target);
+        } else {
+            // 如果到头了，循环回到开始或结尾
+            const allItems = document.querySelectorAll('.gallery-slide-item');
+            scrollToElement(direction > 0 ? allItems[0] : allItems[allItems.length - 1]);
+        }
+    }
+}
 // 需求 4：按钮移动逻辑
 function moveGallery(direction) {
     const container = document.getElementById("galleryContainer");
