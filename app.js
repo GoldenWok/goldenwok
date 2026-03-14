@@ -332,35 +332,36 @@ const slider = document.getElementById('galleryContainer');
 let isDown = false;
 let startX;
 let scrollLeft;
+let velocity = 0; // 增加速度系数实现惯性
 
 if (slider) {
-    // 鼠标按下
     slider.addEventListener('mousedown', (e) => {
         isDown = true;
-        slider.classList.add('active');
+        slider.style.scrollBehavior = 'auto'; // 拖拽时必须关闭 smooth，否则会卡顿
         startX = e.pageX - slider.offsetLeft;
         scrollLeft = slider.scrollLeft;
-        // 拖拽时暂时关闭平滑滚动，否则会有延迟感
-        slider.style.scrollBehavior = 'auto';
+        velocity = 0;
     });
 
-    // 鼠标离开容器
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
+    slider.addEventListener('mouseleave', () => { isDown = false; });
+    slider.addEventListener('mouseup', () => { 
+        isDown = false; 
+        slider.style.scrollBehavior = 'smooth'; // 结束拖拽恢复平滑
     });
 
-    // 鼠标松开
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.style.scrollBehavior = 'smooth'; // 恢复平滑滚动
-    });
-
-    // 鼠标移动
     slider.addEventListener('mousemove', (e) => {
         if (!isDown) return;
-        e.preventDefault(); // 阻止默认的文本选择动作
+        e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 2; // 2 是滑动倍速
+        const walk = (x - startX) * 2.5; // 2.5 是灵敏度，数字越大滑动越快
         slider.scrollLeft = scrollLeft - walk;
+    });
+
+    // 监听鼠标滚轮，让横向滑动也支持滚轮
+    slider.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0) {
+            e.preventDefault();
+            slider.scrollLeft += e.deltaY;
+        }
     });
 }
