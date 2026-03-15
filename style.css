@@ -546,72 +546,61 @@ html, body, a, button, span, .menu-item, .lang span {
     }
 }
 
-/* --- 1. 外部基座：限制全屏溢出 --- */
-.gallery-section {
-    position: relative;
-    width: 100%;
-    max-width: 100vw; /* 严禁超过视口宽度 */
-    overflow: hidden; /* 核心：防止被巨大内容撑开 */
-    padding: 80px 0;
-    background: #050505;
-}
-
-/* --- 2. 轨道容器：强行挤压空间 --- */
+/* --- 1. 轨道：动态计算挤压感 --- */
 .gallery-slider-wrapper {
     display: flex !important;
     align-items: center;
-    justify-content: flex-start; /* 从左向右排队 */
-    
-    overflow-x: scroll; /* 允许滚动 */
+    overflow-x: auto;
     scroll-snap-type: x proximity;
     
-    /* 核心：通过巨大的 padding 左右留白，强制内容待在中间 */
-    padding: 40px 30vw !important; 
+    /* 核心逻辑：
+       左右 Padding 设为 30%，意味着中间只剩下 40% 的视野空间。
+       这样中间一张占满，左右两张各露出一半。 */
+    padding: 60px 30vw !important; 
     
     gap: 0 !important;
     scrollbar-width: none;
     cursor: grab;
 }
 
-.gallery-slider-wrapper::-webkit-scrollbar { display: none; }
-
-/* --- 3. 图片卡片：死锁尺寸 (禁止变形) --- */
+/* --- 2. 图片卡片：自适应宽度 (防止多出) --- */
 .gallery-slide-item {
-    /* 强力锁：禁止放大、禁止缩小、固定基准 */
-    flex: 0 0 420px !important; 
-    width: 420px !important;
-    height: 560px !important;
+    /* 将固定像素 420px 改为相对宽度 40vw */
+    /* 这保证了三张图加起来正好略大于 100% 屏幕，从而挡住多余的图 */
+    flex: 0 0 40vw !important; 
+    width: 40vw !important;
+    height: 60vh !important;
     
-    /* 对称负边距实现覆盖感 */
-    margin: 0 -80px !important; 
+    /* 对称负边距实现深度覆盖 */
+    margin: 0 -60px !important; 
     
     scroll-snap-align: center;
     transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
     opacity: 0.4;
     transform: scale(0.85);
     border-radius: 40px;
-    overflow: hidden; 
     z-index: 1;
     background: #111;
 }
 
-/* 激活态：中间图置顶 */
+/* 激活态：中间图层叠 --- */
 .gallery-slide-item.is-active {
     opacity: 1 !important;
     transform: scale(1.05) !important;
-    z-index: 100 !important; /* 压住两边 */
-    margin: 0 -10px !important; /* 舒张感 */
+    z-index: 100 !important;
+    
+    /* 激活时稍微舒展，露出圆角 */
+    margin: 0 -10px !important; 
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
 }
 
-/* --- 4. 图片本身：适配容器 --- */
+/* --- 3. 图片适配 --- */
 .lazy-img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important; /* 确保图片铺满 420x560 的框，不被撑大 */
+    object-fit: cover !important;
     border-radius: 40px;
-    display: block;
 }
-
 /* --- 5. 按钮：悬浮在左右留白处 --- */
 
 /* --- 4. 左右按钮：放在画廊外侧的留白区 --- */
