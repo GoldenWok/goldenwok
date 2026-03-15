@@ -306,3 +306,39 @@ window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
     if(loader) setTimeout(() => loader.classList.add('done'), 800);
 });
+function highlightTodayPrice() {
+    const now = new Date();
+    const day = now.getDay(); // 0 是周日, 1-6 是周一至周六
+    const infoSection = document.querySelector('.info-box');
+    
+    if (!infoSection) return;
+
+    // 清除之前的加粗状态
+    infoSection.style.transition = "all 0.5s ease";
+
+    // 逻辑：周三(3) 或 周五(5)
+    if (day === 3 || day === 5) {
+        // 高亮周三五的价格
+        applyHighlight(".buffet-price-text", "18€");
+    } 
+    // 逻辑：周六(6) 或 周日(0)
+    else if (day === 6 || day === 0) {
+        // 高亮周六日的价格
+        applyHighlight(".buffet-price-text", "20€");
+    }
+}
+
+// 辅助函数：精准定位文字并变色
+function applyHighlight(selector, priceKey) {
+    const elements = document.querySelectorAll('.gold-core-text');
+    elements.forEach(el => {
+        if (el.innerText.includes(priceKey)) {
+            el.style.color = "#ffffff"; // 变白，使其从金色背景中脱颖而出
+            el.style.textShadow = "0 0 15px #c5a059"; // 增加金色发光效果
+            el.style.transform = "scale(1.05)";
+        }
+    });
+}
+
+// 在页面加载后执行
+window.addEventListener('DOMContentLoaded', highlightTodayPrice);
