@@ -900,39 +900,7 @@ body.lightbox-open {
     cursor: auto !important;
 }
 
-/* 分类标题样式 */
-.category-header {
-    cursor: none; /* 使用自定义光标 */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 0;
-    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
-    transition: color 0.3s;
-}
 
-.category-header:hover {
-    color: #ffffff;
-}
-
-/* 箭头旋转动画 */
-.arrow-icon {
-    width: 10px; height: 10px;
-    border-right: 2px solid #c5a059;
-    border-bottom: 2px solid #c5a059;
-    transform: rotate(45deg);
-    transition: transform 0.3s ease;
-    margin-right: 10px;
-}
-
-.category-header.active .arrow-icon {
-    transform: rotate(-135deg);
-}
-
-.category-header.active {
-    color: #ffffff;
-    border-bottom-color: #c5a059;
-}
 
 /* --- 1. 语言切换器向左移动 --- */
 .nav-right {
@@ -947,17 +915,6 @@ body.lightbox-open {
     gap: 12px;
 }
 
-/* --- 2. 彻底解决跳转位置偏离/空白问题 --- */
-/* 给锚点所在的 Section 增加一个“卷帘”位移 */
-#menu-anchor, #gallery-anchor, #location-anchor {
-    scroll-margin-top: 100px; /* 核心修复：确保跳转后，上方留出 Header 的高度，不会被挡住 */
-}
-
-/* 检查是否有元素撑开了宽度导致侧向空白 */
-body, html {
-    overflow-x: hidden;
-    width: 100%;
-}
 
 /* --- 导航栏容器强化 --- */
 .nav-container {
@@ -988,24 +945,7 @@ body, html {
     scroll-margin-top: 120px !important; 
     padding-top: 20px; /* 内部留白 */
 }
-/* 默认隐藏分类内容 */
-.menu-items-wrapper {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0;
-}
 
-/* 展开时的状态 */
-.menu-items-wrapper.active {
-    opacity: 1;
-}
-
-.category-header {
-    cursor: none; /* 确保使用自定义光标 */
-    padding: 20px 0;
-    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
-}
 /* 导航容器：控制整体边距 */
 .nav-container {
     display: flex;
@@ -1014,35 +954,4 @@ body, html {
     max-width: 1400px; /* 限制最大宽度 */
     margin: 0 auto;
     padding: 0 60px; /* 增加这里的 60px 左右内边距，Logo 就不贴边了 */
-}
-
-/* 锚点偏移量：解决跳转不准 */
-#menu-anchor, #gallery-anchor, #location-anchor {
-    /* 跳转后上方留出的空间，防止被固定的 Header 遮挡 */
-    scroll-margin-top: 100px; 
-    /* 增加板块间的呼吸感 */
-    padding-top: 80px;
-    padding-bottom: 40px;
-}
-#orderButton {
-    display: inline-block !important; /* 强制显示 */
-    visibility: visible !important;
-    position: relative;
-    z-index: 100; /* 确保在 Overlay 之上 */
-}
-
-.menu-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 18px; /* 增加行距，显得不拥挤 */
-    
-    /* 让每一行菜品也有微小的渐入感 */
-    animation: fadeInItem 1s ease forwards;
-    opacity: 0;
-}
-
-@keyframes fadeInItem {
-    from { opacity: 0; transform: translateX(-5px); }
-    to { opacity: 1; transform: translateX(0); }
 }
