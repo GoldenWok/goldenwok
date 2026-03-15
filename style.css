@@ -567,78 +567,92 @@ html, body, a, button, span, .menu-item, .lang span {
 .gallery-track::-webkit-scrollbar { display: none; }
 
 /* --- 2. 图片卡片：锁死 33% 宽度 --- */
+/* --- 轨道：强制 33.33% 视口留白确保三图视野 --- */
+#galleryContainer {
+    display: flex !important;
+    align-items: center;
+    height: 550px !important;
+    padding: 0 33.33% !important; /* 关键：确保首尾图片能滚到中间 */
+    gap: 0 !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+/* --- 图片项：硬性锁死 350px 宽度 --- */
 .gallery-slide-item {
-    flex: 0 0 350px !important; /* 强制宽度，不许放大 */
+    flex: 0 0 350px !important; /* 禁止伸缩，固定350 */
     width: 350px !important;
     height: 450px !important;
-    margin: 0 -80px !important; /* 叠加感 */
-    scroll-snap-align: center;
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    margin: 0 -60px !important; /* 叠加感 */
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     z-index: 1;
-    cursor: none; /* 使用自定义光标 */
+    scroll-snap-align: center;
 }
 
 .gallery-slide-item img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important; /* 核心：防止图片撑大容器 */
+    object-fit: cover !important; /* 裁剪填充，不许撑大容器 */
     border-radius: 30px;
-    opacity: 0.4;
-    filter: grayscale(0.8) blur(1px);
+    opacity: 0.3; /* 侧边图片透明感 */
+    filter: grayscale(1) blur(2px);
     transition: 0.6s;
 }
 
-/* 激活态：突出感 */
+/* --- 中间激活态：突出、放大、不透明 --- */
 .gallery-slide-item.is-active {
     z-index: 100 !important;
-    transform: scale(1.1);
+    transform: scale(1.15) !important;
 }
+
 .gallery-slide-item.is-active img {
-    opacity: 1;
+    opacity: 1 !important;
     filter: grayscale(0) blur(0);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
 }
 /* --- 按钮基础样式 --- */
+/* 按钮基础：金色圆形 */
 .nav-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     width: 60px;
     height: 60px;
-    background: rgba(197, 160, 89, 0.1); /* 初始金色半透 */
+    background: transparent;
     border: 2px solid #c5a059; /* 金色边框 */
     border-radius: 50%;
-    z-index: 1001;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
     transition: all 0.4s ease;
-    cursor: none; /* 统一使用自定义光标 */
 }
 
-/* 箭头图案 (使用伪元素绘制) */
+/* 箭头图案 */
 .nav-btn::after {
     content: '';
     width: 12px;
     height: 12px;
-    border-top: 3px solid #c5a059;
-    border-right: 3px solid #c5a059;
-    transition: all 0.4s ease;
+    border-top: 2px solid #c5a059;
+    border-right: 2px solid #c5a059;
+    transition: 0.4s;
 }
 
-.prev-btn { left: -80px; }
+.prev-btn { left: 20px; }
 .prev-btn::after { transform: rotate(-135deg); margin-left: 5px; }
 
-.next-btn { right: -80px; }
-.next-btn::after { transform: rotate(45deg); margin-right: 5px; }
+.next-btn { right: 20px; }
+.next-btn::after { transform: rotate(45deg); margin-right: -5px; }
 
-/* --- 悬停效果：变白 --- */
+/* 鼠标悬停：变白，箭头变黑 */
 .nav-btn:hover {
     background: #ffffff !important;
     border-color: #ffffff !important;
 }
+
 .nav-btn:hover::after {
-    border-color: #000000 !important; /* 箭头变黑，对比更强 */
+    border-color: #000000 !important;
 }
 /* 响应式调整 */
 @media (max-width: 768px) {
@@ -707,13 +721,14 @@ html, body, a, button, span, .menu-item, .lang span {
 .lb-next { right: 20px; }
 .lb-btn:hover { color: #c5a059; }
 
-/* 当灯箱打开时，确保自定义光标依然在最顶层 */
+/* 灯箱打开时，确保光标在最顶层 (灯箱通常是 10000) */
 body.lightbox-open .cursor,
 body.lightbox-open .cursor-follower {
-    z-index: 10001 !important; /* 必须高于 imageOverlay 的 10000 */
+    z-index: 99999 !important;
+    display: block !important;
 }
 
-/* 或者你希望在灯箱里显示普通光标： */
+/* 如果你希望放大后鼠标指针变回普通箭头，可以这样： */
 body.lightbox-open {
     cursor: auto !important;
 }
