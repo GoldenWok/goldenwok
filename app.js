@@ -1,6 +1,7 @@
 let LANG = "gr";
+let currentImgIndex = 0;
 
-/* --- 1. 光标逻辑 (事件委托版) --- */
+/* --- 1. 光标逻辑 (性能优化版) --- */
 function initCursor() {
     const cursor = document.querySelector('.cursor');
     const follower = document.querySelector('.cursor-follower');
@@ -10,20 +11,13 @@ function initCursor() {
         const x = e.clientX;
         const y = e.clientY;
 
-        // 1. 实时跟随
-        // 使用 requestAnimationFrame 保证丝滑
         requestAnimationFrame(() => {
-            cursor.style.left = x + 'px';
-            cursor.style.top = y + 'px';
-            follower.style.left = x + 'px';
-            follower.style.top = y + 'px';
+            cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+            follower.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
         });
 
-        // 2. 智能探测变色
-        // 使用 elementFromPoint 探测鼠标下的元素，看它是否“可点击”
         const target = e.target;
-       // 在 initCursor 里的 target.closest 增加 .nav-item 和 .logo-group
-const isClickable = target.closest('a, button, .lang span, .logo-group, .nav-item, .category-header, .lb-btn');
+        const isClickable = target.closest('a, button, .lang span, .logo-group, .nav-item, .category-header, .lb-btn, .gallery-slide-item, #overlayImg');
 
         if (isClickable) {
             cursor.classList.add('is-hovering');
@@ -34,58 +28,45 @@ const isClickable = target.closest('a, button, .lang span, .logo-group, .nav-ite
         }
     });
 
-    // 针对灯箱开启时的特殊处理
-    window.addEventListener('mousedown', () => {
-        cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
-    });
-    window.addEventListener('mouseup', () => {
-        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-    });
+    window.addEventListener('mousedown', () => cursor.style.transform += ' scale(0.7)');
+    window.addEventListener('mouseup', () => cursor.style.transform = cursor.style.transform.replace(' scale(0.7)', ''));
 }
 
-/* --- 彻底修复：精准平滑滚动 --- */
+/* --- 2. 精准跳转逻辑 (唯一版本) --- */
 function initSmoothScroll() {
-    // 1. 获取所有导航链接
     const navLinks = document.querySelectorAll('.nav-item, .logo-group');
 
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            // 2. 检查是否有 href 或特定的跳转需求
-            const targetId = this.getAttribute('href') || '#header'; 
+        link.onclick = function(e) {
+            // 获取目标 ID (针对 logo-group 默认回顶)
+            let targetId = this.getAttribute('href');
+            if (!targetId && this.classList.contains('logo-group')) targetId = "body";
+            
             const targetSection = document.querySelector(targetId);
 
             if (targetSection) {
-                // 3. 关键：阻止浏览器默认的锚点跳转行为
                 e.preventDefault();
                 e.stopPropagation();
 
-                // 4. 计算位置：目标距离顶部的距离 - 固定的 Offset（根据你 Header 的高度调整）
-                // 如果你的 Header 比较大，就把 100 改成 120
-                const offset = 100; 
+                // 动态计算 Offset：Header 的高度 + 额外间距
+                const headerHeight = document.getElementById('header').offsetHeight;
+                const offset = headerHeight + 20; 
+                
                 const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
 
-                // 5. 执行滚动
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
                 });
                 
-                // 6. 强制更新 URL 状态（但不跳转）
-                window.history.pushState(null, null, targetId);
+                // 更新 URL 不跳转
+                if(targetId !== "body") window.history.pushState(null, null, targetId);
             }
-        });
+        };
     });
 }
-// 修改滚动监听逻辑，控制透明度
-window.addEventListener('scroll', () => {
-    const header = document.getElementById('header');
-    if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
-    }
-});
-/* --- 2. 渲染逻辑 --- */
+
+/* --- 3. 渲染逻辑 --- */
 function setLang(lang) {
     LANG = lang;
     document.body.style.opacity = "0";
@@ -113,15 +94,19 @@ function renderWebsite() {
     safeSet("contactAddress", contact.address);
     safeSet("contactPhone", contact.phone);
 
-  document.querySelectorAll('.nav-item').forEach(item => {
-        const key = `text-${LANG}`; // 匹配 HTML 中的 data-text-zh 等
+    // 导航栏多语言
+    document.querySelectorAll('.nav-item').forEach(item => {
+        const key = `text-${LANG}`;
         const newText = item.getAttribute(`data-${key}`);
         if (newText) item.innerText = newText;
     });
 
     renderMenu();
     renderGallery();
-    initCursor(); // 确保新渲染的元素也能触发光标变色
+    
+    // 重要：内容渲染后再重新计算一次跳转位置
+    initSmoothScroll();
+    initCursor(); 
 }
 
 function renderMenu() {
@@ -129,34 +114,40 @@ function renderMenu() {
     if (!container) return;
     container.innerHTML = DB.menu.map(cat => `
         <div class="menu-card reveal">
-            <h3>${cat.name[LANG]}</h3>
-            <div class="menu-items">
-                ${cat.items.map(item => {
-                    if (item.type === "complex") {
-                        return `<div class="menu-item"><strong>${item.title[LANG]}</strong></div>` + 
-                               item.options.map(op => `
-                                <div class="menu-item">
-                                    <span class="item-name">${op[LANG]}</span>
-                                    <span class="item-dots"></span>
-                                    <span class="item-price">€${op.price}</span>
-                                </div>`).join('');
-                    }
-                    return `
-                        <div class="menu-item">
-                            <span class="item-name">${item[LANG]}</span>
-                            <span class="item-dots"></span>
-                            <span class="item-price">€${item.price}</span>
-                        </div>`;
-                }).join('')}
+            <h3 class="category-header" onclick="toggleMenuCategory(this)">
+                ${cat.name[LANG]}
+                <span class="arrow-icon"></span>
+            </h3>
+            <div class="menu-items-wrapper" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease;">
+                <div class="menu-items" style="padding: 20px 0;">
+                    ${cat.items.map(item => {
+                        if (item.type === "complex") {
+                            return `<div class="menu-item"><strong>${item.title[LANG]}</strong></div>` + 
+                                   item.options.map(op => `
+                                     <div class="menu-item">
+                                         <span class="item-name">${op[LANG]}</span>
+                                         <span class="item-dots"></span>
+                                         <span class="item-price">€${op.price}</span>
+                                     </div>`).join('');
+                        }
+                        return `
+                            <div class="menu-item">
+                                <span class="item-name">${item[LANG]}</span>
+                                <span class="item-dots"></span>
+                                <span class="item-price">€${item.price}</span>
+                            </div>`;
+                    }).join('')}
+                </div>
             </div>
         </div>
     `).join('');
     initReveal();
 }
 
-/* --- 3. 画廊核心 --- */
+/* --- 4. 画廊与灯箱 --- */
 function renderGallery() {
     const container = document.getElementById("galleryContainer");
+    if (!container) return;
     container.innerHTML = DB.gallery.map((img, i) => `
         <div class="gallery-slide-item" onclick="handleGalleryClick(${i}, this)">
             <img src="images/${img}" alt="Gallery">
@@ -177,48 +168,6 @@ function handleGalleryClick(index, el) {
     }
 }
 
-/* --- 1. 画廊左右按钮修复 --- */
-function moveGallery(direction) {
-    const container = document.getElementById("galleryContainer");
-    if (!container) return;
-
-    // 每次移动大约 1/3 容器宽度的距离
-    const scrollStep = container.offsetWidth / 3;
-    container.scrollBy({
-        left: direction * scrollStep,
-        behavior: 'smooth'
-    });
-}
-
-/* --- 2. 增强版灯箱开启函数 --- */
-function initCursor() {
-    const cursor = document.querySelector('.cursor');
-    const follower = document.querySelector('.cursor-follower');
-    if (!cursor || !follower) return;
-
-    window.addEventListener('mousemove', (e) => {
-        const x = e.clientX;
-        const y = e.clientY;
-
-        // 使用 translate3d 提高渲染性能，并保持中心对齐
-        cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-        follower.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-
-        // 探测是否悬停在可点击元素上
-        const target = e.target;
-        const clickable = target.closest('a, button, .lang span, .gallery-slide-item, .menu-item, .lb-btn, #overlayImg, .cta-gold-btn');
-
-        if (clickable) {
-            cursor.classList.add('is-hovering');
-            follower.classList.add('is-hovering');
-        } else {
-            cursor.classList.remove('is-hovering');
-            follower.classList.remove('is-hovering');
-        }
-    });
-}
-
-// 修改你的打开灯箱函数
 function openFullImage(index) {
     currentImgIndex = index;
     const overlay = document.getElementById("imageOverlay");
@@ -227,7 +176,7 @@ function openFullImage(index) {
     img.src = `images/${DB.gallery[index]}`;
     overlay.style.display = "flex";
 
-    // --- 暴力修复核心：把光标节点移动到 body 的最后面，确保它在大图之上 ---
+    // 保证光标在最前
     const c1 = document.querySelector('.cursor');
     const c2 = document.querySelector('.cursor-follower');
     document.body.appendChild(c1);
@@ -236,13 +185,16 @@ function openFullImage(index) {
     setTimeout(() => overlay.classList.add('active'), 10);
 }
 
-/* --- 3. 灯箱内左右切换修复 --- */
+function closeImage() {
+    const overlay = document.getElementById("imageOverlay");
+    overlay.classList.remove('active');
+    setTimeout(() => { overlay.style.display = "none"; }, 400);
+}
+
 function changeFullImage(direction, event) {
-    if (event) event.stopPropagation(); // 阻止点击箭头关闭灯箱
-    
+    if (event) event.stopPropagation();
     currentImgIndex = (currentImgIndex + direction + DB.gallery.length) % DB.gallery.length;
     const img = document.getElementById("overlayImg");
-    
     if (img) {
         img.style.opacity = "0";
         setTimeout(() => {
@@ -252,94 +204,37 @@ function changeFullImage(direction, event) {
     }
 }
 
-/* --- 4. 动态透明度与激活状态 --- */
+/* --- 5. 交互工具 --- */
+function toggleMenuCategory(headerElement) {
+    const wrapper = headerElement.nextElementSibling;
+    if (wrapper.style.maxHeight === "0px" || !wrapper.style.maxHeight) {
+        wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+        headerElement.classList.add('active');
+    } else {
+        wrapper.style.maxHeight = "0px";
+        headerElement.classList.remove('active');
+    }
+}
+
 function setupDynamicDepth() {
     const container = document.getElementById("galleryContainer");
     if (!container) return;
-
     const update = () => {
         const items = document.querySelectorAll('.gallery-slide-item');
-        const containerRect = container.getBoundingClientRect();
-        const centerX = containerRect.left + containerRect.width / 2;
-
+        const centerX = container.getBoundingClientRect().left + container.offsetWidth / 2;
         items.forEach(item => {
-            const rect = item.getBoundingClientRect();
-            const itemCenter = rect.left + rect.width / 2;
-            
-            // 如果图片中心接近容器中心
-            if (Math.abs(centerX - itemCenter) < rect.width / 3) {
+            const itemCenter = item.getBoundingClientRect().left + item.offsetWidth / 2;
+            if (Math.abs(centerX - itemCenter) < item.offsetWidth / 3) {
                 item.classList.add('is-active');
             } else {
                 item.classList.remove('is-active');
             }
         });
     };
-
     container.addEventListener('scroll', update);
-    // 初始化
     setTimeout(update, 500);
 }
-/* --- 4. 灯箱逻辑 --- */
-let currentImgIndex = 0;
-function openFullImage(index) {
-    currentImgIndex = index;
-    const overlay = document.getElementById("imageOverlay");
-    document.getElementById("overlayImg").src = `images/${DB.gallery[index]}`;
-    overlay.style.display = "flex";
-    setTimeout(() => overlay.classList.add('active'), 10);
-}
 
-
-
-function closeImage() {
-    const overlay = document.getElementById("imageOverlay");
-    overlay.classList.remove('active');
-    setTimeout(() => {
-        overlay.style.display = "none";
-        // 恢复正常光标层级
-        document.querySelector('.cursor').style.zIndex = "100000";
-    }, 400);
-}
-/* --- 菜单折叠交互逻辑 --- */
-function toggleMenuCategory(headerElement) {
-    const wrapper = headerElement.nextElementSibling; // 找到对应的 .menu-items-wrapper
-    const arrow = headerElement.querySelector('.arrow-icon');
-    
-    // 如果当前是收起的
-    if (!wrapper.style.maxHeight || wrapper.style.maxHeight === "0px") {
-        // 先关闭其他所有已打开的分类 (可选，打造手风琴效果)
-        document.querySelectorAll('.menu-items-wrapper').forEach(el => {
-            el.style.maxHeight = "0px";
-            el.previousElementSibling.classList.remove('active');
-        });
-
-        // 展开当前
-        wrapper.style.maxHeight = wrapper.scrollHeight + "px";
-        headerElement.classList.add('active');
-    } else {
-        // 收起当前
-        wrapper.style.maxHeight = "0px";
-        headerElement.classList.remove('active');
-    }
-}
-
-/* --- 补充：平滑滚动到锚点 --- */
-// 当点击导航栏 a 标签时，平滑跳转
-document.querySelectorAll('.nav-item').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-            window.scrollTo({
-                top: targetElement.offsetTop - 80, // 减去 header 的高度
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-/* --- 5. 初始化 --- */
 function initReveal() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('is-visible'); });
@@ -347,18 +242,19 @@ function initReveal() {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
+/* --- 6. 全局生命周期 --- */
 window.addEventListener('scroll', () => {
     const header = document.getElementById('header');
-    if (window.scrollY > 100) header.classList.add('scrolled');
+    if (window.scrollY > 50) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
 });
 
 window.addEventListener('DOMContentLoaded', () => {
     renderWebsite();
-    initCursor();
     document.body.classList.remove('loading');
 });
 
 window.addEventListener('load', () => {
-    setTimeout(() => document.getElementById('loader').classList.add('done'), 1000);
+    const loader = document.getElementById('loader');
+    if(loader) setTimeout(() => loader.classList.add('done'), 1000);
 });
