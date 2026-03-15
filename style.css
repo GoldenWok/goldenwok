@@ -957,3 +957,21 @@ body.lightbox-open {
     margin: 0 auto;
     padding: 0 60px; /* 增加这里的 60px 左右内边距，Logo 就不贴边了 */
 }
+
+/* 让带数字的菜名在悬停时更有交互感 */
+.item-name {
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.menu-item:hover .item-name {
+    color: #c5a059 !important; /* 悬停变金 */
+    padding-left: 10px; /* 轻微向右滑动 */
+}
+
+/* 价格标签的微调 */
+.item-price::before {
+    content: '€';
+    font-size: 0.8em;
+    margin-right: 2px;
+}
