@@ -111,38 +111,65 @@ const revealObserver = new IntersectionObserver((entries) => {
    ========================================= */
 // 渲染画廊
 // 修改渲染函数中的 onclick
+// 全局变量，记录当前放大图片的索引
+let currentImgIndex = 0;
+
 function renderGallery() {
     const container = document.getElementById("galleryContainer");
     if (!container || !DB.gallery) return;
 
-    container.innerHTML = DB.gallery.map(imgName => `
-        <div class="gallery-slide-item" onclick="handleGalleryClick(this, event, 'images/${imgName}')">
-            <img data-src="images/${imgName}" 
-                 src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" 
-                 class="lazy-img" alt="Golden Wok">
+    container.innerHTML = DB.gallery.map((imgName, index) => `
+        <div class="gallery-slide-item" onclick="handleGalleryClick(${index}, this)">
+            <img src="images/${imgName}" class="lazy-img" alt="Gallery Image">
         </div>
     `).join('');
 
-    initLazyLoading();
-    setupActiveEffect();
+    // 核心修复：直接调用你写的 setupDynamicDepth，不再调用 setupActiveEffect
+    setupDynamicDepth(); 
 }
 
-function handleGalleryClick(el, event, fullSrc) {
-    // 如果点击的是已经居中的图片，则放大
+// 核心逻辑：点击判断
+function handleGalleryClick(index, el) {
     if (el.classList.contains('is-active')) {
-        openFullImage(fullSrc);
+        // 如果点的是中间图，放大
+        openFullImage(index);
     } else {
-        // 如果点击的是侧边图片，则先把它推到中间
+        // 如果点的是旁边的图，居中它
         scrollToElement(el);
     }
 }
 
-function openFullImage(src) {
+// 辅助函数：居中滚动
+function scrollToElement(el) {
+    const container = document.getElementById("galleryContainer");
+    const containerCenter = container.offsetWidth / 2;
+    const elLeft = el.offsetLeft;
+    const elWidth = el.offsetWidth;
+
+    container.scrollTo({
+        left: elLeft - (containerCenter - elWidth / 2),
+        behavior: 'smooth'
+    });
+}
+
+// 放大灯箱逻辑
+function openFullImage(index) {
+    currentImgIndex = index;
     const overlay = document.getElementById("imageOverlay");
     const img = document.getElementById("overlayImg");
-    img.src = src;
+    
+    img.src = `images/${DB.gallery[currentImgIndex]}`;
     overlay.style.display = "flex";
     setTimeout(() => overlay.classList.add('active'), 10);
+}
+
+// 灯箱内的左右切换 (新增)
+function changeFullImage(direction, event) {
+    if (event) event.stopPropagation(); // 防止点击按钮时关闭了灯箱
+    
+    currentImgIndex = (currentImgIndex + direction + DB.gallery.length) % DB.gallery.length;
+    const img = document.getElementById("overlayImg");
+    img.src = `images/${DB.gallery[currentImgIndex]}`;
 }
 
 function closeImage() {
@@ -151,7 +178,7 @@ function closeImage() {
     setTimeout(() => overlay.style.display = "none", 400);
 }
 
-// 需求 4：按钮点击也能找到“下一张”并居中
+// 外部按钮移动：每次移动一个图片身位
 function moveGallery(direction) {
     const container = document.getElementById("galleryContainer");
     const activeItem = document.querySelector('.gallery-slide-item.is-active');
@@ -160,63 +187,8 @@ function moveGallery(direction) {
         const target = direction > 0 ? activeItem.nextElementSibling : activeItem.previousElementSibling;
         if (target) {
             scrollToElement(target);
-        } else {
-            // 如果到头了，循环回到开始或结尾
-            const allItems = document.querySelectorAll('.gallery-slide-item');
-            scrollToElement(direction > 0 ? allItems[0] : allItems[allItems.length - 1]);
         }
     }
-}
-// 需求 4：按钮移动逻辑
-function moveGallery(direction) {
-    const container = document.getElementById("galleryContainer");
-    // 每次移动一个视口的 40%，实现丝滑切换
-    const moveDistance = container.offsetWidth * 0.4;
-    container.scrollBy({ left: direction * moveDistance, behavior: 'smooth' });
-}
-
-function setupDynamicDepth() {
-    const container = document.getElementById("galleryContainer");
-    if (!container) return;
-
-    const updateDepth = () => {
-        const items = document.querySelectorAll('.gallery-slide-item');
-        const containerRect = container.getBoundingClientRect();
-        const containerCenter = containerRect.left + containerRect.width / 2;
-
-        items.forEach((item, index) => {
-            const itemRect = item.getBoundingClientRect();
-            const itemCenter = itemRect.left + itemRect.width / 2;
-            
-            // 计算图片中心距离容器中心的百分比 (0 到 1)
-            const distanceFromCenter = Math.abs(containerCenter - itemCenter);
-            const normalizedDistance = Math.min(distanceFromCenter / (containerRect.width / 1.5), 1);
-
-            // 1. 中间 (激活态)
-            if (normalizedDistance < 0.15) {
-                item.classList.add('is-active');
-                item.classList.remove('is-side-1', 'is-side-2');
-                item.style.zIndex = "100";
-            } 
-            // 2. 左右两边稍小一点
-            else if (normalizedDistance < 0.3) {
-                item.classList.remove('is-active', 'is-side-2');
-                item.classList.add('is-side-1');
-                item.style.zIndex = "50"; // 层级稍低
-            }
-            // 3. 更左右两边变得更小
-            else {
-                item.classList.remove('is-active', 'is-side-1');
-                item.classList.add('is-side-2');
-                item.style.zIndex = "10"; // 层级最低
-            }
-        });
-    };
-
-    // 监听滚动，实时计算
-    container.addEventListener('scroll', updateDepth);
-    // 初始化
-    setTimeout(updateDepth, 100);
 }
 function initCursorHover() {
     const cursor = document.querySelector('.cursor');
