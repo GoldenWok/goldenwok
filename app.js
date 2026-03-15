@@ -265,7 +265,18 @@ window.addEventListener('scroll', () => {
     if (window.scrollY > 50) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
 });
+window.addEventListener('DOMContentLoaded', () => {
+    renderWebsite();
+    initCursor();
+    
+    const map = document.getElementById("googleMap");
+    if (map) {
+        // 这是 Golden Wok Nea Smyrni 的正式嵌入链接
+        map.src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.4746682705!2d23.7126155!3d37.942654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bc4069811f5d%3A0x6b2b7161e76f53e5!2sGolden%20Wok!5e0!3m2!1sel!2sgr!4v1710000000000";
+    }
 
+    document.body.classList.remove('loading');
+});
 window.addEventListener('DOMContentLoaded', () => {
     renderWebsite();
     document.body.classList.remove('loading');
