@@ -552,6 +552,48 @@ html, body, a, button, span, .menu-item, .lang span {
     padding: 0 80px; /* 给按钮留位 */
     overflow: visible;
 }
+/* --- 轨道：限制总高度，防止被图片撑高 --- */
+.gallery-slider-wrapper {
+    display: flex !important;
+    align-items: center;
+    height: 500px !important; /* 强制画廊高度 */
+    padding: 0 30% !important; /* 保持左右留白 */
+    overflow-x: auto;
+    gap: 0;
+}
+
+/* --- 图片卡片：三重尺寸锁定 --- */
+.gallery-slide-item {
+    /* 核心：0代表不放大, 0代表不缩小, 350px是固定基准 */
+    flex: 0 0 350px !important; 
+    width: 350px !important;
+    min-width: 350px !important; 
+    max-width: 350px !important;
+    
+    height: 450px !important; /* 强制高度 */
+    margin: 0 -80px !important; /* 保持重叠感 */
+    
+    position: relative;
+    z-index: 1;
+    transition: all 0.6s ease;
+    border-radius: 30px;
+    overflow: hidden; /* 必须剪切，否则内部图片会溢出 */
+}
+
+/* --- 内部图片：填充但不许撑开容器 --- */
+.lazy-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* 重点：图片在 350x450 内填充，不许改动容器大小 */
+    display: block;
+}
+
+/* --- 激活态：稍微放大，但依然受限 --- */
+.gallery-slide-item.is-active {
+    z-index: 100 !important;
+    transform: scale(1.1) !important; /* 突出感 */
+}
+
 
 .gallery-track {
     display: flex;
