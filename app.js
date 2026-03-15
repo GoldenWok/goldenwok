@@ -175,10 +175,11 @@ function renderMenu() {
 /* --- 统一动画初始化函数 --- */
 function initReveal() {
     const observerOptions = {
-        threshold: 0.1, // 元素出现 10% 时触发
-        rootMargin: "0px 0px -50px 0px" // 提前或延迟触发
-    };
-
+    // threshold 为 0.05 意味着元素只要露头 5% 就会触发
+    // rootMargin 底部设为 -100px，让元素在进入视口一定距离后才浮现，增加“惊喜感”
+    threshold: 0.05, 
+    rootMargin: "0px 0px -100px 0px" 
+};
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
