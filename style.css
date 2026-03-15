@@ -37,42 +37,48 @@ body.loading { opacity: 0; }
     --cursor-color: #c5a059; /* 默认金色 */
 }
 
+/* --- 基础光标 (金色状态) --- */
+.cursor, .cursor-follower {
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none; /* 穿透点击，不影响页面交互 */
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s, opacity 0.3s;
+    z-index: 1000000; /* 赋予一个绝对无敌的层级 */
+}
+
 .cursor {
     width: 8px;
     height: 8px;
-    background: var(--cursor-color);
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 200001; /* 必须是最高 */
-    transition: transform 0.1s linear, background 0.3s ease;
-    transform: translate(-50%, -50%); /* 始终保持中心对齐 */
+    background: #c5a059; /* 中心金色小点 */
 }
 
 .cursor-follower {
     width: 35px;
     height: 35px;
-    border: 1.5px solid var(--cursor-color); /* 使用变量控制颜色 */
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 200000;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
-    transform: translate(-50%, -50%);
+    border: 1.5px solid #c5a059; /* 外圈金色圆环 */
 }
 
-/* --- 2. 变色逻辑：当处于 hover 状态时 --- */
-.cursor.white-mode {
-    --cursor-color: #ffffff; /* 切换为白色 */
-    transform: translate(-50%, -50%) scale(1.5);
+/* --- 变白状态 (.is-hovering 类由 JS 动态添加) --- */
+.cursor.is-hovering {
+    background: #ffffff !important;
+    width: 10px;
+    height: 10px;
 }
 
-.cursor-follower.white-mode {
-    --cursor-color: #ffffff;
-    transform: translate(-50%, -50%) scale(1.2);
-    border-width: 1px;
+.cursor-follower.is-hovering {
+    border-color: #ffffff !important;
+    width: 45px;
+    height: 45px;
+}
+
+/* --- 全屏灯箱修正 --- */
+#imageOverlay {
+    cursor: none !important;
+}
+#imageOverlay * {
+    cursor: none !important;
 }
 
 /* --- 3. 灯箱强制补丁 --- */
