@@ -140,20 +140,49 @@ function moveGallery(direction) {
 }
 
 /* --- 2. 增强版灯箱开启函数 --- */
+function initCursor() {
+    const cursor = document.querySelector('.cursor');
+    const follower = document.querySelector('.cursor-follower');
+    if (!cursor || !follower) return;
+
+    window.addEventListener('mousemove', (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        // 使用 translate3d 提高渲染性能，并保持中心对齐
+        cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        follower.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+
+        // 探测是否悬停在可点击元素上
+        const target = e.target;
+        const clickable = target.closest('a, button, .lang span, .gallery-slide-item, .menu-item, .lb-btn, #overlayImg, .cta-gold-btn');
+
+        if (clickable) {
+            cursor.classList.add('is-hovering');
+            follower.classList.add('is-hovering');
+        } else {
+            cursor.classList.remove('is-hovering');
+            follower.classList.remove('is-hovering');
+        }
+    });
+}
+
+// 修改你的打开灯箱函数
 function openFullImage(index) {
     currentImgIndex = index;
     const overlay = document.getElementById("imageOverlay");
     const img = document.getElementById("overlayImg");
     
-    if (img && DB.gallery[index]) {
-        img.src = `images/${DB.gallery[index]}`;
-        overlay.style.display = "flex";
-        
-        // 极致兼容：确保进入全屏瞬间原生光标消失
-        document.body.style.cursor = 'none'; 
-        
-        setTimeout(() => overlay.classList.add('active'), 10);
-    }
+    img.src = `images/${DB.gallery[index]}`;
+    overlay.style.display = "flex";
+
+    // --- 暴力修复核心：把光标节点移动到 body 的最后面，确保它在大图之上 ---
+    const c1 = document.querySelector('.cursor');
+    const c2 = document.querySelector('.cursor-follower');
+    document.body.appendChild(c1);
+    document.body.appendChild(c2);
+
+    setTimeout(() => overlay.classList.add('active'), 10);
 }
 
 /* --- 3. 灯箱内左右切换修复 --- */
