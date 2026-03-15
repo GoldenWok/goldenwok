@@ -580,11 +580,60 @@ html, body, a, button, span, .menu-item, .lang span {
 }
 
 /* 响应式菜单网格 */
+/* 菜单网格：一排三个 */
 .modern-menu-grid {
     display: grid;
-    /* 手机端最小宽度设为 100%，防止溢出 */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-    gap: 40px 20px; /* 缩小间距 */
+    grid-template-columns: repeat(3, 1fr); /* 核心：强制三列 */
+    gap: 30px;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 移动端自动转为一排一个 */
+@media (max-width: 992px) {
+    .modern-menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 600px) {
+    .modern-menu-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 菜品分类卡片样式 */
+.menu-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    padding: 25px;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+/* 取消点击样式，改为静态标题 */
+.category-header {
+    color: #d4af37;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d4af37;
+    cursor: default; /* 取消手型光标 */
+    pointer-events: none; /* 禁用点击 */
+}
+
+/* 菜品列表强制显示，不再折叠 */
+.menu-items-wrapper {
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+}
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
 }
 
 @media (max-width: 600px) {
