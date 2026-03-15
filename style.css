@@ -253,26 +253,86 @@ section[id$="-anchor"] {
 }
 
 /* 6. 菜单板块 - 修复长名字换行 */
+/* --- 菜单板块：旧版结构 + 新版动效 --- */
 .menu-section { padding: 120px 10%; }
+
 .modern-menu-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 70px 100px; margin-top: 80px;
+    display: grid; 
+    /* 保持你旧版的宽度和间距 */
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 70px 100px; 
+    margin-top: 80px;
 }
-.menu-card h3 {
-    font-size: 24px; border-bottom: 0.5px solid rgba(197,160,89,0.2);
-    padding-bottom: 18px; margin-bottom: 35px;
+
+/* 菜品分类标题：高级金 + 加大字号 + 禁用交互 */
+.category-header {
+    color: #d4af37 !important; 
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem !important; /* 按照你的要求加大字号 */
+    font-weight: 300 !important;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border-bottom: 0.5px solid rgba(211, 175, 55, 0.3);
+    padding-bottom: 18px; 
+    margin-bottom: 35px;
+    pointer-events: none; /* 禁用点击/变色 */
+    cursor: default;
 }
-/* 菜品对齐逻辑核心 */
+
+/* 菜品对齐逻辑：承袭旧版核心 */
 .menu-item {
-    display: flex; align-items: flex-end; margin-bottom: 22px;
-    font-size: 15px; font-weight: 200; width: 100%;
+    display: flex; 
+    align-items: flex-end; /* 底部对齐，确保点状线连接文字底部 */
+    margin-bottom: 22px;
+    font-size: 15px; 
+    font-weight: 200; 
+    width: 100%;
+    color: #ffffff;
     transition: transform 0.3s ease;
 }
-.item-name { flex-shrink: 1; max-width: 78%; line-height: 1.5; word-wrap: break-word; transition: 0.3s ease; }
-.item-dots { flex-grow: 1; border-bottom: 1px dotted rgba(197,160,89,0.3); margin: 0 12px 6px; min-width: 15px; }
-.item-price { color: #c5a059; flex-shrink: 0; font-weight: 500; font-family: 'Montserrat', sans-serif; }
-/* 悬停微动效 */
-.menu-item:hover .item-name { color: #fff; padding-left: 8px; }
+
+/* 长名字换行处理 */
+.item-name { 
+    flex-shrink: 1; 
+    max-width: 78%; 
+    line-height: 1.5; 
+    word-wrap: break-word; 
+    transition: 0.3s ease; 
+}
+
+/* 点状线：颜色调回你旧版的色值 */
+.item-dots { 
+    flex-grow: 1; 
+    border-bottom: 1px dotted rgba(212, 175, 55, 0.3); 
+    margin: 0 12px 6px; 
+    min-width: 15px; 
+}
+
+/* 价格：使用你要求的 Montserrat 字体 */
+.item-price { 
+    color: #d4af37; 
+    flex-shrink: 0; 
+    font-weight: 500; 
+    font-family: 'Montserrat', sans-serif; 
+}
+
+/* --- 菜单分类渐入动画 (Luxury Motion) --- */
+.menu-category-group.reveal {
+    opacity: 0;
+    /* 向下偏移 + 模糊，营造从远处走来的感觉 */
+    transform: translateY(50px);
+    filter: blur(8px);
+    transition: 
+        opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1.5s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 1.2s ease;
+}
+
+.menu-category-group.reveal.is-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    filter: blur(0);
+}
 
 /* 7. 相册 - 优化为错位瀑布流布局 */
 .gallery-section { padding: 120px 0; background: #080808; }
