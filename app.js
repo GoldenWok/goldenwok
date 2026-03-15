@@ -69,8 +69,15 @@ function renderWebsite() {
     safeSet("contactAddress", contact.address);
     safeSet("contactPhone", contact.phone);
 
+  document.querySelectorAll('.nav-item').forEach(item => {
+        const key = `text-${LANG}`; // 匹配 HTML 中的 data-text-zh 等
+        const newText = item.getAttribute(`data-${key}`);
+        if (newText) item.innerText = newText;
+    });
+
     renderMenu();
     renderGallery();
+    initCursor(); // 确保新渲染的元素也能触发光标变色
 }
 
 function renderMenu() {
@@ -249,7 +256,44 @@ function closeImage() {
         document.querySelector('.cursor').style.zIndex = "100000";
     }, 400);
 }
+/* --- 菜单折叠交互逻辑 --- */
+function toggleMenuCategory(headerElement) {
+    const wrapper = headerElement.nextElementSibling; // 找到对应的 .menu-items-wrapper
+    const arrow = headerElement.querySelector('.arrow-icon');
+    
+    // 如果当前是收起的
+    if (!wrapper.style.maxHeight || wrapper.style.maxHeight === "0px") {
+        // 先关闭其他所有已打开的分类 (可选，打造手风琴效果)
+        document.querySelectorAll('.menu-items-wrapper').forEach(el => {
+            el.style.maxHeight = "0px";
+            el.previousElementSibling.classList.remove('active');
+        });
 
+        // 展开当前
+        wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+        headerElement.classList.add('active');
+    } else {
+        // 收起当前
+        wrapper.style.maxHeight = "0px";
+        headerElement.classList.remove('active');
+    }
+}
+
+/* --- 补充：平滑滚动到锚点 --- */
+// 当点击导航栏 a 标签时，平滑跳转
+document.querySelectorAll('.nav-item').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - 80, // 减去 header 的高度
+                behavior: 'smooth'
+            });
+        }
+    });
+});
 
 /* --- 5. 初始化 --- */
 function initReveal() {
