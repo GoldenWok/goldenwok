@@ -123,17 +123,21 @@ function renderWebsite() {
 
 function renderMenu() {
     const container = document.getElementById("menuContainer");
-    if (!container || !DB.menu) return;
+    if (!container || typeof DB === 'undefined' || !DB.menu) return;
 
-    container.innerHTML = DB.menu.map(cat => `
+    container.innerHTML = "";
+
+    const menuHtml = DB.menu.map(cat => `
         <div class="menu-category-group reveal">
-            <h3 class="category-header">${cat.name[LANG]}</h3>
+            <h3 class="category-header">
+                ${cat.name[LANG]}
+            </h3>
             <div class="menu-items">
                 ${cat.items.map(item => {
                     if (item.type === 'complex') {
                         return `
                             <div class="menu-item-complex" style="margin-bottom: 25px;">
-                                <strong style="display:block; color:#fff; font-weight:200; margin-bottom:12px; font-family:'Montserrat', sans-serif;">
+                                <strong style="display:block; color:#fff; font-weight:200; margin-bottom:10px; letter-spacing:1px;">
                                     ${item.title[LANG]}
                                 </strong>
                                 ${item.options.map(opt => `
@@ -145,9 +149,10 @@ function renderMenu() {
                                 `).join('')}
                             </div>`;
                     }
+                    // 修改点 2：确保读取的是 item[LANG]，这是你普通菜品的名字
                     return `
                         <div class="menu-item">
-                            <span class="item-name">${item[LANG]}</span>
+                            <span class="item-name">${item[LANG] || ""}</span>
                             <span class="item-dots"></span>
                             <span class="item-price">€${Number(item.price).toFixed(2)}</span>
                         </div>`;
@@ -155,8 +160,6 @@ function renderMenu() {
             </div>
         </div>
     `).join('');
-
-
 
     container.innerHTML = menuHtml;
 
@@ -169,7 +172,6 @@ function renderMenu() {
         }
     }, 100);
 }
-
 /* --- 统一动画初始化函数 --- */
 function initReveal() {
     const observerOptions = {
