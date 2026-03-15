@@ -77,52 +77,57 @@ function setLang(lang) {
 }
 
 function renderWebsite() {
-    const safeSet = (id, val) => { if(document.getElementById(id)) document.getElementById(id).innerText = val || ""; };
+    const safeSet = (id, val) => { 
+        const el = document.getElementById(id);
+        if (el && val !== undefined) el.innerText = val; 
+    };
 
-    safeSet("siteTitle", DB.restaurant[LANG]);
-    safeSet("welcome", DB.welcome[LANG]);
-    safeSet("slogan", DB.slogan[LANG]);
-    safeSet("openingText", DB.opening[LANG]);
-    safeSet("buffetTime", DB.buffetTime[LANG]);
-    safeSet("buffetPrice", DB.buffetPrice[LANG]);
-    safeSet("menuTitle", DB.menuTitle[LANG]);
-    safeSet("galleryTitle", DB.galleryTitle[LANG]);
-    safeSet("locationTitle", DB.locationTitle[LANG]);
-    safeSet("orderButton", DB.orderModule.orderButton[LANG]);
-    
-    const contact = DB.contact[LANG];
-    safeSet("contactAddress", contact.address);
-    safeSet("contactPhone", contact.phone);
+    // 基础文字渲染
+    if (window.DB) {
+        safeSet("welcome", DB.welcome[LANG]);
+        safeSet("slogan", DB.slogan[LANG]);
+        safeSet("openingText", DB.opening[LANG]);
+        safeSet("buffetTime", DB.buffetTime[LANG]);
+        safeSet("buffetPrice", DB.buffetPrice[LANG]);
+        safeSet("menuTitle", DB.menuTitle[LANG]);
+        safeSet("galleryTitle", DB.galleryTitle[LANG]);
+        safeSet("locationTitle", DB.locationTitle[LANG]);
+        
+        // 修复点餐按钮：同时设置文字和链接
+        const orderBtn = document.getElementById("orderButton");
+        if (orderBtn && DB.orderModule) {
+            orderBtn.innerText = DB.orderModule.orderButton[LANG] || "ORDER ONLINE";
+            if (DB.orderModule.link) orderBtn.href = DB.orderModule.link;
+        }
 
-    // 导航栏多语言
-    document.querySelectorAll('.nav-item').forEach(item => {
-        const key = `text-${LANG}`;
-        const newText = item.getAttribute(`data-${key}`);
-        if (newText) item.innerText = newText;
-    });
+        const contact = DB.contact[LANG];
+        if (contact) {
+            safeSet("contactAddress", contact.address);
+            safeSet("contactPhone", contact.phone);
+        }
+    }
 
+    // 渲染组件
     renderMenu();
     renderGallery();
-    
-    // 重要：内容渲染后再重新计算一次跳转位置
     initSmoothScroll();
-    initCursor(); 
+    initCursor();
 }
-
 function renderMenu() {
     const container = document.getElementById("menuContainer");
-    if (!container) return;
+    if (!container || !window.DB || !DB.menu) return;
+
     container.innerHTML = DB.menu.map(cat => `
         <div class="menu-card reveal">
             <h3 class="category-header" onclick="toggleMenuCategory(this)">
                 ${cat.name[LANG]}
                 <span class="arrow-icon"></span>
             </h3>
-            <div class="menu-items-wrapper" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease;">
-                <div class="menu-items" style="padding: 20px 0;">
+            <div class="menu-items-wrapper" style="max-height: 0; overflow: hidden; transition: all 0.5s ease;">
+                <div class="menu-items">
                     ${cat.items.map(item => {
                         if (item.type === "complex") {
-                            return `<div class="menu-item"><strong>${item.title[LANG]}</strong></div>` + 
+                            return `<div class="menu-item-group"><strong>${item.title[LANG]}</strong></div>` + 
                                    item.options.map(op => `
                                      <div class="menu-item">
                                          <span class="item-name">${op[LANG]}</span>
@@ -141,7 +146,6 @@ function renderMenu() {
             </div>
         </div>
     `).join('');
-    initReveal();
 }
 
 /* --- 4. 画廊与灯箱 --- */
@@ -190,6 +194,15 @@ function closeImage() {
     overlay.classList.remove('active');
     setTimeout(() => { overlay.style.display = "none"; }, 400);
 }
+function moveGallery(direction) {
+    const container = document.getElementById("galleryContainer");
+    if (!container) return;
+    // 每次滑动 300px
+    container.scrollBy({
+        left: direction * 300,
+        behavior: 'smooth'
+    });
+}
 
 function changeFullImage(direction, event) {
     if (event) event.stopPropagation();
@@ -207,15 +220,19 @@ function changeFullImage(direction, event) {
 /* --- 5. 交互工具 --- */
 function toggleMenuCategory(headerElement) {
     const wrapper = headerElement.nextElementSibling;
-    if (wrapper.style.maxHeight === "0px" || !wrapper.style.maxHeight) {
+    const isActive = headerElement.classList.contains('active');
+    
+    // 关闭其他已打开的 (可选)
+    document.querySelectorAll('.category-header').forEach(h => {
+        h.classList.remove('active');
+        h.nextElementSibling.style.maxHeight = "0px";
+    });
+
+    if (!isActive) {
         wrapper.style.maxHeight = wrapper.scrollHeight + "px";
         headerElement.classList.add('active');
-    } else {
-        wrapper.style.maxHeight = "0px";
-        headerElement.classList.remove('active');
     }
 }
-
 function setupDynamicDepth() {
     const container = document.getElementById("galleryContainer");
     if (!container) return;
