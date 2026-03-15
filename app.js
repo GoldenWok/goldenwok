@@ -355,73 +355,29 @@ if (orderBtn) {
     orderBtn.style.setProperty('cursor', 'none', 'important');
 }
 
-// 在 app.js 中替换或添加
-const slider = document.getElementById('galleryContainer');
-let isDragging = false;
-let startX, scrollLeft;
+let currentPhotoIndex = 0;
+const photos = ["img1.jpg", "img2.jpg", "img3.jpg"]; // 替换为你的真实路径
 
-if (slider) {
-    // 1. 鼠标拖拽逻辑
-    slider.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        slider.style.scrollBehavior = 'auto'; // 拖拽时关闭平滑，防止“跟不上”
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-
-    slider.addEventListener('mouseup', () => {
-        isDragging = false;
-        slider.style.scrollBehavior = 'smooth'; // 释放后恢复平滑
-    });
-
-    slider.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 2; // 调整滑动灵敏度
-        slider.scrollLeft = scrollLeft - walk;
-    });
-
-    // 2. 需求 3：点击图片自动将其推到正中间
-    slider.addEventListener('click', (e) => {
-        const item = e.target.closest('.gallery-slide-item');
-        if (item && !isDragging) {
-            scrollToElement(item);
-        }
-    });
+function openLightbox(index) {
+    currentPhotoIndex = index;
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightboxImg');
+    img.src = `images/${photos[currentPhotoIndex]}`;
+    lb.classList.add('active');
 }
 
-function scrollToElement(el) {
-    const container = document.getElementById("galleryContainer");
-    const containerCenter = container.offsetWidth / 2;
-    const elCenter = el.offsetLeft + (el.offsetWidth / 2);
-    container.scrollTo({
-        left: elCenter - containerCenter,
-        behavior: 'smooth'
-    });
+function changeLightboxImage(dir, event) {
+    event.stopPropagation(); // 防止触发关闭
+    currentPhotoIndex = (currentPhotoIndex + dir + photos.length) % photos.length;
+    document.getElementById('lightboxImg').src = `images/${photos[currentPhotoIndex]}`;
 }
-// 在你的 setupActiveEffect 函数中确保有这一行
-function setupActiveEffect() {
-    const container = document.getElementById("galleryContainer");
-    
-    const updateActive = () => {
-        const items = document.querySelectorAll('.gallery-slide-item');
-        const containerCenter = container.getBoundingClientRect().left + container.offsetWidth / 2;
 
-        items.forEach(item => {
-            const rect = item.getBoundingClientRect();
-            const itemCenter = rect.left + rect.width / 2;
-            
-            if (Math.abs(containerCenter - itemCenter) < 100) {
-                item.classList.add('is-active');
-                // 确保 JS 也能辅助锁定层级
-                item.style.zIndex = "100";
-            } else {
-                item.classList.remove('is-active');
-                item.style.zIndex = "1";
-            }
-        });
-    };
-
-    container.addEventListener('scroll', updateActive);
+// 核心：点击图片居中
+function handleItemClick(index, el) {
+    if (el.classList.contains('is-active')) {
+        openLightbox(index);
+    } else {
+        // 如果点的是旁边的，滚动到该位置
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
 }
