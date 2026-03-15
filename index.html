@@ -47,13 +47,20 @@
         <div id="menuContainer" class="modern-menu-grid"></div>
     </section>
 
-<section class="gallery-section">
-    <button class="nav-btn prev-btn" onclick="moveGallery(-1)">&lsaquo;</button>
-    <button class="nav-btn next-btn" onclick="moveGallery(1)">&rsaquo;</button>
+<section class="gallery-wrapper">
+    <button class="nav-arrow prev" onclick="moveGallery(-1)">&#10229;</button>
+    <button class="nav-arrow next" onclick="moveGallery(1)">&#10230;</button>
 
-    <div class="gallery-slider-wrapper" id="galleryContainer">
+    <div class="gallery-track" id="galleryContainer">
         </div>
 </section>
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+    <span class="close-btn">&times;</span>
+    <button class="lb-nav lb-prev" onclick="changeLightboxImage(-1, event)">&#10229;</button>
+    <img id="lightboxImg" src="" alt="Full View">
+    <button class="lb-nav lb-next" onclick="changeLightboxImage(1, event)">&#10230;</button>
+</div>
 
     <section class="location-section reveal">
         <h2 id="locationTitle" class="section-title"></h2>
