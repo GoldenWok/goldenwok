@@ -17,13 +17,33 @@
     <div class="cursor-follower"></div>
 
     <header id="header">
-        <div class="lang">
-            <span onclick="setLang('zh')">中文</span>
-            <span onclick="setLang('en')">EN</span>
-            <span onclick="setLang('gr')">GR</span>
+    <nav class="nav-container">
+        <div class="logo-group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <span class="logo-zh">金鼎</span>
+            <span class="logo-en">GOLDEN WOK</span>
         </div>
-        <div class="main-logo" id="siteTitle">GOLDEN WOK</div>
-    </header>
+
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="#menu-anchor" class="nav-item" data-text-zh="选单" data-text-en="MENU" data-text-gr="ΜΕΝΟΥ">MENU</a>
+                <a href="#gallery-anchor" class="nav-item" data-text-zh="视觉" data-text-en="PHOTOS" data-text-gr="ΦΩΤΟ">PHOTOS</a>
+                <a href="#location-anchor" class="nav-item" data-text-zh="地点" data-text-en="VISIT" data-text-gr="ΕΠΙΣΚΕΨΗ">VISIT</a>
+            </div>
+            
+            <div class="divider-line"></div>
+
+            <div class="lang-switcher">
+                <span onclick="setLang('zh')">中</span>
+                <span onclick="setLang('en')">EN</span>
+                <span onclick="setLang('gr')">GR</span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<section id="menu-anchor" class="menu-section">...</section>
+<section id="gallery-anchor" class="gallery-section">...</section>
+<section id="location-anchor" class="location-section">...</section>
 
     <section class="hero parallax-bg">
         <div class="hero-overlay"></div>
