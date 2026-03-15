@@ -1,109 +1,89 @@
 <!DOCTYPE html>
 <html lang="el">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOLDEN WOK | Authentic Chinese Dining</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+    <title>GOLDEN WOK | THE ART OF CHINESE TASTE</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
 </head>
-    
-<body class="loading"> <div class="cursor"></div>
+<body class="loading">
+
+    <div id="loader">
+        <div class="loader-logo">GOLDEN WOK</div>
+    </div>
+
+    <div class="cursor"></div>
     <div class="cursor-follower"></div>
 
     <header id="header">
-        <nav class="lang-nav">
-            <div class="lang">
-                <span onclick="setLang('zh')">ZH</span>
-                <span onclick="setLang('en')">EN</span>
-                <span onclick="setLang('gr')">GR</span>
-            </div>
-        </nav>
-        <h1 id="siteTitle" class="main-logo split-text"></h1>
+        <div class="lang">
+            <span onclick="setLang('zh')">中文</span>
+            <span onclick="setLang('en')">EN</span>
+            <span onclick="setLang('gr')">GR</span>
+        </div>
+        <div class="main-logo" id="siteTitle">GOLDEN WOK</div>
     </header>
 
     <section class="hero parallax-bg">
         <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h2 id="welcome" class="split-text"></h2>
+        <div class="hero-content reveal">
+            <h1 id="welcome">WELCOME</h1>
             <div class="gold-line-divider"></div>
-            <p id="slogan" class="reveal-type"></p>
+            <p id="slogan">THE ART OF CHINESE TASTE</p>
+            <a href="https://www.e-food.gr" target="_blank" class="cta-gold-btn" id="orderButton">ORDER ONLINE</a>
         </div>
     </section>
 
     <section class="info-section reveal">
-        <h3 id="orderTitle" class="gold-subtitle"></h3>
+        <h2 class="gold-subtitle" id="openingTitle">OPENING HOURS</h2>
         <div class="info-box">
-            <p id="openingText" class="grey-hint"></p>
-            <p id="buffetTime" class="gold-core-text"></p>
-            <p id="buffetPrice" class="gold-core-text"></p>
+            <p class="gold-core-text" id="openingText"></p>
+            <p class="gold-core-text" id="buffetTime"></p>
+            <p class="grey-hint" id="buffetPrice"></p>
         </div>
-        <a id="orderButton" class="cta-gold-btn" href="https://www.e-food.gr/delivery/nea-smurni/golden-wok-8734941" target="_blank"></a>
     </section>
 
-    <section class="menu-section reveal">
-        <h2 id="menuTitle" class="section-title"></h2>
-        <div id="menuContainer" class="modern-menu-grid"></div>
+    <section class="menu-section">
+        <h2 class="section-title" id="menuTitle">THE MENU</h2>
+        <div id="menuContainer" class="modern-menu-grid">
+            </div>
     </section>
 
-<section class="gallery-wrapper">
-    <button class="nav-arrow prev" onclick="moveGallery(-1)">&#10229;</button>
-    <button class="nav-arrow next" onclick="moveGallery(1)">&#10230;</button>
-
-    <div class="gallery-track" id="galleryContainer">
+    <section class="gallery-section">
+        <h2 class="section-title" id="galleryTitle">GALLERY</h2>
+        <div class="gallery-wrapper">
+            <button class="nav-btn prev-btn" onclick="moveGallery(-1)"></button>
+            <div id="galleryContainer" class="gallery-track">
+                </div>
+            <button class="nav-btn next-btn" onclick="moveGallery(1)"></button>
         </div>
-</section>
-
-<div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
-    <span class="close-btn">&times;</span>
-    <button class="lb-nav lb-prev" onclick="changeLightboxImage(-1, event)">&#10229;</button>
-    <img id="lightboxImg" src="" alt="Full View">
-    <button class="lb-nav lb-next" onclick="changeLightboxImage(1, event)">&#10230;</button>
-</div>
-
-    <div id="imageOverlay" class="image-overlay" onclick="closeImage()">
-    <button class="lb-btn lb-prev" onclick="changeFullImage(-1, event)">&#10094;</button>
-    <img id="overlayImg" src="" alt="Full View">
-    <button class="lb-btn lb-next" onclick="changeFullImage(1, event)">&#10095;</button>
-    
-    <span class="close-overlay">&times;</span>
-</div>
+    </section>
 
     <section class="location-section reveal">
-        <h2 id="locationTitle" class="section-title"></h2>
+        <h2 class="section-title" id="locationTitle">LOCATION</h2>
         <div class="map-wrapper">
-            <iframe 
-              id="googleMap" 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.44238510656!2d23.712613476388484!3d37.94344400240974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bc24985223c3%3A0xc3f17c5b6b150c77!2sGolden%20Wok!5e0!3m2!1sen!2sgr!4v1709800000000!5m2!1sen!2sgr" 
-              allowfullscreen="" 
-              loading="lazy" 
-              referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
+            <iframe id="googleMap" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.4746404764493!2d23.712604615322425!3d37.94265497972967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bd0f1e000001%3A0x7d00000000000000!2zTGVvZi4gQW5kcmVhIFNpZ2dyb3UgMjA3LCBOZWEgU215cm5pIDE3MSA0MQ!5e0!3m2!1sen!2sgr!4v1650000000000!5m2!1sen!2sgr" allowfullscreen="" loading="lazy"></iframe>
         </div>
-        <div class="location-info">
-            <p id="contactAddress" class="gold-address-text"></p>
-            <div class="gold-dot-divider"></div> <p id="contactPhone" class="gold-address-text"></p>
-        </div>
+        <p class="gold-address-text" id="contactAddress"></p>
+        <div class="gold-dot-divider"></div>
+        <p class="gold-address-text" id="contactPhone"></p>
     </section>
 
-   <footer class="minimal-footer">
-    <div class="footer-logo">GOLDEN WOK</div>
-    <div class="footer-dot"></div>
-    <p class="footer-info">ATHENS · NEA SMYRNI</p>
-    <p class="footer-copy">© 2026</p>
-</footer>
+    <div id="imageOverlay" class="image-overlay" onclick="closeImage()">
+        <span class="close-overlay">&times;</span>
+        <button class="lb-btn lb-prev" onclick="changeFullImage(-1, event)">&#10094;</button>
+        <img id="overlayImg" src="" alt="Full View">
+        <button class="lb-btn lb-next" onclick="changeFullImage(1, event)">&#10095;</button>
+    </div>
+
+    <footer class="minimal-footer">
+        <div class="footer-logo">GOLDEN WOK</div>
+        <div class="footer-info">SINCE 2010</div>
+        <div class="footer-copy">© 2026 ALL RIGHTS RESERVED</div>
+    </footer>
 
     <script src="config.js"></script>
     <script src="app.js"></script>
-
-    <div id="imageOverlay" class="image-overlay" onclick="closeImage()">
-    <img id="overlayImg" src="" alt="Full View">
-    <span class="close-overlay">&times;</span>
-</div>
 </body>
-
-<div id="loader">
-    <div class="loader-logo">GOLDEN WOK</div>
-</div>
 </html>
