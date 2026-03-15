@@ -41,6 +41,37 @@ function initCursor() {
         cursor.style.transform = 'translate(-50%, -50%) scale(1)';
     });
 }
+
+// 在 initCursor 之后添加
+function initSmoothScroll() {
+    document.querySelectorAll('.nav-item').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault(); // 阻止默认跳转，防止 URL 出现 # 导致页面跳动
+
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                // 计算 header 的高度
+                const headerOffset = 90; 
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// 确保在渲染完页面后调用
+window.addEventListener('DOMContentLoaded', () => {
+    renderWebsite();
+    initCursor();
+    initSmoothScroll(); // 激活平滑滚动
+});
 /* --- 2. 渲染逻辑 --- */
 function setLang(lang) {
     LANG = lang;
