@@ -330,26 +330,63 @@ if (orderBtn) {
 let currentPhotoIndex = 0;
 const photos = ["img1.jpg", "img2.jpg", "img3.jpg"]; // 替换为你的真实路径
 
-function openLightbox(index) {
-    currentPhotoIndex = index;
-    const lb = document.getElementById('lightbox');
-    const img = document.getElementById('lightboxImg');
-    img.src = `images/${photos[currentPhotoIndex]}`;
-    lb.classList.add('active');
+/* =========================================
+   6. 补全缺失的画廊动态效果与灯箱逻辑
+   ========================================= */
+
+// 修复：定义 setupDynamicDepth，解决 Uncaught ReferenceError
+function setupDynamicDepth() {
+    const container = document.getElementById("galleryContainer");
+    if (!container) return;
+
+    const updateDepth = () => {
+        const items = document.querySelectorAll('.gallery-slide-item');
+        const containerRect = container.getBoundingClientRect();
+        const containerCenter = containerRect.left + containerRect.width / 2;
+
+        items.forEach((item) => {
+            const itemRect = item.getBoundingClientRect();
+            const itemCenter = itemRect.left + itemRect.width / 2;
+            
+            // 计算图片中心距离容器中心的距离
+            const distanceFromCenter = Math.abs(containerCenter - itemCenter);
+
+            // 如果距离中心小于 150 像素，判定为激活状态
+            if (distanceFromCenter < 150) {
+                item.classList.add('is-active');
+            } else {
+                item.classList.remove('is-active');
+            }
+        });
+    };
+
+    // 监听滚动事件
+    container.addEventListener('scroll', updateDepth);
+    // 初始化执行一次
+    setTimeout(updateDepth, 100);
 }
 
-function changeLightboxImage(dir, event) {
-    event.stopPropagation(); // 防止触发关闭
-    currentPhotoIndex = (currentPhotoIndex + dir + photos.length) % photos.length;
-    document.getElementById('lightboxImg').src = `images/${photos[currentPhotoIndex]}`;
+// 修复：统一灯箱逻辑（将 openFullImage 与 photos 数组关联）
+// 注意：这里直接使用 DB.gallery，不再需要手动写 photos 数组
+function openFullImage(index) {
+    currentImgIndex = index;
+    const overlay = document.getElementById("imageOverlay");
+    const img = document.getElementById("overlayImg");
+    
+    if (overlay && img && DB.gallery[index]) {
+        img.src = `images/${DB.gallery[index]}`;
+        overlay.style.display = "flex";
+        setTimeout(() => overlay.classList.add('active'), 10);
+    }
 }
 
-// 核心：点击图片居中
-function handleItemClick(index, el) {
-    if (el.classList.contains('is-active')) {
-        openLightbox(index);
-    } else {
-        // 如果点的是旁边的，滚动到该位置
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+// 修复：统一灯箱切换逻辑
+function changeFullImage(direction, event) {
+    if (event) event.stopPropagation();
+    
+    currentImgIndex = (currentImgIndex + direction + DB.gallery.length) % DB.gallery.length;
+    const img = document.getElementById("overlayImg");
+    if (img) {
+        img.src = `images/${DB.gallery[currentImgIndex]}`;
     }
 }
