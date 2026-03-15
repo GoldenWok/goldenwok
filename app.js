@@ -22,7 +22,8 @@ function initCursor() {
         // 2. 智能探测变色
         // 使用 elementFromPoint 探测鼠标下的元素，看它是否“可点击”
         const target = e.target;
-        const isClickable = target.closest('a, button, .lang span, .gallery-slide-item, .menu-item, .lb-btn, #overlayImg, .cta-gold-btn');
+       // 在 initCursor 里的 target.closest 增加 .nav-item 和 .logo-group
+const isClickable = target.closest('a, button, .lang span, .logo-group, .nav-item, .category-header, .lb-btn');
 
         if (isClickable) {
             cursor.classList.add('is-hovering');
