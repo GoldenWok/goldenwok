@@ -398,25 +398,23 @@ iframe { width: 100%; height: 100%; border: 0; }
 /* 分类标题金色 */
 /* 1. 高级金色标题样式 */
 /* 高级金色标题：加大字号 + 禁用交互 */
+/* 强制统一所有分类标题与总标题 */
 .category-header {
-    color: #c5a059 !important; 
-    font-family: 'Cormorant Garamond', serif;
-    /* 1. 加大字号：从原来的 1.8rem 提升到 2.2rem 或更高 */
-    font-size: 2.2rem !important; 
+    color: #c5a059 !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 2.8rem !important; /* 对标总标题大小 */
     font-weight: 300 !important;
-    letter-spacing: 3px; /* 增加字间距，更有呼吸感 */
-    text-transform: uppercase;
+    letter-spacing: 4px !important;
+    text-transform: uppercase !important;
     
-    margin-bottom: 35px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    /* 装饰线 */
+    border-bottom: 1px solid rgba(197, 160, 89, 0.3) !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 40px !important;
     
-    /* 2. 禁用鼠标触发：禁止变色、禁止点击、禁止改变光标 */
-    pointer-events: none; 
-    cursor: default;
-    
-    /* 确保即使有 hover 样式也不会生效 */
-    transition: none !important; 
+    /* 禁用交互，防止干扰动画 */
+    pointer-events: none !important;
+    cursor: none !important;
 }
 /* 2. 渐入动画修正 */
 /* --- 增强版：高级渐入动画 --- */
