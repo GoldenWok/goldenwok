@@ -43,7 +43,6 @@ function initCursor() {
 }
 
 function initSmoothScroll() {
-    // 监听所有带 # 的链接
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -52,21 +51,17 @@ function initSmoothScroll() {
             const targetElement = document.querySelector(targetId);
             
             if (targetElement) {
-                // 1. 获取目标元素相对于文档顶部的距离
-                const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                // 2. 减去 Header 的动态高度（建议设置一个固定偏移值，如 100）
-                const offsetPosition = elementPosition - 100;
-
-                // 3. 执行平滑滚动
+                // 手动计算：元素顶部距离 - 导航栏高度(100px)
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 100;
+                
                 window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
+                    top: targetPosition,
+                    behavior: 'smooth'
                 });
             }
         });
     });
 }
-
 // 修改滚动监听逻辑，控制透明度
 window.addEventListener('scroll', () => {
     const header = document.getElementById('header');
