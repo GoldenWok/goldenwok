@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GOLDEN WOK | THE ART OF CHINESE TASTE</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
 </head>
@@ -17,39 +18,30 @@
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
 
-  <header id="header">
-    <nav class="nav-container">
-        <div class="logo-group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-            <span class="logo-zh">金鼎</span>
-            <span class="logo-en">GOLDEN WOK</span>
-        </div>
-
-        <div class="nav-right">
-            <div class="nav-links">
-                <a href="#menu-anchor" class="nav-item" data-text-zh="选单" data-text-en="MENU" data-text-gr="ΜΕΝΟΥ">MENU</a>
-                <a href="#gallery-anchor" class="nav-item" data-text-zh="视觉" data-text-en="PHOTOS" data-text-gr="ΦΩΤΟ">PHOTOS</a>
-                <a href="#location-anchor" class="nav-item" data-text-zh="地点" data-text-en="VISIT" data-text-gr="ΕΠΙΣΚΕΨΗ">VISIT</a>
+    <header id="header">
+        <nav class="nav-container">
+            <div class="logo-group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <span class="logo-zh">金鼎</span>
+                <span class="logo-en">GOLDEN WOK</span>
             </div>
-            
-            <div class="divider-line"></div>
 
-            <div class="lang-switcher">
-                <span onclick="setLang('zh')">中</span>
-                <span onclick="setLang('en')">EN</span>
-                <span onclick="setLang('gr')">GR</span>
+            <div class="nav-right">
+                <div class="nav-links">
+                    <a href="#menu-anchor" class="nav-item" data-text-zh="选单" data-text-en="MENU" data-text-gr="ΜΕΝΟΥ">MENU</a>
+                    <a href="#gallery-anchor" class="nav-item" data-text-zh="视觉" data-text-en="PHOTOS" data-text-gr="ΦΩΤΟ">PHOTOS</a>
+                    <a href="#location-anchor" class="nav-item" data-text-zh="地点" data-text-en="VISIT" data-text-gr="ΕΠΙΣΚΕΨΗ">VISIT</a>
+                </div>
+                
+                <div class="divider-line"></div>
+
+                <div class="lang-switcher">
+                    <span onclick="setLang('zh')">中</span>
+                    <span onclick="setLang('en')">EN</span>
+                    <span onclick="setLang('gr')">GR</span>
+                </div>
             </div>
-        </div>
-    </nav>
-</header>
-
-<section id="menu-anchor" class="menu-section">
-    </section>
-
-<section id="gallery-anchor" class="gallery-section">
-    </section>
-
-<section id="location-anchor" class="location-section">
-    </section>
+        </nav>
+    </header>
 
     <section class="hero parallax-bg">
         <div class="hero-overlay"></div>
@@ -70,13 +62,13 @@
         </div>
     </section>
 
-    <section class="menu-section">
+    <section id="menu-anchor" class="menu-section">
         <h2 class="section-title" id="menuTitle">THE MENU</h2>
         <div id="menuContainer" class="modern-menu-grid">
             </div>
     </section>
 
-    <section class="gallery-section">
+    <section id="gallery-anchor" class="gallery-section">
         <h2 class="section-title" id="galleryTitle">GALLERY</h2>
         <div class="gallery-wrapper">
             <button class="nav-btn prev-btn" onclick="moveGallery(-1)"></button>
@@ -86,10 +78,10 @@
         </div>
     </section>
 
-    <section class="location-section reveal">
+    <section id="location-anchor" class="location-section reveal">
         <h2 class="section-title" id="locationTitle">LOCATION</h2>
         <div class="map-wrapper">
-            <iframe id="googleMap" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.4746404764493!2d23.712604615322425!3d37.94265497972967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bd0f1e000001%3A0x7d00000000000000!2zTGVvZi4gQW5kcmVhIFNpZ2dyb3UgMjA3LCBOZWEgU215cm5pIDE3MSA0MQ!5e0!3m2!1sen!2sgr!4v1650000000000!5m2!1sen!2sgr" allowfullscreen="" loading="lazy"></iframe>
+            <iframe id="googleMap" src="about:blank" allowfullscreen="" loading="lazy"></iframe>
         </div>
         <p class="gold-address-text" id="contactAddress"></p>
         <div class="gold-dot-divider"></div>
@@ -97,10 +89,10 @@
     </section>
 
     <div id="imageOverlay" class="image-overlay" onclick="closeImage()">
-        <span class="close-overlay">&times;</span>
-        <button class="lb-btn lb-prev" onclick="changeFullImage(-1, event)">&#10094;</button>
+        <span class="close-overlay">×</span>
+        <button class="lb-btn lb-prev" onclick="changeFullImage(-1, event)">❮</button>
         <img id="overlayImg" src="" alt="Full View">
-        <button class="lb-btn lb-next" onclick="changeFullImage(1, event)">&#10095;</button>
+        <button class="lb-btn lb-next" onclick="changeFullImage(1, event)">❯</button>
     </div>
 
     <footer class="minimal-footer">
