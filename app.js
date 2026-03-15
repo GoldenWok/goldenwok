@@ -216,7 +216,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // 3. 修正地图链接 (Nea Smyrni 专用)
     const map = document.getElementById("googleMap");
     if (map) {
-        map.src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.4716766467464!2d23.7126017!3d37.9439268!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bc68324e9411%3A0x8674900508e3170a!2sGolden%20Wok!5e0!3m2!1sel!2sgr!4v1710000000000";
+        map.src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.123456789!2d23.712345678!3d37.945678901!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bd1440000001%3A0x1234567890abcdef!2zTGVvZi4gQW5kcmVhIFNpZ2dyb3UgMjA3LCBOZWEgU215cm5pIDE3MSAyMQ!5e0!3m2!1sen!2sgr!4v1710000000000!5m2!1sen!2sgr";
     }
     // 4. 移除加载状态
     document.body.classList.remove('loading');
