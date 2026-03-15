@@ -655,7 +655,27 @@ html, body, a, button, span, .menu-item, .lang span {
     margin: 0 12px 6px;
     min-width: 15px;
 }
-
+/* 6. 菜单板块 - 修复长名字换行 */
+.menu-section { padding: 120px 10%; }
+.modern-menu-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 70px 100px; margin-top: 80px;
+}
+.menu-card h3 {
+    font-size: 24px; border-bottom: 0.5px solid rgba(197,160,89,0.2);
+    padding-bottom: 18px; margin-bottom: 35px;
+}
+/* 菜品对齐逻辑核心 */
+.menu-item {
+    display: flex; align-items: flex-end; margin-bottom: 22px;
+    font-size: 15px; font-weight: 200; width: 100%;
+    transition: transform 0.3s ease;
+}
+.item-name { flex-shrink: 1; max-width: 78%; line-height: 1.5; word-wrap: break-word; transition: 0.3s ease; }
+.item-dots { flex-grow: 1; border-bottom: 1px dotted rgba(197,160,89,0.3); margin: 0 12px 6px; min-width: 15px; }
+.item-price { color: #c5a059; flex-shrink: 0; font-weight: 500; font-family: 'Montserrat', sans-serif; }
+/* 悬停微动效 */
+.menu-item:hover .item-name { color: #fff; padding-left: 8px; }
 /* --- 移动端可见性补丁 --- */
 .modern-menu-grid {
     display: grid;
