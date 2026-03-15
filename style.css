@@ -346,6 +346,8 @@ section[id$="-anchor"] {
         transform 1.5s cubic-bezier(0.16, 1, 0.3, 1),
         filter 1.2s ease;
 }
+/* 悬停微动效 */
+.menu-item:hover .item-name { color: #fff; padding-left: 8px; }
 
 .menu-category-group.reveal.is-visible {
     opacity: 1 !important;
