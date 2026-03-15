@@ -878,3 +878,51 @@ body, html {
     overflow-x: hidden;
     width: 100%;
 }
+
+/* --- 导航栏容器强化 --- */
+.nav-container {
+    display: flex;
+    justify-content: space-between; /* 强制两端对齐：Logo在左，其他在右 */
+    align-items: center;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    /* 修正：确保在最右侧留出呼吸空间，不贴屏幕边缘 */
+    margin-right: 40px; 
+}
+
+/* --- 彻底消除跳转空白：锚点补丁 --- */
+/* 如果点击后上方出现空白，通常是因为 Section 的父容器有 margin。
+   我们直接在 Section 上强制修正。
+*/
+#menu-anchor, #gallery-anchor, #location-anchor {
+    display: block;
+    position: relative;
+    /* 核心：跳转时停在距离顶部 120px 的位置 */
+    scroll-margin-top: 120px !important; 
+    padding-top: 20px; /* 内部留白 */
+}
+/* 默认隐藏分类内容 */
+.menu-items-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+}
+
+/* 展开时的状态 */
+.menu-items-wrapper.active {
+    opacity: 1;
+}
+
+.category-header {
+    cursor: none; /* 确保使用自定义光标 */
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+}
