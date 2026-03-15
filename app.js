@@ -65,54 +65,60 @@ function setLang(lang) {
 function renderWebsite() {
     const safeSet = (id, val) => { 
         const el = document.getElementById(id);
-        if (el && val !== undefined) el.innerText = val; 
+        if (el && val !== undefined) {
+            el.innerText = val; 
+        } 
     };
 
-    // 检查 DB 是否定义
-    if (typeof DB === 'undefined') {
-        console.error("DB is not defined. Make sure config.js is loaded before app.js");
-        return;
+    if (typeof DB === 'undefined') return;
+
+    // --- 核心逻辑：根据你提供的 config.js 结构精确取值 ---
+
+    // 1. 顶部 Logo/名字 (直接取自 DB.restaurant)
+    const logoName = DB.restaurant ? DB.restaurant[LANG] : "GOLDEN WOK";
+    // 如果你有 logo 相关的 ID 可以设置在这里
+
+    // 2. 基础文字渲染 (这些属性在 DB 根目录下)
+    safeSet("welcome", DB.welcome ? DB.welcome[LANG] : "");
+    safeSet("slogan", DB.slogan ? DB.slogan[LANG] : "");
+    safeSet("openingText", DB.opening ? DB.opening[LANG] : "");
+    safeSet("buffetTime", DB.buffetTime ? DB.buffetTime[LANG] : "");
+    safeSet("buffetPrice", DB.buffetPrice ? DB.buffetPrice[LANG] : "");
+    
+    // 3. 标题渲染 (平级属性)
+    safeSet("menuTitle", DB.menuTitle ? DB.menuTitle[LANG] : "");
+    safeSet("galleryTitle", DB.galleryTitle ? DB.galleryTitle[LANG] : "");
+    safeSet("locationTitle", DB.locationTitle ? DB.locationTitle[LANG] : "");
+    
+    // 4. 按钮渲染 (在 orderModule 内部)
+    if (DB.orderModule && DB.orderModule.orderButton) {
+        safeSet("orderButton", DB.orderModule.orderButton[LANG]);
     }
 
-    const info = DB.restaurant; 
-
-    // --- 1. 基础信息 (都在 restaurant 对象内) ---
-    safeSet("welcome", info.welcome[LANG]);
-    safeSet("slogan", info.slogan[LANG]);
-    safeSet("openingText", info.opening[LANG]);
-    safeSet("buffetTime", info.buffetTime[LANG]);
-    safeSet("buffetPrice", info.buffetPrice[LANG]);
-    
-    // 修正：这些标题在 info (restaurant) 内部
-    safeSet("menuTitle", info.menuTitle ? info.menuTitle[LANG] : "");
-    safeSet("galleryTitle", info.galleryTitle ? info.galleryTitle[LANG] : "");
-    safeSet("locationTitle", info.locationTitle ? info.locationTitle[LANG] : "");
-    
-    // --- 2. 按钮渲染 ---
-    const orderBtn = document.getElementById("orderButton");
-    if (orderBtn && info.orderModule) {
-        orderBtn.innerText = info.orderModule.orderButton[LANG];
+    // 5. 联系方式渲染 (结构：DB.contact[LANG].address)
+    if (DB.contact && DB.contact[LANG]) {
+        const contactInfo = DB.contact[LANG];
+        safeSet("contactAddress", contactInfo.address);
+        safeSet("contactPhone", contactInfo.phone);
     }
 
-    // --- 3. 联系方式渲染 (核心报错点修复) ---
-    // 你的结构是: info.contact.gr.address
-    if (info.contact && info.contact[LANG]) {
-        const langContact = info.contact[LANG];
-        safeSet("contactAddress", langContact.address);
-        safeSet("contactPhone", langContact.phone);
-    }
+    // --- 启动子组件 ---
+    try {
+        renderMenu();
+        renderGallery();
+        initSmoothScroll();
+        initReveal();
+    } catch (e) { console.error("渲染组件时出错:", e); }
 
-    // --- 4. 渲染子组件 ---
-    renderMenu();
-    renderGallery();
-    initSmoothScroll();
-    initReveal();
-    
-    // 强制触发显示
+    // --- 强制解除加载锁定 ---
     document.body.classList.remove('loading');
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.add('done');
+    
+    // 强制显示 reveal 元素
     setTimeout(() => {
         document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
-    }, 100);
+    }, 200);
 }
 function renderMenu() {
     const container = document.getElementById("menuContainer");
