@@ -62,6 +62,14 @@
     <button class="lb-nav lb-next" onclick="changeLightboxImage(1, event)">&#10230;</button>
 </div>
 
+    <div id="imageOverlay" class="image-overlay" onclick="closeImage()">
+    <button class="lb-btn lb-prev" onclick="changeFullImage(-1, event)">&#10094;</button>
+    <img id="overlayImg" src="" alt="Full View">
+    <button class="lb-btn lb-next" onclick="changeFullImage(1, event)">&#10095;</button>
+    
+    <span class="close-overlay">&times;</span>
+</div>
+
     <section class="location-section reveal">
         <h2 id="locationTitle" class="section-title"></h2>
         <div class="map-wrapper">
