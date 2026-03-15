@@ -61,16 +61,18 @@ body.loading { opacity: 0; }
 /* --- 交互状态：双圆变白 (The White Glow) --- */
 /* 当鼠标移入按钮、链接、语言切换时触发 */
 
-.cursor.hover {
-    transform: translate(-50%, -50%) scale(1.5); /* 稍微扩大一点点 */
-    background: #ffffff !important; /* 强制变白 */
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); /* 白色发光感 */
+/* --- 光标：极致层级 --- */
+.cursor {
+    width: 8px; height: 8px; background: #c5a059; border-radius: 50%;
+    position: fixed; top: 0; left: 0; pointer-events: none; 
+    z-index: 200000; /* 确保在最顶层 */
+    transition: transform 0.1s linear, background 0.3s ease;
 }
-
-.cursor-follower.hover {
-    transform: translate(-50%, -50%) scale(1.8); /* 外圈扩大 */
-    border: 1.5px solid #ffffff !important; /* 外圈边框变白，并稍微加粗 */
-    background: rgba(255, 255, 255, 0.1); /* 给外圈加一个极淡的白色半透明填充，更明显 */
+.cursor-follower {
+    width: 30px; height: 30px; border: 1px solid rgba(197, 160, 89, 0.4);
+    border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; 
+    z-index: 199999;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 /* 2. 标题文字排版 (Oulang Typography) */
 h1, h2, h3, .section-title {
@@ -547,69 +549,30 @@ html, body, a, button, span, .menu-item, .lang span {
 }
 /* --- 1. 画廊容器：允许按钮飞出 --- */
 .gallery-wrapper {
-    position: relative;
-    max-width: 1000px; /* 窄版高级感 */
-    margin: 60px auto;
-    overflow: visible !important;
+    position: relative; width: 100%; overflow: hidden; padding: 60px 0;
 }
-
 .gallery-track {
-    display: flex !important;
-    align-items: center;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    /* 这里的 padding 是关键：确保中间那张图居中 */
-    padding: 40px 33.33% !important; 
-    gap: 0;
-    scrollbar-width: none;
-    height: 500px;
+    display: flex; align-items: center; overflow-x: auto; scroll-snap-type: x mandatory;
+    /* 核心：两边留出各 1/3 的空间，确保中间图居中 */
+    padding: 0 33.33% !important; 
+    scrollbar-width: none; height: 500px; gap: 20px;
 }
-.gallery-track::-webkit-scrollbar { display: none; }
-
-/* --- 2. 图片卡片：锁死 33% 宽度 --- */
-/* --- 轨道：强制 33.33% 视口留白确保三图视野 --- */
-#galleryContainer {
-    display: flex !important;
-    align-items: center;
-    height: 550px !important;
-    padding: 0 33.33% !important; /* 关键：确保首尾图片能滚到中间 */
-    gap: 0 !important;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-}
-
-/* --- 图片项：硬性锁死 350px 宽度 --- */
 .gallery-slide-item {
-    flex: 0 0 350px !important; /* 禁止伸缩，固定350 */
-    width: 350px !important;
-    height: 450px !important;
-    margin: 0 -60px !important; /* 叠加感 */
-    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    z-index: 1;
+    flex: 0 0 33.33vw; /* 每张图占据 1/3 屏幕宽度 */
+    height: 400px; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     scroll-snap-align: center;
 }
-
 .gallery-slide-item img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important; /* 裁剪填充，不许撑大容器 */
-    border-radius: 30px;
-    opacity: 0.3; /* 侧边图片透明感 */
-    filter: grayscale(1) blur(2px);
-    transition: 0.6s;
+    width: 100%; height: 100%; object-fit: cover; border-radius: 15px;
+    opacity: 0.5; /* 非中间图半透明 */
+    transform: scale(0.9); transition: 0.6s;
+    filter: none !important; /* 彻底移除灰度 */
 }
-
-/* --- 中间激活态：突出、放大、不透明 --- */
-.gallery-slide-item.is-active {
-    z-index: 100 !important;
-    transform: scale(1.15) !important;
-}
-
+.gallery-slide-item.is-active { transform: scale(1.1); }
 .gallery-slide-item.is-active img {
-    opacity: 1 !important;
-    filter: grayscale(0) blur(0);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    opacity: 1; /* 中间图完全显示 */
+    transform: scale(1);
+    box-shadow: 0 15px 40px rgba(197, 160, 89, 0.3);
 }
 /* --- 按钮基础样式 --- */
 /* 按钮基础：金色圆形 */
