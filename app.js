@@ -160,6 +160,10 @@ function openFullImage(index) {
     
     img.src = `images/${DB.gallery[currentImgIndex]}`;
     overlay.style.display = "flex";
+    
+    // 关键：给 body 加一个类，允许在灯箱里显示原生光标，或者让自定义光标层级最高
+    document.body.classList.add('lightbox-open');
+    
     setTimeout(() => overlay.classList.add('active'), 10);
 }
 
@@ -175,6 +179,7 @@ function changeFullImage(direction, event) {
 function closeImage() {
     const overlay = document.getElementById("imageOverlay");
     overlay.classList.remove('active');
+    document.body.classList.remove('lightbox-open'); // 移除类名
     setTimeout(() => overlay.style.display = "none", 400);
 }
 
