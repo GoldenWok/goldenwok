@@ -68,32 +68,38 @@ function renderWebsite() {
         if (el && val !== undefined) el.innerText = val; 
     };
 
-    // 关键修正：检查局部变量 DB 是否存在并指向 restaurant
     if (typeof DB !== 'undefined') {
-        const info = DB.restaurant; // 对应 config.js 中的 restaurant 层级
-        
+        // 1. 获取 restaurant 核心数据
+        const info = DB.restaurant; 
+
+        // 基础信息渲染
         safeSet("welcome", info.welcome[LANG]);
         safeSet("slogan", info.slogan[LANG]);
         safeSet("openingText", info.opening[LANG]);
         safeSet("buffetTime", info.buffetTime[LANG]);
         safeSet("buffetPrice", info.buffetPrice[LANG]);
-        safeSet("menuTitle", DB.menuTitle[LANG]); // menuTitle 在 restaurant 外层
+        
+        // 2. 修正：这些标题直接在 DB 下，不在 restaurant 下
+        safeSet("menuTitle", DB.menuTitle[LANG]);
         safeSet("galleryTitle", DB.galleryTitle[LANG]);
         safeSet("locationTitle", DB.locationTitle[LANG]);
         
+        // 3. 按钮渲染
         const orderBtn = document.getElementById("orderButton");
         if (orderBtn && info.orderModule) {
             orderBtn.innerText = info.orderModule.orderButton[LANG] || "ORDER ONLINE";
         }
 
-        // 修正 contact 路径
-        const contact = info.contact[LANG];
-        if (contact) {
-            safeSet("contactAddress", contact.address);
-            safeSet("contactPhone", contact.phone);
+        // 4. 【核心修复点】联系方式渲染
+        // 你的数据结构是 DB.restaurant.contact[LANG].address
+        if (info.contact && info.contact[LANG]) {
+            const contactData = info.contact[LANG];
+            safeSet("contactAddress", contactData.address);
+            safeSet("contactPhone", contactData.phone);
         }
     }
 
+    // 渲染其他组件
     renderMenu();
     renderGallery();
     initSmoothScroll();
