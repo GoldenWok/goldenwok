@@ -32,43 +32,56 @@ body.loading { opacity: 0; }
 }
 
 /* --- 核心光标样式 --- */
+/* --- 1. 核心光标定义 --- */
+:root {
+    --cursor-color: #c5a059; /* 默认金色 */
+}
+
 .cursor {
     width: 8px;
     height: 8px;
-    background: #c5a059; /* 金色小圆点 */
+    background: var(--cursor-color);
     border-radius: 50%;
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     pointer-events: none;
-    z-index: 200001; /* 确保高于灯箱的 100000 */
+    z-index: 200001; /* 必须是最高 */
     transition: transform 0.1s linear, background 0.3s ease;
+    transform: translate(-50%, -50%); /* 始终保持中心对齐 */
 }
 
 .cursor-follower {
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgba(197, 160, 89, 0.6); /* 外圈金色圆 */
+    width: 35px;
+    height: 35px;
+    border: 1.5px solid var(--cursor-color); /* 使用变量控制颜色 */
     border-radius: 50%;
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     pointer-events: none;
     z-index: 200000;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    transform: translate(-50%, -50%);
 }
 
-/* 当鼠标悬停在按钮或图片上时，外圈稍微放大 */
-.cursor.hover {
+/* --- 2. 变色逻辑：当处于 hover 状态时 --- */
+.cursor.white-mode {
+    --cursor-color: #ffffff; /* 切换为白色 */
     transform: translate(-50%, -50%) scale(1.5);
-    background: #ffffff; /* 悬停时变白增加交互感，不想要可删 */
 }
 
-.cursor-follower.hover {
-    transform: translate(-50%, -50%) scale(1.8);
-    border-color: #ffffff;
+.cursor-follower.white-mode {
+    --cursor-color: #ffffff;
+    transform: translate(-50%, -50%) scale(1.2);
+    border-width: 1px;
 }
 
+/* --- 3. 灯箱强制补丁 --- */
+#imageOverlay {
+    cursor: none !important; /* 隐藏系统光标 */
+}
+#imageOverlay * {
+    cursor: none !important; /* 隐藏灯箱内所有元素的光标 */
+}
 /* --- 灯箱全屏样式补丁 --- */
 .image-overlay {
     cursor: none !important; /* 强制灯箱区域也不显示原生光标 */
