@@ -4,25 +4,31 @@ let LANG = "gr";
 function initCursor() {
     const cursor = document.querySelector('.cursor');
     const follower = document.querySelector('.cursor-follower');
-    if (!cursor) return;
+    if (!cursor || !follower) return;
 
+    // 1. 移动跟随
     window.addEventListener('mousemove', (e) => {
         const x = e.clientX;
         const y = e.clientY;
+        // 使用 translate3d 性能更好
         cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
         follower.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
     });
 
+    // 2. 智能变色：使用事件委托监听所有“可点击”元素
     document.body.addEventListener('mouseover', (e) => {
-        if (e.target.closest('a, button, .lang span, .gallery-slide-item, .menu-item')) {
-            cursor.classList.add('hover');
-            follower.classList.add('hover');
+        // 判定条件：a标签、button、语言切换、菜单项、画廊图片、灯箱按钮
+        const isClickable = e.target.closest('a, button, .lang span, .gallery-slide-item, .menu-item, .lb-btn, #overlayImg');
+        
+        if (isClickable) {
+            cursor.classList.add('white-mode');
+            follower.classList.add('white-mode');
         }
     });
 
     document.body.addEventListener('mouseout', (e) => {
-        cursor.classList.remove('hover');
-        follower.classList.remove('hover');
+        cursor.classList.remove('white-mode');
+        follower.classList.remove('white-mode');
     });
 }
 
@@ -143,17 +149,17 @@ function openFullImage(index) {
 
 /* --- 3. 灯箱内左右切换修复 --- */
 function changeFullImage(direction, event) {
-    if (event) event.stopPropagation(); // 阻止点击按钮关闭灯箱
+    if (event) event.stopPropagation(); // 阻止点击箭头关闭灯箱
     
     currentImgIndex = (currentImgIndex + direction + DB.gallery.length) % DB.gallery.length;
     const img = document.getElementById("overlayImg");
+    
     if (img) {
-        // 增加一个微小的淡入效果
         img.style.opacity = "0";
         setTimeout(() => {
             img.src = `images/${DB.gallery[currentImgIndex]}`;
             img.style.opacity = "1";
-        }, 150);
+        }, 200);
     }
 }
 
