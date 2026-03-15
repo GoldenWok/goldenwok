@@ -31,48 +31,51 @@ body.loading { opacity: 0; }
     cursor: none !important;
 }
 
-/* --- 基础状态：金色 --- */
+/* --- 核心光标样式 --- */
 .cursor {
     width: 8px;
     height: 8px;
-    background: #c5a059;
+    background: #c5a059; /* 金色小圆点 */
     border-radius: 50%;
     position: fixed;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     pointer-events: none;
-    z-index: 10000;
-    transition: transform 0.1s linear, background 0.3s ease, box-shadow 0.3s ease;
-    will-change: transform;
-}
-
-.cursor-follower {
-    width: 32px;
-    height: 32px;
-    border: 1px solid rgba(197, 160, 89, 0.4);
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.2s ease-out, border 0.3s ease;
-    will-change: transform;
-}
-
-/* --- 交互状态：双圆变白 (The White Glow) --- */
-/* 当鼠标移入按钮、链接、语言切换时触发 */
-
-/* --- 光标：极致层级 --- */
-.cursor {
-    width: 8px; height: 8px; background: #c5a059; border-radius: 50%;
-    position: fixed; top: 0; left: 0; pointer-events: none; 
-    z-index: 200000; /* 确保在最顶层 */
+    z-index: 200001; /* 确保高于灯箱的 100000 */
     transition: transform 0.1s linear, background 0.3s ease;
 }
+
 .cursor-follower {
-    width: 30px; height: 30px; border: 1px solid rgba(197, 160, 89, 0.4);
-    border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; 
-    z-index: 199999;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(197, 160, 89, 0.6); /* 外圈金色圆 */
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 200000;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 当鼠标悬停在按钮或图片上时，外圈稍微放大 */
+.cursor.hover {
+    transform: translate(-50%, -50%) scale(1.5);
+    background: #ffffff; /* 悬停时变白增加交互感，不想要可删 */
+}
+
+.cursor-follower.hover {
+    transform: translate(-50%, -50%) scale(1.8);
+    border-color: #ffffff;
+}
+
+/* --- 灯箱全屏样式补丁 --- */
+.image-overlay {
+    cursor: none !important; /* 强制灯箱区域也不显示原生光标 */
+}
+
+.image-overlay img {
+    cursor: none !important;
 }
 /* 2. 标题文字排版 (Oulang Typography) */
 h1, h2, h3, .section-title {
