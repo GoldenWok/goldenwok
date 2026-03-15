@@ -73,14 +73,6 @@ body.loading { opacity: 0; }
     height: 45px;
 }
 
-/* --- 全屏灯箱修正 --- */
-#imageOverlay {
-    cursor: none !important;
-}
-#imageOverlay * {
-    cursor: none !important;
-}
-
 /* --- 3. 灯箱强制补丁 --- */
 #imageOverlay {
     cursor: none !important; /* 隐藏系统光标 */
