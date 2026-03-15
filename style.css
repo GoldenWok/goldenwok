@@ -580,58 +580,41 @@ html, body, a, button, span, .menu-item, .lang span {
 }
 
 /* 响应式菜单网格 */
-/* --- 布局核心：移除卡片，回归直铺 --- */
-.modern-menu-grid {
-    display: grid;
-    /* 自动填充，大屏幕一排三个，手机端自动一列 */
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-    gap: 60px 80px; /* 增加间距增加高级感 */
-    padding: 60px 20px;
-    max-width: 1300px;
-    margin: 0 auto;
-}
-
-/* 移除所有类似卡片的背景和边框 */
-.menu-category-group {
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-}
-
-/* --- 你的旧版本样式补丁 --- */
+/* --- 统一菜单颜色与字重 (全白、无加粗) --- */
 .menu-item, 
 .menu-item strong, 
 .item-name,
 .item-price {
-    color: #ffffff !important;
-    font-weight: 200 !important; /* 极细体 */
+    color: #ffffff !important; /* 强制全白 */
+    font-weight: 200 !important; /* 极细体，增加高级感 */
     font-style: normal;
-    text-transform: none;
-    font-family: 'Montserrat', sans-serif;
+    text-transform: none; /* 保持自然大小写 */
 }
 
-.menu-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 15px;
-}
-
+/* 专门针对 Complex 类型的标题 */
 .menu-item strong {
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     letter-spacing: 1px;
-    font-weight: 200 !important;
-    color: #ffffff;
+    /* 取消 strong 的默认加粗 */
+    font-weight: 200 !important; 
 }
 
+/* 修正点状线颜色，使其不至于太刺眼 */
 .item-dots {
     flex-grow: 1;
-    border-bottom: 1px dotted rgba(255, 255, 255, 0.2);
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.2); /* 白色半透明点 */
     margin: 0 12px 6px;
     min-width: 15px;
 }
 
+/* --- 移动端可见性补丁 --- */
+.modern-menu-grid {
+    display: grid;
+    /* 核心修复：确保在手机端不会因为 min-width 导致菜单消失 */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 50px 80px;
+}
 
 @media (max-width: 768px) {
     .modern-menu-grid {
