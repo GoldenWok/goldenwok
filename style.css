@@ -265,18 +265,37 @@ section[id$="-anchor"] {
 }
 
 /* 菜品分类标题：高级金 + 加大字号 + 禁用交互 */
+/* 让菜品分类标题与 MENU 总标题完全对齐 */
 .category-header {
-    color: #d4af37 !important; 
+    /* 1. 核心：将字号设为与总标题一致（通常总标题在 2.5rem 到 3rem 之间） */
+    font-size: 2.8rem !important; 
+    color: #c5a059 !important; /* 使用统一的高级金 */
+    
+    /* 2. 字体与风格保持一致 */
     font-family: 'Cormorant Garamond', serif;
-    font-size: 2.2rem !important; /* 按照你的要求加大字号 */
     font-weight: 300 !important;
-    letter-spacing: 3px;
     text-transform: uppercase;
-    border-bottom: 0.5px solid rgba(211, 175, 55, 0.3);
-    padding-bottom: 18px; 
-    margin-bottom: 35px;
-    pointer-events: none; /* 禁用点击/变色 */
+    letter-spacing: 4px; /* 增加间距，对标大标题的呼吸感 */
+    
+    /* 3. 装饰线：对标旧版的精致感 */
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    
+    /* 4. 静态化：禁止鼠标交互（不变色、不点击） */
+    pointer-events: none;
     cursor: default;
+    
+    /* 5. 确保在动态生成时文字居中（如果总标题是居中的） */
+    text-align: left; /* 如果你希望像旧版一样靠左，保持 left */
+}
+
+/* 适配移动端：防止超大字体在手机上溢出 */
+@media (max-width: 768px) {
+    .category-header {
+        font-size: 2rem !important;
+        letter-spacing: 2px;
+    }
 }
 
 /* 菜品对齐逻辑：承袭旧版核心 */
