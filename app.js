@@ -66,27 +66,35 @@ function renderWebsite() {
         const el = document.getElementById(id);
         if (el && val !== undefined) el.innerText = val; 
     };
+// 检查全局数据对象
+    if (!window.DB || !window.DB.restaurant) {
+        console.error("Data source DB.restaurant not found!");
+        return;
+    }
 
-    if (window.DB) {
-        safeSet("welcome", DB.welcome[LANG]);
-        safeSet("slogan", DB.slogan[LANG]);
-        safeSet("openingText", DB.opening[LANG]);
-        safeSet("buffetTime", DB.buffetTime[LANG]);
-        safeSet("buffetPrice", DB.buffetPrice[LANG]);
-        safeSet("menuTitle", DB.menuTitle[LANG]);
-        safeSet("galleryTitle", DB.galleryTitle[LANG]);
-        safeSet("locationTitle", DB.locationTitle[LANG]);
-        
-        const orderBtn = document.getElementById("orderButton");
-        if (orderBtn && DB.orderModule) {
-            orderBtn.innerText = DB.orderModule.orderButton[LANG] || "ORDER ONLINE";
-        }
+    const info = window.DB.restaurant;
 
-        const contact = DB.contact[LANG];
-        if (contact) {
-            safeSet("contactAddress", contact.address);
-            safeSet("contactPhone", contact.phone);
-        }
+    // 1. 基础文字渲染 (适配嵌套结构)
+    safeSet("welcome", info.welcome[LANG]);
+    safeSet("slogan", info.slogan[LANG]);
+    safeSet("openingText", info.opening[LANG]);
+    safeSet("buffetTime", info.buffetTime[LANG]);
+    safeSet("buffetPrice", info.buffetPrice[LANG]);
+    safeSet("menuTitle", info.menuTitle[LANG]);
+    safeSet("galleryTitle", info.galleryTitle[LANG]);
+    safeSet("locationTitle", info.locationTitle[LANG]);
+    
+    // 2. 按钮渲染
+    const orderBtn = document.getElementById("orderButton");
+    if (orderBtn && info.orderModule) {
+        orderBtn.innerText = info.orderModule.orderButton[LANG];
+    }
+
+    // 3. 联系方式渲染
+    const contact = info.contact[LANG];
+    if (contact) {
+        safeSet("contactAddress", contact.address);
+        safeSet("contactPhone", contact.phone);
     }
 
     // 渲染子组件
