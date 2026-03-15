@@ -545,125 +545,77 @@ html, body, a, button, span, .menu-item, .lang span {
         transform: none !important;
     }
 }
-/* --- 1. 画廊总区：锁定 1000px 窄版视野 --- */
-.gallery-section {
+.gallery-wrapper {
     position: relative;
-    max-width: 1000px;
-    margin: 50px auto;
-    padding: 20px 0;
-    overflow: visible !important; /* 确保按钮飞出去 */
-    background: #050505;
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 80px; /* 给按钮留位 */
+    overflow: visible;
 }
 
-/* --- 2. 轨道：强行挤压，预留五图空间 --- */
-.gallery-slider-wrapper {
-    display: flex !important;
-    align-items: center;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    
-    /* 对称挤压：Padding 缩小到 200px，腾出空间给两侧更小的图 */
-    padding: 40px 200px !important; 
-    
-    gap: 0 !important;
-    scrollbar-width: none;
-    cursor: grab;
-    height: 500px; /* 锁定画廊高度 */
-    box-sizing: border-box;
-}
-
-/* --- 3. 图片项：锁死尺寸与圆角 --- */
-.gallery-slide-item {
-    /* 强力锁：禁止变形 */
-    flex: 0 0 380px !important; 
-    width: 380px !important;
-    height: 480px !important;
-    
-    /* 对称负边距实现深度重叠 (改为较深的重叠，产生紧凑感) */
-    margin: 0 -100px !important; 
-    
-    scroll-snap-align: center;
-    
-    /* 核心修复：不再透明，而是纯黑色背景，遮挡后面的图 */
-    background: #000 !important; 
-    
-    border-radius: 40px; /* 更加圆润 */
-    overflow: hidden; 
-    z-index: 1; /* 初始层级 */
-    
-    /* 初始状态：缩小且压暗 (通过 transform 和 brightness) */
-    transform: scale(0.7) !important;
-    opacity: 1 !important; /* 彻底不透明 */
-    filter: brightness(0.2) blur(2px) !important; /* 越远越暗、越模糊 */
-    
-    transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-}
-
-/* --- 4. 激活态 (中间)：置顶、放大、最亮 --- */
-.gallery-slide-item.is-active {
-    opacity: 1 !important;
-    filter: brightness(1.1) blur(0px) !important; /* 最亮、清晰 */
-    transform: scale(1.05) !important; /* 放大到 105% */
-    z-index: 100 !important; /* 在所有图之上 */
-    margin: 0 -10px !important; /* 舒张感 */
-    box-shadow: 0 40px 80px rgba(0,0,0,1);
-}
-/* --- 5. 景深辅助样式 (由 JS 动态控制) --- */
-
-/* 中间那张 */
-.gallery-slide-item.is-active {
-    transform: scale(1.05) !important;
-    filter: brightness(1) blur(0px) !important;
-}
-
-/* 左右各一 (稍微压暗、缩小) */
-.gallery-slide-item.is-side-1 {
-    transform: scale(0.85) !important;
-    filter: brightness(0.6) blur(0.5px) !important;
-    opacity: 0.9 !important;
-}
-
-/* 更左右各一 (变得更小、更暗) */
-.gallery-slide-item.is-side-2 {
-    transform: scale(0.7) !important;
-    filter: brightness(0.25) blur(2px) !important;
-    opacity: 0.7 !important;
-}
-
-
-/* 图片内容：彻底禁止溢出 */
-.lazy-img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important; 
-    border-radius: 35px;
-    display: block;
-}
-
-/* --- 4. 按钮定位：在受限容器之外 --- */
-.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 55px;
-    height: 55px;
-    background: rgba(197, 160, 89, 0.1);
-    border: 1px solid rgba(197, 160, 89, 0.5);
-    border-radius: 50%;
-    z-index: 9999;
-    cursor: pointer;
+.gallery-track {
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: 0.3s;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0;
+    scrollbar-width: none;
+    padding: 40px 0;
 }
 
-/* 将按钮放置在 1000px 范围以外的空白处 */
-.prev-btn { left: -100px; } 
-.next-btn { right: -100px; }
+.gallery-track::-webkit-scrollbar { display: none; }
 
-.nav-btn:hover { background: #c5a059; }
+/* 每一项的容器 */
+.gallery-item {
+    flex: 0 0 33.33%; /* 严格一排三个 */
+    min-width: 33.33%;
+    height: 450px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+/* 图片本体：圆润、阴影 */
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    /* 侧边图的透明感：默认压暗半透明 */
+    opacity: 0.5;
+    filter: grayscale(0.5) blur(1px);
+    transition: 0.5s;
+}
+
+/* --- 中间突出感：C 位属性 --- */
+.gallery-item.is-active {
+    z-index: 10;
+    transform: scale(1.1); /* 放大突出 */
+}
+
+.gallery-item.is-active img {
+    opacity: 1;
+    filter: grayscale(0) blur(0);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+/* 叠加效果：让左右两边稍微往中间靠拢 */
+.gallery-item:nth-child(odd) { margin: 0 -30px; } 
+
+/* 按钮样式：空灵细线 */
+.nav-arrow {
+    position: absolute;
+    top: 50%; transform: translateY(-50%);
+    background: none; border: none;
+    color: #c5a059; font-size: 40px;
+    cursor: pointer; z-index: 100;
+}
+.prev { left: 10px; }
+.next { right: 10px; }
 /* 响应式调整 */
 @media (max-width: 768px) {
     .gallery-slider-wrapper { padding: 20px 15%; }
