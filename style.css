@@ -923,3 +923,21 @@ body, html {
     padding: 20px 0;
     border-bottom: 1px solid rgba(197, 160, 89, 0.2);
 }
+/* 导航容器：控制整体边距 */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px; /* 限制最大宽度 */
+    margin: 0 auto;
+    padding: 0 60px; /* 增加这里的 60px 左右内边距，Logo 就不贴边了 */
+}
+
+/* 锚点偏移量：解决跳转不准 */
+#menu-anchor, #gallery-anchor, #location-anchor {
+    /* 跳转后上方留出的空间，防止被固定的 Header 遮挡 */
+    scroll-margin-top: 100px; 
+    /* 增加板块间的呼吸感 */
+    padding-top: 80px;
+    padding-bottom: 40px;
+}
