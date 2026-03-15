@@ -106,51 +106,67 @@ h1, h2, h3, .section-title {
 
 /* 3. 导航栏 (滚动时变窄+模糊) */
 /* --- 导航栏容器 --- */
+/* --- 1. 导航栏初始透明态 --- */
 header {
     position: fixed;
-    top: 0; width: 100%;
-    padding: 20px 5%;
-    z-index: 99999; /* 仅次于光标 */
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    top: 0; left: 0; width: 100%;
+    padding: 40px 5%; /* 初始更宽敞 */
+    z-index: 100000;
+    background: transparent; /* 初始完全透明 */
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* 滚动后的状态：变窄、带背景 */
 header.scrolled {
-    padding: 12px 5%;
-    background: rgba(5, 5, 5, 0.9);
-    backdrop-filter: blur(20px);
-    border-bottom: 0.5px solid rgba(197, 160, 89, 0.3);
+    padding: 15px 5%;
+    background: rgba(5, 5, 5, 0.75); /* 半透明黑 */
+    backdrop-filter: blur(15px); /* 磨砂玻璃效果 */
+    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
 }
 
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-/* --- Logo 设计 --- */
+/* --- 2. Logo 增强设计 --- */
 .logo-group {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    line-height: 1;
+    cursor: none;
+    transition: transform 0.3s ease;
+}
+
+.logo-group:hover {
+    transform: scale(1.05); /* 悬停微动 */
 }
 
 .logo-zh {
-    font-family: "Noto Serif SC", serif; /* 建议引入谷歌宋体 */
-    font-size: 24px;
-    letter-spacing: 4px;
+    font-family: "Noto Serif SC", "Source Han Serif CN", serif;
+    font-size: 38px; /* 显著加大 */
+    font-weight: 600;
+    letter-spacing: 8px;
     color: #c5a059;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* 增加投影使其突出 */
+    line-height: 1.1;
 }
 
 .logo-en {
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: rgba(197, 160, 89, 0.7);
-    margin-top: 4px;
+    font-size: 12px;
+    letter-spacing: 5px;
+    color: rgba(197, 160, 89, 0.8);
+    margin-top: 5px;
+    text-transform: uppercase;
 }
 
+/* --- 3. 语言切换器位置优化 --- */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    padding-right: 60px; /* 再次增加右边距，防止被挡 */
+}
+
+/* 锚点修复补丁：强制偏移 */
+section[id$="-anchor"] {
+    scroll-margin-top: 120px !important; /* 核心：强制给所有锚点留出空间 */
+}
 /* --- 右侧链接 --- */
 .nav-right {
     display: flex;
