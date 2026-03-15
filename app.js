@@ -110,13 +110,31 @@ function renderMenu() {
             </h3>
             <div class="menu-items-wrapper" style="max-height: 0; overflow: hidden; transition: all 0.5s ease;">
                 <div class="menu-items">
-                    ${cat.items.map(item => `
-                        <div class="menu-item">
-                            <span class="item-name">${item[LANG]}</span>
-                            <span class="item-dots"></span>
-                            <span class="item-price">€${item.price}</span>
-                        </div>
-                    `).join('')}
+                    ${cat.items.map(item => {
+                        // 核心修复：处理普通菜品和 complex 菜品
+                        if (item.type === 'complex') {
+                            return `
+                                <div class="menu-item complex">
+                                    <strong class="item-name">${item.title[LANG]}</strong>
+                                    <div class="options-list" style="width:100%">
+                                        ${item.options.map(opt => `
+                                            <div class="menu-item" style="margin-left: 20px; border:none">
+                                                <span class="item-name">${opt[LANG]}</span>
+                                                <span class="item-dots"></span>
+                                                <span class="item-price">€${opt.price}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>`;
+                        } else {
+                            return `
+                                <div class="menu-item">
+                                    <span class="item-name">${item[LANG]}</span>
+                                    <span class="item-dots"></span>
+                                    <span class="item-price">€${item.price}</span>
+                                </div>`;
+                        }
+                    }).join('')}
                 </div>
             </div>
         </div>
@@ -220,6 +238,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     // 4. 移除加载状态
     document.body.classList.remove('loading');
+    const loader = document.getElementById('loader');
+    if(loader) loader.classList.add('done');
 });
 
 window.addEventListener('scroll', () => {
