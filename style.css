@@ -320,8 +320,8 @@ iframe { width: 100%; height: 100%; border: 0; }
 /* 1. 高级金色标题样式 */
 /* 高级金色标题：加大字号 + 禁用交互 */
 .category-header {
-    color: #d4af37 !important; 
-    font-family: 'Cormorant Garamond', serif;
+    color: #c5a059 !important; 
+    font-family: 'Montserrat', sans-serif;
     /* 1. 加大字号：从原来的 1.8rem 提升到 2.2rem 或更高 */
     font-size: 2.2rem !important; 
     font-weight: 300 !important;
