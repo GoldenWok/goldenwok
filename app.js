@@ -175,27 +175,48 @@ function moveGallery(direction) {
     container.scrollBy({ left: direction * moveDistance, behavior: 'smooth' });
 }
 
-// 自动检测中心图片并高亮
-function setupActiveEffect() {
+function setupDynamicDepth() {
     const container = document.getElementById("galleryContainer");
-    const updateActive = () => {
-        const items = document.querySelectorAll('.gallery-slide-item');
-        const containerCenter = container.getBoundingClientRect().left + container.offsetWidth / 2;
+    if (!container) return;
 
-        items.forEach(item => {
-            const rect = item.getBoundingClientRect();
-            const itemCenter = rect.left + rect.width / 2;
+    const updateDepth = () => {
+        const items = document.querySelectorAll('.gallery-slide-item');
+        const containerRect = container.getBoundingClientRect();
+        const containerCenter = containerRect.left + containerRect.width / 2;
+
+        items.forEach((item, index) => {
+            const itemRect = item.getBoundingClientRect();
+            const itemCenter = itemRect.left + itemRect.width / 2;
             
-            if (Math.abs(containerCenter - itemCenter) < 150) {
+            // 计算图片中心距离容器中心的百分比 (0 到 1)
+            const distanceFromCenter = Math.abs(containerCenter - itemCenter);
+            const normalizedDistance = Math.min(distanceFromCenter / (containerRect.width / 1.5), 1);
+
+            // 1. 中间 (激活态)
+            if (normalizedDistance < 0.15) {
                 item.classList.add('is-active');
-            } else {
-                item.classList.remove('is-active');
+                item.classList.remove('is-side-1', 'is-side-2');
+                item.style.zIndex = "100";
+            } 
+            // 2. 左右两边稍小一点
+            else if (normalizedDistance < 0.3) {
+                item.classList.remove('is-active', 'is-side-2');
+                item.classList.add('is-side-1');
+                item.style.zIndex = "50"; // 层级稍低
+            }
+            // 3. 更左右两边变得更小
+            else {
+                item.classList.remove('is-active', 'is-side-1');
+                item.classList.add('is-side-2');
+                item.style.zIndex = "10"; // 层级最低
             }
         });
     };
 
-    container.addEventListener('scroll', updateActive);
-    setTimeout(updateActive, 100);
+    // 监听滚动，实时计算
+    container.addEventListener('scroll', updateDepth);
+    // 初始化
+    setTimeout(updateDepth, 100);
 }
 function initCursorHover() {
     const cursor = document.querySelector('.cursor');
