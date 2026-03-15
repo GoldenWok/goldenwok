@@ -113,23 +113,41 @@ function handleGalleryClick(index, el) {
 
 function setupDynamicDepth() {
     const container = document.getElementById("galleryContainer");
-    let ticking = false;
+    if (!container) return;
+
     const update = () => {
         const items = document.querySelectorAll('.gallery-slide-item');
-        const center = container.scrollLeft + container.offsetWidth / 2;
-        items.forEach(item => {
-            const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-            if (Math.abs(center - itemCenter) < 100) item.classList.add('is-active');
-            else item.classList.remove('is-active');
-        });
-        ticking = false;
-    };
-    container.addEventListener('scroll', () => {
-        if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
-    });
-    setTimeout(update, 300);
-}
+        const containerRect = container.getBoundingClientRect();
+        const centerX = containerRect.left + containerRect.width / 2;
 
+        items.forEach(item => {
+            const rect = item.getBoundingClientRect();
+            const itemCenter = rect.left + rect.width / 2;
+            
+            // 判断中心点距离，距离容器中轴线最近的设为激活
+            if (Math.abs(centerX - itemCenter) < rect.width / 2) {
+                item.classList.add('is-active');
+            } else {
+                item.classList.remove('is-active');
+            }
+        });
+    };
+
+    container.addEventListener('scroll', update);
+    // 初始化时触发一次
+    setTimeout(update, 500);
+}
+function moveGallery(direction) {
+    const container = document.getElementById("galleryContainer");
+    if (!container) return;
+    
+    // 计算单张图片的宽度（含 gap）
+    const scrollAmount = container.offsetWidth / 3; 
+    container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+    });
+}
 /* --- 4. 灯箱逻辑 --- */
 let currentImgIndex = 0;
 function openFullImage(index) {
@@ -140,10 +158,29 @@ function openFullImage(index) {
     setTimeout(() => overlay.classList.add('active'), 10);
 }
 
+function openFullImage(index) {
+    currentImgIndex = index;
+    const overlay = document.getElementById("imageOverlay");
+    const img = document.getElementById("overlayImg");
+    
+    img.src = `images/${DB.gallery[index]}`;
+    overlay.style.display = "flex";
+    
+    // 强制刷新光标层级（部分浏览器需要）
+    const cursor = document.querySelector('.cursor');
+    if(cursor) cursor.style.zIndex = "200001"; 
+
+    setTimeout(() => overlay.classList.add('active'), 10);
+}
+
 function closeImage() {
     const overlay = document.getElementById("imageOverlay");
     overlay.classList.remove('active');
-    setTimeout(() => overlay.style.display = "none", 400);
+    setTimeout(() => {
+        overlay.style.display = "none";
+        // 恢复正常光标层级
+        document.querySelector('.cursor').style.zIndex = "100000";
+    }, 400);
 }
 
 function changeFullImage(dir, e) {
