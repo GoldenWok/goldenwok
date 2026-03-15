@@ -379,3 +379,28 @@ function scrollToElement(el) {
         behavior: 'smooth'
     });
 }
+// 在你的 setupActiveEffect 函数中确保有这一行
+function setupActiveEffect() {
+    const container = document.getElementById("galleryContainer");
+    
+    const updateActive = () => {
+        const items = document.querySelectorAll('.gallery-slide-item');
+        const containerCenter = container.getBoundingClientRect().left + container.offsetWidth / 2;
+
+        items.forEach(item => {
+            const rect = item.getBoundingClientRect();
+            const itemCenter = rect.left + rect.width / 2;
+            
+            if (Math.abs(containerCenter - itemCenter) < 100) {
+                item.classList.add('is-active');
+                // 确保 JS 也能辅助锁定层级
+                item.style.zIndex = "100";
+            } else {
+                item.classList.remove('is-active');
+                item.style.zIndex = "1";
+            }
+        });
+    };
+
+    container.addEventListener('scroll', updateActive);
+}
