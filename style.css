@@ -633,40 +633,6 @@ html, body, a, button, span, .menu-item, .lang span {
 }
 .prev-btn::after { transform: rotate(-135deg); margin-left: 5px; }
 .next-btn::after { transform: rotate(45deg); margin-right: 5px; }
-/* --- 4. 按钮：精准定位在两侧空白处 --- */
-.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background: rgba(197, 160, 89, 0.1);
-    border: 1px solid rgba(197, 160, 89, 0.5);
-    border-radius: 50%;
-    
-    /* 核心修复：提升 z-index 确保按钮在最顶层 */
-    z-index: 9999 !important; 
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
-}
-
-/* 按钮位置：放在 30vw 挤压区的正中间 */
-.prev-btn { left: 10vw; }
-.next-btn { right: 10vw; }
-
-.nav-btn:hover { background: #c5a059; border-color: #fff; }
-.nav-btn::after {
-    content: '';
-    width: 10px; height: 10px;
-    border-top: 2px solid #c5a059;
-    border-right: 2px solid #c5a059;
-}
-.prev-btn::after { transform: rotate(-135deg); margin-left: 5px; }
-.next-btn::after { transform: rotate(45deg); margin-right: 5px; }
-.nav-btn:hover::after { border-color: #000; }
 /* 响应式调整 */
 @media (max-width: 768px) {
     .gallery-slider-wrapper { padding: 20px 15%; }
