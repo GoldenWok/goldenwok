@@ -38,33 +38,36 @@ body.loading { opacity: 0; }
 }
 
 /* --- 基础光标 (金色状态) --- */
+/* 确保没有其他元素能超过这个数字 */
 .cursor, .cursor-follower {
     position: fixed;
-    top: 0; left: 0;
-    pointer-events: none; /* 穿透点击，不影响页面交互 */
+    top: 0;
+    left: 0;
+    pointer-events: none;
     border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s, opacity 0.3s;
-    z-index: 1000000; /* 赋予一个绝对无敌的层级 */
+    /* 核心修复：translate 必须写在 transform 里，不要用 left/top 偏移，否则会偏心 */
+    transform: translate(-50%, -50%); 
+    transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
+    /* 极致层级：比灯箱更高 */
+    z-index: 2147483647 !important; 
 }
 
 .cursor {
     width: 8px;
     height: 8px;
-    background: #c5a059; /* 中心金色小点 */
+    background: #c5a059; /* 金色点 */
 }
 
 .cursor-follower {
     width: 35px;
     height: 35px;
-    border: 1.5px solid #c5a059; /* 外圈金色圆环 */
+    border: 1.5px solid #c5a059; /* 金色圈 */
+    background: transparent !important; /* 确保中间是透明的 */
 }
 
-/* --- 变白状态 (.is-hovering 类由 JS 动态添加) --- */
+/* 交互时的白色状态 */
 .cursor.is-hovering {
     background: #ffffff !important;
-    width: 10px;
-    height: 10px;
 }
 
 .cursor-follower.is-hovering {
@@ -73,6 +76,10 @@ body.loading { opacity: 0; }
     height: 45px;
 }
 
+/* 强制灯箱本身不显示任何光标 */
+#imageOverlay, #imageOverlay * {
+    cursor: none !important;
+}
 /* --- 3. 灯箱强制补丁 --- */
 #imageOverlay {
     cursor: none !important; /* 隐藏系统光标 */
