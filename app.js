@@ -332,9 +332,6 @@ if (orderBtn) {
     orderBtn.style.setProperty('cursor', 'none', 'important');
 }
 
-let currentPhotoIndex = 0;
-const photos = ["img1.jpg", "img2.jpg", "img3.jpg"]; // 替换为你的真实路径
-
 /* =========================================
    6. 补全缺失的画廊动态效果与灯箱逻辑
    ========================================= */
