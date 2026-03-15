@@ -133,13 +133,15 @@ function renderMenu() {
             <div class="menu-items-wrapper" style="max-height: 0; overflow: hidden; transition: all 0.5s ease;">
                 <div class="menu-items">
                     ${cat.items.map(item => {
-                        // 增加对 10. 包子 (complex 类型) 的兼容渲染
+                        // 处理像 10. 包子 这样的复杂项
                         if (item.type === 'complex') {
                             return `
-                                <div class="menu-item-complex" style="margin-bottom: 15px;">
-                                    <div class="item-name" style="font-weight: 500; margin-bottom: 5px;">${item.title[LANG]}</div>
+                                <div class="menu-item-complex">
+                                    <div class="item-main-title" style="color: #d4af37; font-weight: bold; margin: 10px 0 5px 0;">
+                                        ${item.title[LANG]}
+                                    </div>
                                     ${item.options.map(opt => `
-                                        <div class="menu-item sub-option" style="padding-left: 15px; border-bottom: 1px dashed #333;">
+                                        <div class="menu-item sub-option" style="padding-left: 15px; font-size: 0.9em;">
                                             <span class="item-name">${opt[LANG]}</span>
                                             <span class="item-dots"></span>
                                             <span class="item-price">€${opt.price}</span>
@@ -147,6 +149,7 @@ function renderMenu() {
                                     `).join('')}
                                 </div>`;
                         }
+                        // 处理普通菜品
                         return `
                             <div class="menu-item">
                                 <span class="item-name">${item[LANG]}</span>
@@ -159,7 +162,6 @@ function renderMenu() {
         </div>
     `).join('');
 }
-
 /* --- 4. 交互工具 --- */
 function toggleMenuCategory(headerElement) {
     const wrapper = headerElement.nextElementSibling;
@@ -194,17 +196,23 @@ function initReveal() {
 function renderGallery() {
     const container = document.getElementById("galleryContainer");
     if (!container || typeof DB === 'undefined') return;
+
+    // 尝试两个可能的路径：直接在 DB 下，或者在 DB.restaurant 下
+    const galleryData = DB.gallery || (DB.restaurant && DB.restaurant.gallery);
     
-    // 修正 gallery 路径，它在 info (restaurant) 里面
-    const galleryData = DB.restaurant.gallery;
-    if(!galleryData) return;
+    if (!galleryData || !Array.isArray(galleryData)) {
+        console.warn("未找到画廊图片数据");
+        return;
+    }
 
     container.innerHTML = galleryData.map((img, i) => `
         <div class="gallery-slide-item" onclick="handleGalleryClick(${i}, this)">
-            <img src="images/${img}" alt="Gallery">
+            <img src="images/${img}" alt="Gallery ${i}" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Missing'">
         </div>
     `).join('');
-    setupDynamicDepth();
+    
+    // 初始化画廊交互深度效果
+    if (typeof setupDynamicDepth === 'function') setupDynamicDepth();
 }
 
 function handleGalleryClick(index, el) {
