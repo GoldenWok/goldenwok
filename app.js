@@ -1,7 +1,7 @@
 let LANG = "gr";
 let currentImgIndex = 0;
 
-/* --- 1. 光标逻辑 (性能优化版) --- */
+/* --- 1. 光标逻辑 --- */
 function initCursor() {
     const cursor = document.querySelector('.cursor');
     const follower = document.querySelector('.cursor-follower');
@@ -17,7 +17,7 @@ function initCursor() {
         });
 
         const target = e.target;
-        const isClickable = target.closest('a, button, .lang span, .logo-group, .nav-item, .category-header, .lb-btn, .gallery-slide-item, #overlayImg');
+        const isClickable = target.closest('a, button, .lang-switcher span, .logo-group, .nav-item, .category-header, .lb-btn, .gallery-slide-item');
 
         if (isClickable) {
             cursor.classList.add('is-hovering');
@@ -27,46 +27,31 @@ function initCursor() {
             follower.classList.remove('is-hovering');
         }
     });
-
-    window.addEventListener('mousedown', () => cursor.style.transform += ' scale(0.7)');
-    window.addEventListener('mouseup', () => cursor.style.transform = cursor.style.transform.replace(' scale(0.7)', ''));
 }
 
-/* --- 2. 精准跳转逻辑 (唯一版本) --- */
+/* --- 2. 精准跳转 --- */
 function initSmoothScroll() {
     const navLinks = document.querySelectorAll('.nav-item, .logo-group');
-
     navLinks.forEach(link => {
         link.onclick = function(e) {
-            // 获取目标 ID (针对 logo-group 默认回顶)
             let targetId = this.getAttribute('href');
             if (!targetId && this.classList.contains('logo-group')) targetId = "body";
             
             const targetSection = document.querySelector(targetId);
-
             if (targetSection) {
                 e.preventDefault();
-                e.stopPropagation();
-
-                // 动态计算 Offset：Header 的高度 + 额外间距
                 const headerHeight = document.getElementById('header').offsetHeight;
-                const offset = headerHeight + 20; 
-                
+                const offset = headerHeight + 20;
                 const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
 
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-                
-                // 更新 URL 不跳转
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
                 if(targetId !== "body") window.history.pushState(null, null, targetId);
             }
         };
     });
 }
 
-/* --- 3. 渲染逻辑 --- */
+/* --- 3. 核心渲染 --- */
 function setLang(lang) {
     LANG = lang;
     document.body.style.opacity = "0";
@@ -82,7 +67,6 @@ function renderWebsite() {
         if (el && val !== undefined) el.innerText = val; 
     };
 
-    // 基础文字渲染
     if (window.DB) {
         safeSet("welcome", DB.welcome[LANG]);
         safeSet("slogan", DB.slogan[LANG]);
@@ -93,11 +77,9 @@ function renderWebsite() {
         safeSet("galleryTitle", DB.galleryTitle[LANG]);
         safeSet("locationTitle", DB.locationTitle[LANG]);
         
-        // 修复点餐按钮：同时设置文字和链接
         const orderBtn = document.getElementById("orderButton");
         if (orderBtn && DB.orderModule) {
             orderBtn.innerText = DB.orderModule.orderButton[LANG] || "ORDER ONLINE";
-            if (DB.orderModule.link) orderBtn.href = DB.orderModule.link;
         }
 
         const contact = DB.contact[LANG];
@@ -107,12 +89,15 @@ function renderWebsite() {
         }
     }
 
-    // 渲染组件
+    // 渲染子组件
     renderMenu();
     renderGallery();
     initSmoothScroll();
-    initCursor();
+    
+    // 重要：渲染完内容后，立即重新初始化动画监听，否则文字会保持透明
+    initReveal();
 }
+
 function renderMenu() {
     const container = document.getElementById("menuContainer");
     if (!container || !window.DB || !DB.menu) return;
@@ -125,30 +110,51 @@ function renderMenu() {
             </h3>
             <div class="menu-items-wrapper" style="max-height: 0; overflow: hidden; transition: all 0.5s ease;">
                 <div class="menu-items">
-                    ${cat.items.map(item => {
-                        if (item.type === "complex") {
-                            return `<div class="menu-item-group"><strong>${item.title[LANG]}</strong></div>` + 
-                                   item.options.map(op => `
-                                     <div class="menu-item">
-                                         <span class="item-name">${op[LANG]}</span>
-                                         <span class="item-dots"></span>
-                                         <span class="item-price">€${op.price}</span>
-                                     </div>`).join('');
-                        }
-                        return `
-                            <div class="menu-item">
-                                <span class="item-name">${item[LANG]}</span>
-                                <span class="item-dots"></span>
-                                <span class="item-price">€${item.price}</span>
-                            </div>`;
-                    }).join('')}
+                    ${cat.items.map(item => `
+                        <div class="menu-item">
+                            <span class="item-name">${item[LANG]}</span>
+                            <span class="item-dots"></span>
+                            <span class="item-price">€${item.price}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
         </div>
     `).join('');
 }
 
-/* --- 4. 画廊与灯箱 --- */
+/* --- 4. 交互工具 --- */
+function toggleMenuCategory(headerElement) {
+    const wrapper = headerElement.nextElementSibling;
+    const isActive = headerElement.classList.contains('active');
+    
+    // 自动关闭其他项
+    document.querySelectorAll('.category-header').forEach(h => {
+        h.classList.remove('active');
+        h.nextElementSibling.style.maxHeight = "0px";
+    });
+
+    if (!isActive) {
+        wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+        headerElement.classList.add('active');
+    }
+}
+
+function moveGallery(direction) {
+    const container = document.getElementById("galleryContainer");
+    if (container) container.scrollBy({ left: direction * 300, behavior: 'smooth' });
+}
+
+function initReveal() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { 
+            if(entry.isIntersecting) entry.target.classList.add('is-visible'); 
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+/* --- 5. 画廊逻辑 (保持原样) --- */
 function renderGallery() {
     const container = document.getElementById("galleryContainer");
     if (!container) return;
@@ -161,9 +167,8 @@ function renderGallery() {
 }
 
 function handleGalleryClick(index, el) {
-    if (el.classList.contains('is-active')) {
-        openFullImage(index);
-    } else {
+    if (el.classList.contains('is-active')) openFullImage(index);
+    else {
         const container = document.getElementById("galleryContainer");
         container.scrollTo({
             left: el.offsetLeft - (container.offsetWidth / 2 - el.offsetWidth / 2),
@@ -176,16 +181,8 @@ function openFullImage(index) {
     currentImgIndex = index;
     const overlay = document.getElementById("imageOverlay");
     const img = document.getElementById("overlayImg");
-    
     img.src = `images/${DB.gallery[index]}`;
     overlay.style.display = "flex";
-
-    // 保证光标在最前
-    const c1 = document.querySelector('.cursor');
-    const c2 = document.querySelector('.cursor-follower');
-    document.body.appendChild(c1);
-    document.body.appendChild(c2);
-
     setTimeout(() => overlay.classList.add('active'), 10);
 }
 
@@ -194,45 +191,7 @@ function closeImage() {
     overlay.classList.remove('active');
     setTimeout(() => { overlay.style.display = "none"; }, 400);
 }
-function moveGallery(direction) {
-    const container = document.getElementById("galleryContainer");
-    if (!container) return;
-    // 每次滑动 300px
-    container.scrollBy({
-        left: direction * 300,
-        behavior: 'smooth'
-    });
-}
 
-function changeFullImage(direction, event) {
-    if (event) event.stopPropagation();
-    currentImgIndex = (currentImgIndex + direction + DB.gallery.length) % DB.gallery.length;
-    const img = document.getElementById("overlayImg");
-    if (img) {
-        img.style.opacity = "0";
-        setTimeout(() => {
-            img.src = `images/${DB.gallery[currentImgIndex]}`;
-            img.style.opacity = "1";
-        }, 200);
-    }
-}
-
-/* --- 5. 交互工具 --- */
-function toggleMenuCategory(headerElement) {
-    const wrapper = headerElement.nextElementSibling;
-    const isActive = headerElement.classList.contains('active');
-    
-    // 关闭其他已打开的 (可选)
-    document.querySelectorAll('.category-header').forEach(h => {
-        h.classList.remove('active');
-        h.nextElementSibling.style.maxHeight = "0px";
-    });
-
-    if (!isActive) {
-        wrapper.style.maxHeight = wrapper.scrollHeight + "px";
-        headerElement.classList.add('active');
-    }
-}
 function setupDynamicDepth() {
     const container = document.getElementById("galleryContainer");
     if (!container) return;
@@ -241,48 +200,35 @@ function setupDynamicDepth() {
         const centerX = container.getBoundingClientRect().left + container.offsetWidth / 2;
         items.forEach(item => {
             const itemCenter = item.getBoundingClientRect().left + item.offsetWidth / 2;
-            if (Math.abs(centerX - itemCenter) < item.offsetWidth / 3) {
-                item.classList.add('is-active');
-            } else {
-                item.classList.remove('is-active');
-            }
+            item.classList.toggle('is-active', Math.abs(centerX - itemCenter) < item.offsetWidth / 3);
         });
     };
     container.addEventListener('scroll', update);
     setTimeout(update, 500);
 }
 
-function initReveal() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('is-visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-}
+/* --- 6. 全局生命周期 (合并后的唯一版本) --- */
+window.addEventListener('DOMContentLoaded', () => {
+    // 1. 渲染文字和内容
+    renderWebsite();
+    // 2. 初始化光标
+    initCursor();
+    // 3. 修正地图链接 (Nea Smyrni 专用)
+    const map = document.getElementById("googleMap");
+    if (map) {
+        map.src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.4716766467464!2d23.7126017!3d37.9439268!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bc68324e9411%3A0x8674900508e3170a!2sGolden%20Wok!5e0!3m2!1sel!2sgr!4v1710000000000";
+    }
+    // 4. 移除加载状态
+    document.body.classList.remove('loading');
+});
 
-/* --- 6. 全局生命周期 --- */
 window.addEventListener('scroll', () => {
     const header = document.getElementById('header');
     if (window.scrollY > 50) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
 });
-window.addEventListener('DOMContentLoaded', () => {
-    renderWebsite();
-    initCursor();
-    
-    const map = document.getElementById("googleMap");
-    if (map) {
-        // 这是 Golden Wok Nea Smyrni 的正式嵌入链接
-        map.src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3146.4746682705!2d23.7126155!3d37.942654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a1bc4069811f5d%3A0x6b2b7161e76f53e5!2sGolden%20Wok!5e0!3m2!1sel!2sgr!4v1710000000000";
-    }
-
-    document.body.classList.remove('loading');
-});
-window.addEventListener('DOMContentLoaded', () => {
-    renderWebsite();
-    document.body.classList.remove('loading');
-});
 
 window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
-    if(loader) setTimeout(() => loader.classList.add('done'), 1000);
+    if(loader) setTimeout(() => loader.classList.add('done'), 800);
 });
