@@ -968,10 +968,3 @@ body.lightbox-open {
     color: #c5a059 !important; /* 悬停变金 */
     padding-left: 10px; /* 轻微向右滑动 */
 }
-
-/* 价格标签的微调 */
-.item-price::before {
-    content: '€';
-    font-size: 0.8em;
-    margin-right: 2px;
-}
