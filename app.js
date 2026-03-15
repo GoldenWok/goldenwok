@@ -43,22 +43,35 @@ const isClickable = target.closest('a, button, .lang span, .logo-group, .nav-ite
     });
 }
 
+/* --- 彻底修复：精准平滑滚动 --- */
 function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                // 手动计算：元素顶部距离 - 导航栏高度(100px)
-                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 100;
-                
+    // 1. 获取所有导航链接
+    const navLinks = document.querySelectorAll('.nav-item, .logo-group');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // 2. 检查是否有 href 或特定的跳转需求
+            const targetId = this.getAttribute('href') || '#header'; 
+            const targetSection = document.querySelector(targetId);
+
+            if (targetSection) {
+                // 3. 关键：阻止浏览器默认的锚点跳转行为
+                e.preventDefault();
+                e.stopPropagation();
+
+                // 4. 计算位置：目标距离顶部的距离 - 固定的 Offset（根据你 Header 的高度调整）
+                // 如果你的 Header 比较大，就把 100 改成 120
+                const offset = 100; 
+                const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - offset;
+
+                // 5. 执行滚动
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
                 });
+                
+                // 6. 强制更新 URL 状态（但不跳转）
+                window.history.pushState(null, null, targetId);
             }
         });
     });
