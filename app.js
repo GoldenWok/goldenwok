@@ -126,34 +126,37 @@ function renderMenu() {
 
     container.innerHTML = DB.menu.map(cat => `
         <div class="menu-card reveal">
-            <h3 class="category-header" onclick="toggleMenuCategory(this)">
+            <h3 class="category-header">
                 ${cat.name[LANG]}
-                <span class="arrow-icon"></span>
             </h3>
-            <div class="menu-items-wrapper" style="max-height: 0; overflow: hidden; transition: all 0.5s ease;">
+            <div class="menu-items-wrapper">
                 <div class="menu-items">
                     ${cat.items.map(item => {
-                        // 处理像 10. 包子 这样的复杂项
+                        // 1. 处理复杂项 (如：10. 包子)
                         if (item.type === 'complex') {
                             return `
-                                <div class="menu-item-complex">
-                                    <div class="item-main-title" style="color: #d4af37; font-weight: bold; margin: 10px 0 5px 0;">
+                                <div class="menu-item-complex" style="margin-bottom: 20px;">
+                                    <div class="item-name" style="color: #d4af37; font-weight: 500; margin-bottom: 8px;">
                                         ${item.title[LANG]}
                                     </div>
                                     ${item.options.map(opt => `
-                                        <div class="menu-item sub-option" style="padding-left: 15px; font-size: 0.9em;">
+                                        <div class="menu-item sub-option" style="padding-left: 10px; opacity: 0.9; font-size: 0.95em;">
                                             <span class="item-name">${opt[LANG]}</span>
-                                            <span class="item-dots"></span>
+                                            <span class="item-dots" style="border-bottom: 1px dotted #444; flex: 1; margin: 0 10px; position: relative; top: -5px;"></span>
                                             <span class="item-price">€${opt.price}</span>
                                         </div>
                                     `).join('')}
                                 </div>`;
                         }
-                        // 处理普通菜品
+                        
+                        // 2. 处理普通菜品 (如：1. 春卷)
+                        // 注意：这里直接读取 item[LANG]，因为你的数据里 zh/en/gr 在 item 的第一层
+                        const itemName = item[LANG] || "Item Name Missing";
+                        
                         return `
                             <div class="menu-item">
-                                <span class="item-name">${item[LANG]}</span>
-                                <span class="item-dots"></span>
+                                <span class="item-name">${itemName}</span>
+                                <span class="item-dots" style="border-bottom: 1px dotted #444; flex: 1; margin: 0 10px; position: relative; top: -5px;"></span>
                                 <span class="item-price">€${item.price}</span>
                             </div>`;
                     }).join('')}
@@ -161,6 +164,9 @@ function renderMenu() {
             </div>
         </div>
     `).join('');
+
+    // 重新运行渐显动画初始化
+    if (typeof initReveal === 'function') initReveal();
 }
 /* --- 4. 交互工具 --- */
 function toggleMenuCategory(headerElement) {
