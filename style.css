@@ -566,38 +566,42 @@ html, body, a, button, span, .menu-item, .lang span {
 }
 
 /* --- 2. 图片项：锁死重叠感 --- */
+/* --- 2. 图片项：对称负边距 --- */
 .gallery-slide-item {
-    flex: 0 0 40vw !important; /* 锁定每张图占屏幕 40% 宽 */
+    flex: 0 0 40vw !important;
     width: 40vw !important;
     height: 65vh !important;
     
-    /* 核心修复：强制负边距，让图片无论如何都叠在一起 */
-    /* 如果觉得叠得不够多，就把 -120px 往大改 */
-    margin-right: -120px !important; 
+    /* 核心修复：左右同时使用负边距，让图片向中心靠拢 */
+    margin: 0 -60px !important; 
     
     scroll-snap-align: center;
     transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
-    opacity: 0.4;
+    opacity: 0.5;
     transform: scale(0.85);
-    border-radius: 40px; /* 更加圆润 */
+    border-radius: 40px;
     overflow: hidden;
-    z-index: 1;
+    
+    /* 初始层级较低 */
+    z-index: 1; 
     background: #000;
-    box-shadow: -15px 0 30px rgba(0,0,0,0.5); /* 给左侧加阴影，强化堆叠感 */
+    
+    /* 给双侧都加一点点阴影，增加重叠深度感 */
+    box-shadow: 0 0 30px rgba(0,0,0,0.4);
 }
 
-/* --- 3. 激活态：中间图跳出来 --- */
+/* --- 3. 激活态：强制置顶并对称推开 --- */
 .gallery-slide-item.is-active {
     opacity: 1 !important;
     transform: scale(1.05) !important;
-    z-index: 100 !important; /* 确保它在所有图的最上方 */
     
-    /* 激活时稍微露出一点点缝隙，显得有呼吸感 */
-    margin-right: -20px !important; 
-    margin-left: 20px !important;
+    /* 核心修复：中间图层级最高，它会同时压住左边和右边 */
+    z-index: 100 !important; 
+    
+    /* 激活时稍微收回一点负边距，让它看起来像是从两张图中间“钻”出来的 */
+    margin: 0 -20px !important; 
     box-shadow: 0 30px 60px rgba(0,0,0,0.8);
 }
-
 /* 图片适配 */
 .lazy-img {
     width: 100% !important;
