@@ -707,4 +707,14 @@ html, body, a, button, span, .menu-item, .lang span {
 .lb-next { right: 20px; }
 .lb-btn:hover { color: #c5a059; }
 
+/* 当灯箱打开时，确保自定义光标依然在最顶层 */
+body.lightbox-open .cursor,
+body.lightbox-open .cursor-follower {
+    z-index: 10001 !important; /* 必须高于 imageOverlay 的 10000 */
+}
+
+/* 或者你希望在灯箱里显示普通光标： */
+body.lightbox-open {
+    cursor: auto !important;
+}
 
