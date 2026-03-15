@@ -315,9 +315,23 @@ iframe { width: 100%; height: 100%; border: 0; }
 }
 .cta-gold-btn:hover { background: #c5a059; color: #000; }
 
-/* 滚动渐显动效 */
-.reveal { opacity: 0; transform: translateY(35px); transition: 1.5s cubic-bezier(0.23, 1, 0.32, 1); }
-.reveal.is-visible { opacity: 1; transform: translateY(0); }
+/* --- 动画基础状态 --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px); /* 初始向下偏移 30 像素 */
+    transition: all 0.8s cubic-bezier(0.2, 0.6, 0.2, 1); /* 平滑的贝塞尔曲线 */
+    will-change: transform, opacity;
+}
+
+/* --- 激活后的状态 --- */
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0); /* 回到原位 */
+}
+
+/* 如果希望菜单项之间有微小的延迟感（交错效果），可以加这个 */
+.modern-menu-grid .menu-category-group:nth-child(2) { transition-delay: 0.1s; }
+.modern-menu-grid .menu-category-group:nth-child(3) { transition-delay: 0.2s; }
 
 /* --- 导航栏修正 --- */
 header {
