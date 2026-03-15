@@ -6,32 +6,41 @@ function initCursor() {
     const follower = document.querySelector('.cursor-follower');
     if (!cursor || !follower) return;
 
-    // 1. 移动跟随
     window.addEventListener('mousemove', (e) => {
         const x = e.clientX;
         const y = e.clientY;
-        // 使用 translate3d 性能更好
-        cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-        follower.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-    });
 
-    // 2. 智能变色：使用事件委托监听所有“可点击”元素
-    document.body.addEventListener('mouseover', (e) => {
-        // 判定条件：a标签、button、语言切换、菜单项、画廊图片、灯箱按钮
-        const isClickable = e.target.closest('a, button, .lang span, .gallery-slide-item, .menu-item, .lb-btn, #overlayImg');
-        
+        // 1. 实时跟随
+        // 使用 requestAnimationFrame 保证丝滑
+        requestAnimationFrame(() => {
+            cursor.style.left = x + 'px';
+            cursor.style.top = y + 'px';
+            follower.style.left = x + 'px';
+            follower.style.top = y + 'px';
+        });
+
+        // 2. 智能探测变色
+        // 使用 elementFromPoint 探测鼠标下的元素，看它是否“可点击”
+        const target = e.target;
+        const isClickable = target.closest('a, button, .lang span, .gallery-slide-item, .menu-item, .lb-btn, #overlayImg, .cta-gold-btn');
+
         if (isClickable) {
-            cursor.classList.add('white-mode');
-            follower.classList.add('white-mode');
+            cursor.classList.add('is-hovering');
+            follower.classList.add('is-hovering');
+        } else {
+            cursor.classList.remove('is-hovering');
+            follower.classList.remove('is-hovering');
         }
     });
 
-    document.body.addEventListener('mouseout', (e) => {
-        cursor.classList.remove('white-mode');
-        follower.classList.remove('white-mode');
+    // 针对灯箱开启时的特殊处理
+    window.addEventListener('mousedown', () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    });
+    window.addEventListener('mouseup', () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
     });
 }
-
 /* --- 2. 渲染逻辑 --- */
 function setLang(lang) {
     LANG = lang;
