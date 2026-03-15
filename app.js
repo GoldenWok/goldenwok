@@ -125,47 +125,39 @@ function renderMenu() {
     if (!container || typeof DB === 'undefined' || !DB.menu) return;
 
     container.innerHTML = DB.menu.map(cat => `
-        <div class="menu-card reveal">
-            <h3 class="category-header">
+        <div class="menu-category-group reveal">
+            <h3 class="category-header" style="color: #ffffff; font-weight: 400; font-family: 'Cormorant Garamond', serif; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; padding-bottom: 10px;">
                 ${cat.name[LANG]}
             </h3>
-            <div class="menu-items-wrapper">
-                <div class="menu-items">
-                    ${cat.items.map(item => {
-                        // 1. 处理复杂项 (如：10. 包子)
-                        if (item.type === 'complex') {
-                            return `
-                                <div class="menu-item-complex" style="margin-bottom: 20px;">
-                                    <div class="item-name" style="color: #d4af37; font-weight: 500; margin-bottom: 8px;">
-                                        ${item.title[LANG]}
-                                    </div>
-                                    ${item.options.map(opt => `
-                                        <div class="menu-item sub-option" style="padding-left: 10px; opacity: 0.9; font-size: 0.95em;">
-                                            <span class="item-name">${opt[LANG]}</span>
-                                            <span class="item-dots" style="border-bottom: 1px dotted #444; flex: 1; margin: 0 10px; position: relative; top: -5px;"></span>
-                                            <span class="item-price">€${opt.price}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>`;
-                        }
-                        
-                        // 2. 处理普通菜品 (如：1. 春卷)
-                        // 注意：这里直接读取 item[LANG]，因为你的数据里 zh/en/gr 在 item 的第一层
-                        const itemName = item[LANG] || "Item Name Missing";
-                        
+            <div class="menu-items">
+                ${cat.items.map(item => {
+                    // 处理像 10. 包子 这样的 Complex 类型
+                    if (item.type === 'complex') {
                         return `
-                            <div class="menu-item">
-                                <span class="item-name">${itemName}</span>
-                                <span class="item-dots" style="border-bottom: 1px dotted #444; flex: 1; margin: 0 10px; position: relative; top: -5px;"></span>
-                                <span class="item-price">€${item.price}</span>
+                            <div class="menu-item-complex" style="margin-bottom: 20px;">
+                                <strong>${item.title[LANG]}</strong>
+                                ${item.options.map(opt => `
+                                    <div class="menu-item">
+                                        <span class="item-name">${opt[LANG]}</span>
+                                        <span class="item-dots"></span>
+                                        <span class="item-price">€${opt.price}</span>
+                                    </div>
+                                `).join('')}
                             </div>`;
-                    }).join('')}
-                </div>
+                    }
+                    // 处理普通菜品
+                    return `
+                        <div class="menu-item">
+                            <span class="item-name">${item[LANG]}</span>
+                            <span class="item-dots"></span>
+                            <span class="item-price">€${item.price}</span>
+                        </div>`;
+                }).join('')}
             </div>
         </div>
     `).join('');
 
-    // 重新运行渐显动画初始化
+    // 重新触发渐显动画
     if (typeof initReveal === 'function') initReveal();
 }
 /* --- 4. 交互工具 --- */
