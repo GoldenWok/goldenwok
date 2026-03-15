@@ -546,94 +546,103 @@ html, body, a, button, span, .menu-item, .lang span {
     }
 }
 
-/* --- 1. 轨道：动态计算挤压感 --- */
+/* --- 1. 画廊外层：必须允许内容溢出，按钮才看得见 --- */
+.gallery-section {
+    position: relative;
+    width: 100%;
+    margin: 40px auto;
+    padding: 20px 0;
+    /* 核心修复：严禁在这里使用 overflow: hidden */
+    overflow: visible !important; 
+    background: #050505;
+}
+
+/* --- 2. 轨道：缩短高度并精准挤压 --- */
 .gallery-slider-wrapper {
     display: flex !important;
     align-items: center;
     overflow-x: auto;
     scroll-snap-type: x proximity;
     
-    /* 核心逻辑：
-       左右 Padding 设为 30%，意味着中间只剩下 40% 的视野空间。
-       这样中间一张占满，左右两张各露出一半。 */
-    padding: 60px 30vw !important; 
+    /* 核心：通过 padding 锁定视野，确保只露三张图 */
+    padding: 20px 30vw !important; 
+    
+    /* 核心修复：缩短画廊高度 (从 60vh 缩短到 45vh) */
+    height: 50vh !important; 
     
     gap: 0 !important;
     scrollbar-width: none;
     cursor: grab;
 }
 
-/* --- 2. 图片卡片：自适应宽度 (防止多出) --- */
+.gallery-slider-wrapper::-webkit-scrollbar { display: none; }
+
+/* --- 3. 图片卡片：圆润、缩短、对称叠加 --- */
 .gallery-slide-item {
-    /* 将固定像素 420px 改为相对宽度 40vw */
-    /* 这保证了三张图加起来正好略大于 100% 屏幕，从而挡住多余的图 */
+    /* 锁定宽度为屏幕的 40%，确保一排三个 */
     flex: 0 0 40vw !important; 
     width: 40vw !important;
-    height: 60vh !important;
     
-    /* 对称负边距实现深度覆盖 */
-    margin: 0 -60px !important; 
+    /* 核心修复：缩短卡片高度 */
+    height: 45vh !important; 
+    
+    /* 对称负边距实现深度重叠 */
+    margin: 0 -80px !important; 
     
     scroll-snap-align: center;
     transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
     opacity: 0.4;
     transform: scale(0.85);
-    border-radius: 40px;
+    border-radius: 30px; /* 稍微减小圆角，适配更短的比例 */
+    overflow: hidden; 
     z-index: 1;
     background: #111;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* 激活态：中间图层叠 --- */
+/* 激活态：中间图层叠 */
 .gallery-slide-item.is-active {
     opacity: 1 !important;
     transform: scale(1.05) !important;
     z-index: 100 !important;
-    
-    /* 激活时稍微舒展，露出圆角 */
-    margin: 0 -10px !important; 
-    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    margin: 0 -15px !important; /* 呼吸间距 */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
 }
 
-/* --- 3. 图片适配 --- */
-.lazy-img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    border-radius: 40px;
-}
-/* --- 5. 按钮：悬浮在左右留白处 --- */
-
-/* --- 4. 左右按钮：放在画廊外侧的留白区 --- */
+/* --- 4. 按钮：精准定位在两侧空白处 --- */
 .nav-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(197, 160, 89, 0.3);
+    width: 50px;
+    height: 50px;
+    background: rgba(197, 160, 89, 0.1);
+    border: 1px solid rgba(197, 160, 89, 0.5);
     border-radius: 50%;
-    z-index: 1000;
-    cursor: none !important;
+    
+    /* 核心修复：提升 z-index 确保按钮在最顶层 */
+    z-index: 9999 !important; 
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: 0.3s;
 }
 
-/* 调整这里，直到按钮出现在画廊两侧的空白处 */
-.prev-btn { left: 5vw; }
-.next-btn { right: 5vw; }
+/* 按钮位置：放在 30vw 挤压区的正中间 */
+.prev-btn { left: 10vw; }
+.next-btn { right: 10vw; }
 
+.nav-btn:hover { background: #c5a059; border-color: #fff; }
 .nav-btn::after {
     content: '';
-    width: 12px;
-    height: 12px;
+    width: 10px; height: 10px;
     border-top: 2px solid #c5a059;
     border-right: 2px solid #c5a059;
 }
 .prev-btn::after { transform: rotate(-135deg); margin-left: 5px; }
 .next-btn::after { transform: rotate(45deg); margin-right: 5px; }
+.nav-btn:hover::after { border-color: #000; }
 /* 响应式调整 */
 @media (max-width: 768px) {
     .gallery-slider-wrapper { padding: 20px 15%; }
