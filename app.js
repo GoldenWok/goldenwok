@@ -42,35 +42,39 @@ function initCursor() {
     });
 }
 
-// 在 initCursor 之后添加
 function initSmoothScroll() {
-    document.querySelectorAll('.nav-item').forEach(anchor => {
+    // 监听所有带 # 的链接
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault(); // 阻止默认跳转，防止 URL 出现 # 导致页面跳动
-
+            e.preventDefault();
+            
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-
+            
             if (targetElement) {
-                // 计算 header 的高度
-                const headerOffset = 90; 
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                // 1. 获取目标元素相对于文档顶部的距离
+                const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                // 2. 减去 Header 的动态高度（建议设置一个固定偏移值，如 100）
+                const offsetPosition = elementPosition - 100;
 
+                // 3. 执行平滑滚动
                 window.scrollTo({
                     top: offsetPosition,
-                    behavior: 'smooth'
+                    behavior: "smooth"
                 });
             }
         });
     });
 }
 
-// 确保在渲染完页面后调用
-window.addEventListener('DOMContentLoaded', () => {
-    renderWebsite();
-    initCursor();
-    initSmoothScroll(); // 激活平滑滚动
+// 修改滚动监听逻辑，控制透明度
+window.addEventListener('scroll', () => {
+    const header = document.getElementById('header');
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
 });
 /* --- 2. 渲染逻辑 --- */
 function setLang(lang) {
