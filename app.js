@@ -111,6 +111,53 @@ function handleGalleryClick(index, el) {
     }
 }
 
+/* --- 1. 画廊左右按钮修复 --- */
+function moveGallery(direction) {
+    const container = document.getElementById("galleryContainer");
+    if (!container) return;
+
+    // 每次移动大约 1/3 容器宽度的距离
+    const scrollStep = container.offsetWidth / 3;
+    container.scrollBy({
+        left: direction * scrollStep,
+        behavior: 'smooth'
+    });
+}
+
+/* --- 2. 增强版灯箱开启函数 --- */
+function openFullImage(index) {
+    currentImgIndex = index;
+    const overlay = document.getElementById("imageOverlay");
+    const img = document.getElementById("overlayImg");
+    
+    if (img && DB.gallery[index]) {
+        img.src = `images/${DB.gallery[index]}`;
+        overlay.style.display = "flex";
+        
+        // 极致兼容：确保进入全屏瞬间原生光标消失
+        document.body.style.cursor = 'none'; 
+        
+        setTimeout(() => overlay.classList.add('active'), 10);
+    }
+}
+
+/* --- 3. 灯箱内左右切换修复 --- */
+function changeFullImage(direction, event) {
+    if (event) event.stopPropagation(); // 阻止点击按钮关闭灯箱
+    
+    currentImgIndex = (currentImgIndex + direction + DB.gallery.length) % DB.gallery.length;
+    const img = document.getElementById("overlayImg");
+    if (img) {
+        // 增加一个微小的淡入效果
+        img.style.opacity = "0";
+        setTimeout(() => {
+            img.src = `images/${DB.gallery[currentImgIndex]}`;
+            img.style.opacity = "1";
+        }, 150);
+    }
+}
+
+/* --- 4. 动态透明度与激活状态 --- */
 function setupDynamicDepth() {
     const container = document.getElementById("galleryContainer");
     if (!container) return;
@@ -124,8 +171,8 @@ function setupDynamicDepth() {
             const rect = item.getBoundingClientRect();
             const itemCenter = rect.left + rect.width / 2;
             
-            // 判断中心点距离，距离容器中轴线最近的设为激活
-            if (Math.abs(centerX - itemCenter) < rect.width / 2) {
+            // 如果图片中心接近容器中心
+            if (Math.abs(centerX - itemCenter) < rect.width / 3) {
                 item.classList.add('is-active');
             } else {
                 item.classList.remove('is-active');
@@ -134,19 +181,8 @@ function setupDynamicDepth() {
     };
 
     container.addEventListener('scroll', update);
-    // 初始化时触发一次
+    // 初始化
     setTimeout(update, 500);
-}
-function moveGallery(direction) {
-    const container = document.getElementById("galleryContainer");
-    if (!container) return;
-    
-    // 计算单张图片的宽度（含 gap）
-    const scrollAmount = container.offsetWidth / 3; 
-    container.scrollBy({
-        left: direction * scrollAmount,
-        behavior: 'smooth'
-    });
 }
 /* --- 4. 灯箱逻辑 --- */
 let currentImgIndex = 0;
@@ -158,20 +194,7 @@ function openFullImage(index) {
     setTimeout(() => overlay.classList.add('active'), 10);
 }
 
-function openFullImage(index) {
-    currentImgIndex = index;
-    const overlay = document.getElementById("imageOverlay");
-    const img = document.getElementById("overlayImg");
-    
-    img.src = `images/${DB.gallery[index]}`;
-    overlay.style.display = "flex";
-    
-    // 强制刷新光标层级（部分浏览器需要）
-    const cursor = document.querySelector('.cursor');
-    if(cursor) cursor.style.zIndex = "200001"; 
 
-    setTimeout(() => overlay.classList.add('active'), 10);
-}
 
 function closeImage() {
     const overlay = document.getElementById("imageOverlay");
@@ -183,11 +206,6 @@ function closeImage() {
     }, 400);
 }
 
-function changeFullImage(dir, e) {
-    e.stopPropagation();
-    currentImgIndex = (currentImgIndex + dir + DB.gallery.length) % DB.gallery.length;
-    document.getElementById("overlayImg").src = `images/${DB.gallery[currentImgIndex]}`;
-}
 
 /* --- 5. 初始化 --- */
 function initReveal() {
