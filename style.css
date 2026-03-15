@@ -655,4 +655,32 @@ html, body, a, button, span, .menu-item, .lang span {
     cursor: pointer;
 }
 
+.image-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.lb-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: white;
+    font-size: 50px;
+    cursor: pointer;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.lb-prev { left: 20px; }
+.lb-next { right: 20px; }
+.lb-btn:hover { color: #c5a059; }
+
 
