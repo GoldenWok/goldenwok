@@ -108,20 +108,17 @@ h1, h2, h3, .section-title {
 /* --- 导航栏容器 --- */
 /* --- 1. 导航栏初始透明态 --- */
 header {
-    position: fixed;
-    top: 0; left: 0; width: 100%;
-    padding: 40px 5%; /* 初始更宽敞 */
-    z-index: 100000;
-    background: transparent; /* 初始完全透明 */
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    /* 初始状态：完全透明，Logo 很大 */
+    background: transparent !important;
+    padding: 40px 5%;
+    transition: all 0.5s ease;
 }
 
-/* 滚动后的状态：变窄、带背景 */
 header.scrolled {
+    /* 滚动后状态：半透明黑，Logo 缩小 */
+    background: rgba(5, 5, 5, 0.8) !important;
+    backdrop-filter: blur(15px);
     padding: 15px 5%;
-    background: rgba(5, 5, 5, 0.75); /* 半透明黑 */
-    backdrop-filter: blur(15px); /* 磨砂玻璃效果 */
-    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
 }
 
 /* --- 2. Logo 增强设计 --- */
