@@ -953,3 +953,19 @@ body, html {
     position: relative;
     z-index: 100; /* 确保在 Overlay 之上 */
 }
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px; /* 增加行距，显得不拥挤 */
+    
+    /* 让每一行菜品也有微小的渐入感 */
+    animation: fadeInItem 1s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInItem {
+    from { opacity: 0; transform: translateX(-5px); }
+    to { opacity: 1; transform: translateX(0); }
+}
