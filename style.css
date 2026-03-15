@@ -837,3 +837,28 @@ body.lightbox-open {
     color: #ffffff;
     border-bottom-color: #c5a059;
 }
+
+/* --- 1. 语言切换器向左移动 --- */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* 缩小间距防止溢出 */
+    padding-right: 40px; /* 核心修复：增加右边距，让它离开屏幕最边缘 */
+}
+
+.lang-switcher {
+    display: flex;
+    gap: 12px;
+}
+
+/* --- 2. 彻底解决跳转位置偏离/空白问题 --- */
+/* 给锚点所在的 Section 增加一个“卷帘”位移 */
+#menu-anchor, #gallery-anchor, #location-anchor {
+    scroll-margin-top: 100px; /* 核心修复：确保跳转后，上方留出 Header 的高度，不会被挡住 */
+}
+
+/* 检查是否有元素撑开了宽度导致侧向空白 */
+body, html {
+    overflow-x: hidden;
+    width: 100%;
+}
