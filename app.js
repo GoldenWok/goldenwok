@@ -124,13 +124,11 @@ function renderMenu() {
     const container = document.getElementById("menuContainer");
     if (!container || typeof DB === 'undefined' || !DB.menu) return;
 
-    // 清空现有内容
     container.innerHTML = "";
 
-    // 动态生成 HTML
     const menuHtml = DB.menu.map(cat => `
         <div class="menu-category-group reveal">
-            <h3 class="category-header" style="color: #ffffff; font-weight: 400; font-family: 'Cormorant Garamond', serif; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; padding-bottom: 10px; font-size: 1.8rem;">
+            <h3 class="category-header">
                 ${cat.name[LANG]}
             </h3>
             <div class="menu-items">
@@ -150,11 +148,12 @@ function renderMenu() {
                                 `).join('')}
                             </div>`;
                     }
+                    // 修改点 2：确保读取的是 item[LANG]，这是你普通菜品的名字
                     return `
                         <div class="menu-item">
-                            <span class="item-name">${item[LANG]}</span>
+                            <span class="item-name">${item[LANG] || ""}</span>
                             <span class="item-dots"></span>
-                            <span class="item-price">€${item.price.toFixed(2)}</span>
+                            <span class="item-price">€${Number(item.price).toFixed(2)}</span>
                         </div>`;
                 }).join('')}
             </div>
@@ -163,10 +162,13 @@ function renderMenu() {
 
     container.innerHTML = menuHtml;
 
-    // 【关键】必须在 innerHTML 赋值后，立即重新运行观察器
-    // 否则新生成的 .reveal 元素不会被浏览器“看到”
+    // 修改点 3：确保 revealObserver (旧版变量名) 重新扫描新元素
     setTimeout(() => {
-        initReveal();
+        if (typeof revealObserver !== 'undefined') {
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        } else if (typeof initReveal === 'function') {
+            initReveal();
+        }
     }, 100);
 }
 
