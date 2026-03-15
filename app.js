@@ -68,44 +68,52 @@ function renderWebsite() {
         if (el && val !== undefined) el.innerText = val; 
     };
 
-    if (typeof DB !== 'undefined') {
-        // 1. 获取 restaurant 核心数据
-        const info = DB.restaurant; 
-
-        // 基础信息渲染
-        safeSet("welcome", info.welcome[LANG]);
-        safeSet("slogan", info.slogan[LANG]);
-        safeSet("openingText", info.opening[LANG]);
-        safeSet("buffetTime", info.buffetTime[LANG]);
-        safeSet("buffetPrice", info.buffetPrice[LANG]);
-        
-        // 2. 修正：这些标题直接在 DB 下，不在 restaurant 下
-        safeSet("menuTitle", DB.menuTitle[LANG]);
-        safeSet("galleryTitle", DB.galleryTitle[LANG]);
-        safeSet("locationTitle", DB.locationTitle[LANG]);
-        
-        // 3. 按钮渲染
-        const orderBtn = document.getElementById("orderButton");
-        if (orderBtn && info.orderModule) {
-            orderBtn.innerText = info.orderModule.orderButton[LANG] || "ORDER ONLINE";
-        }
-
-        // 4. 【核心修复点】联系方式渲染
-        // 你的数据结构是 DB.restaurant.contact[LANG].address
-        if (info.contact && info.contact[LANG]) {
-            const contactData = info.contact[LANG];
-            safeSet("contactAddress", contactData.address);
-            safeSet("contactPhone", contactData.phone);
-        }
+    // 检查 DB 是否定义
+    if (typeof DB === 'undefined') {
+        console.error("DB is not defined. Make sure config.js is loaded before app.js");
+        return;
     }
 
-    // 渲染其他组件
+    const info = DB.restaurant; 
+
+    // --- 1. 基础信息 (都在 restaurant 对象内) ---
+    safeSet("welcome", info.welcome[LANG]);
+    safeSet("slogan", info.slogan[LANG]);
+    safeSet("openingText", info.opening[LANG]);
+    safeSet("buffetTime", info.buffetTime[LANG]);
+    safeSet("buffetPrice", info.buffetPrice[LANG]);
+    
+    // 修正：这些标题在 info (restaurant) 内部
+    safeSet("menuTitle", info.menuTitle ? info.menuTitle[LANG] : "");
+    safeSet("galleryTitle", info.galleryTitle ? info.galleryTitle[LANG] : "");
+    safeSet("locationTitle", info.locationTitle ? info.locationTitle[LANG] : "");
+    
+    // --- 2. 按钮渲染 ---
+    const orderBtn = document.getElementById("orderButton");
+    if (orderBtn && info.orderModule) {
+        orderBtn.innerText = info.orderModule.orderButton[LANG];
+    }
+
+    // --- 3. 联系方式渲染 (核心报错点修复) ---
+    // 你的结构是: info.contact.gr.address
+    if (info.contact && info.contact[LANG]) {
+        const langContact = info.contact[LANG];
+        safeSet("contactAddress", langContact.address);
+        safeSet("contactPhone", langContact.phone);
+    }
+
+    // --- 4. 渲染子组件 ---
     renderMenu();
     renderGallery();
     initSmoothScroll();
     initReveal();
+    
+    // 强制触发显示
+    document.body.classList.remove('loading');
+    setTimeout(() => {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+    }, 100);
 }
-
 function renderMenu() {
     const container = document.getElementById("menuContainer");
     if (!container || typeof DB === 'undefined' || !DB.menu) return;
