@@ -545,64 +545,92 @@ html, body, a, button, span, .menu-item, .lang span {
         transform: none !important;
     }
 }
-/* --- 1. 画廊总区：容器锁死 --- */
+/* --- 1. 画廊总区：锁定 1000px 窄版视野 --- */
 .gallery-section {
     position: relative;
-    max-width: 1000px; /* 保持你中意的窄版宽度 */
+    max-width: 1000px;
     margin: 50px auto;
     padding: 20px 0;
-    overflow: visible !important; 
+    overflow: visible !important; /* 确保按钮飞出去 */
     background: #050505;
 }
 
-/* --- 2. 轨道：通过增加 Padding 挤走多余图片 --- */
+/* --- 2. 轨道：强行挤压，预留五图空间 --- */
 .gallery-slider-wrapper {
     display: flex !important;
     align-items: center;
     overflow-x: auto;
     scroll-snap-type: x proximity;
     
-    /* 核心修复：
-       将左右 Padding 从 300px 增加到 350px。
-       这样中间留下的可视缺口更小，只能容纳中间一张 + 左右各露出的一点边缘。 */
-    padding: 20px 350px !important; 
+    /* 对称挤压：Padding 缩小到 200px，腾出空间给两侧更小的图 */
+    padding: 40px 200px !important; 
     
     gap: 0 !important;
     scrollbar-width: none;
     cursor: grab;
-    height: 450px;
+    height: 500px; /* 锁定画廊高度 */
     box-sizing: border-box;
 }
 
-/* --- 3. 图片卡片：微调重叠度 --- */
+/* --- 3. 图片项：锁死尺寸与圆角 --- */
 .gallery-slide-item {
-    flex: 0 0 350px !important; 
-    width: 350px !important;
-    max-width: 350px !important; 
-    height: 400px !important;
+    /* 强力锁：禁止变形 */
+    flex: 0 0 380px !important; 
+    width: 380px !important;
+    height: 480px !important;
     
-    /* 核心修复：
-       稍微减小负边距（从 -90px 改为 -70px）。
-       重叠得太深会露出更多后面的图，稍微拉开一点能更有效地填满 1000px 的空间。 */
-    margin: 0 -70px !important; 
+    /* 对称负边距实现深度重叠 (改为较深的重叠，产生紧凑感) */
+    margin: 0 -100px !important; 
     
     scroll-snap-align: center;
-    transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
-    opacity: 0.5;
-    transform: scale(0.85);
-    border-radius: 35px;
-    z-index: 1;
+    
+    /* 核心修复：不再透明，而是纯黑色背景，遮挡后面的图 */
+    background: #000 !important; 
+    
+    border-radius: 40px; /* 更加圆润 */
+    overflow: hidden; 
+    z-index: 1; /* 初始层级 */
+    
+    /* 初始状态：缩小且压暗 (通过 transform 和 brightness) */
+    transform: scale(0.7) !important;
+    opacity: 1 !important; /* 彻底不透明 */
+    filter: brightness(0.2) blur(2px) !important; /* 越远越暗、越模糊 */
+    
+    transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
-/* 激活态：中间图 */
+/* --- 4. 激活态 (中间)：置顶、放大、最亮 --- */
 .gallery-slide-item.is-active {
     opacity: 1 !important;
-    transform: scale(1.1) !important;
-    z-index: 100 !important;
-    
-    /* 激活时稍微舒张，挡住后面的边缘 */
-    margin: 0 -5px !important; 
+    filter: brightness(1.1) blur(0px) !important; /* 最亮、清晰 */
+    transform: scale(1.05) !important; /* 放大到 105% */
+    z-index: 100 !important; /* 在所有图之上 */
+    margin: 0 -10px !important; /* 舒张感 */
+    box-shadow: 0 40px 80px rgba(0,0,0,1);
 }
+/* --- 5. 景深辅助样式 (由 JS 动态控制) --- */
+
+/* 中间那张 */
+.gallery-slide-item.is-active {
+    transform: scale(1.05) !important;
+    filter: brightness(1) blur(0px) !important;
+}
+
+/* 左右各一 (稍微压暗、缩小) */
+.gallery-slide-item.is-side-1 {
+    transform: scale(0.85) !important;
+    filter: brightness(0.6) blur(0.5px) !important;
+    opacity: 0.9 !important;
+}
+
+/* 更左右各一 (变得更小、更暗) */
+.gallery-slide-item.is-side-2 {
+    transform: scale(0.7) !important;
+    filter: brightness(0.25) blur(2px) !important;
+    opacity: 0.7 !important;
+}
+
 
 /* 图片内容：彻底禁止溢出 */
 .lazy-img {
