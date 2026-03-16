@@ -391,7 +391,13 @@ iframe { width: 100%; height: 100%; border: 0; }
     position: relative; overflow: hidden;
 }
 .cta-gold-btn:hover { background: #c5a059; color: #000; }
-
+/* 专门针对 info-box 内部按钮的修正 */
+.info-box .cta-gold-btn {
+    align-self: center;   /* 核心：只让按钮根据自身内容宽度显示，并居中 */
+    width: auto;          /* 撤销可能的拉伸 */
+    min-width: 220px;     /* 保持一定的分量感 */
+    text-align: center;
+}
 /* --- 动画基础状态 --- */
 /* 分类标题金色 */
 /* 1. 高级金色标题样式 */
