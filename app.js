@@ -252,12 +252,18 @@ function handleGalleryClick(index, el) {
 
 function openFullImage(index) {
     currentImgIndex = index;
-    const galleryData = DB.restaurant.gallery;
+    const galleryData = DB.gallery;    
     const overlay = document.getElementById("imageOverlay");
     const img = document.getElementById("overlayImg");
     img.src = `images/${galleryData[index]}`;
     overlay.style.display = "flex";
     setTimeout(() => overlay.classList.add('active'), 10);
+    img.classList.remove('zoomed');
+
+    document.getElementById("overlayImg").addEventListener("click", function(e) {
+    e.stopPropagation(); // να μην κλείνει το overlay
+    this.classList.toggle("zoomed");
+});
 }
 
 function closeImage() {
@@ -339,6 +345,24 @@ function applyHighlight(selector, priceKey) {
         }
     });
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const img = document.getElementById("overlayImg");
 
+    let zoomed = false;
+
+    img.addEventListener("click", function(e) {
+        e.stopPropagation();
+
+        zoomed = !zoomed;
+
+        if (zoomed) {
+            img.style.transform = "scale(2)";
+        } else {
+            img.style.transform = "scale(1)";
+        }
+    });
+});
 // 在页面加载后执行
 window.addEventListener('DOMContentLoaded', highlightTodayPrice);
+
+
